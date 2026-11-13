@@ -55,6 +55,7 @@ PruebaBrandMatch/
 │   └── theme/          # Design System (Colores, fuentes globales)
 ├── App.js              # Punto de entrada y contenedores principales
 └── package.json        # Dependencias del proyecto
+```
 
 ## ⚙️ Cómo ejecutar el proyecto localmente
 
