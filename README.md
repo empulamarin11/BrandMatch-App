@@ -12,11 +12,11 @@ Este repositorio contiene el **prototipo funcional de la aplicación móvil** de
 
 | Pantalla de Bienvenida | Login | Registro |
 | :---: | :---: | :---: |
-| ![Welcome](./assets/screenshots/welcome.png) | ![Login](./assets/screenshots/login.png) | ![Registro](./assets/screenshots/registro.png) |
+| ![Welcome](./assets/screenshots/welcome.jpeg) | ![Login](./assets/screenshots/login.jpeg) | ![Registro](./assets/screenshots/registro.jpeg) |
 
 | Configuración ADN (Sliders) | Análisis de Match (Radar) | Pitch IA |
 | :---: | :---: | :---: |
-| ![Sliders](./assets/screenshots/sliders.png) | ![Match](./assets/screenshots/match.png) | ![Pitch](./assets/screenshots/pitch.png) |
+| ![Sliders](./assets/screenshots/sliders.jpeg) | ![Match](./assets/screenshots/match.jpeg) | ![Pitch](./assets/screenshots/pitch.jpeg) |
 
 ---
 
