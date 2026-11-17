@@ -29,11 +29,11 @@ En el marketing de influencers actual, las marcas toman decisiones basadas casi 
 
 | Bienvenida (`Welcome`) | Autenticación (`Login`) | Configuración ADN (`Configuracion`) |
 | :---: | :---: | :---: |
-| ![Welcome](./assets/screenshots/welcome.jpeg) | ![Login](./assets/screenshots/login.jpeg) | ![Configuracion](./assets/screenshots/sliders.jpeg) |
+| ![Welcome](./assets/screenshots/welcome.jpeg) | ![Login](./assets/screenshots/login.jpeg) | ![Registro](./assets/screenshots/registro.jpeg) |
 
 | Análisis de Match (`Match`) | Generador de Pitch IA (`Pitch`) |
-| :---: | :---: |
-| ![Match](./assets/screenshots/match.jpeg) | ![Pitch](./assets/screenshots/pitch.jpeg) |
+| :---: | :---: | :---: |
+| ![Configuracion](./assets/screenshots/sliders.jpeg) | ![Match](./assets/screenshots/match.jpeg) | ![Pitch](./assets/screenshots/pitch.jpeg) |
 
 ---
 
