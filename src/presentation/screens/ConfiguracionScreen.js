@@ -7,12 +7,14 @@ import CustomButton from '../components/CustomButton';
 import { getInfluencers } from '../../infrastructure/match/InfluencerRepository';
 
 export default function ConfiguracionScreen({ navigation }) {
+  // --- ESTADOS DEL BIG FIVE (5 Sliders) ---
   const [creatividad, setCreatividad] = useState(80);
   const [seriedad, setSeriedad] = useState(50);
   const [sociabilidad, setSociabilidad] = useState(70);
   const [empatia, setEmpatia] = useState(60);
   const [estabilidad, setEstabilidad] = useState(20);
 
+  // --- ESTADOS DEL BUSCADOR ---
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedInfluencer, setSelectedInfluencer] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -34,9 +36,10 @@ export default function ConfiguracionScreen({ navigation }) {
     setIsCalculating(true);
     setTimeout(() => {
       setIsCalculating(false);
-      navigation.navigate('Match', { 
+      // Enviamos los 5 valores del ADN de la marca y el influencer seleccionado
+      navigation.navigate('Match', {
         marca: { creatividad, seriedad, sociabilidad, empatia, estabilidad },
-        influencer: selectedInfluencer 
+        influencer: selectedInfluencer
       });
     }, 1200);
   };
@@ -45,39 +48,68 @@ export default function ConfiguracionScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Configura tu ADN</Text>
-        <Text style={styles.subtitle}>Desliza para definir la personalidad que buscas:</Text>
+        <Text style={styles.subtitle}>Desliza para definir la personalidad de tu marca:</Text>
 
-        <View style={styles.sliderGroup}>
-          <View style={styles.sliderHeader}><Text style={styles.sliderLabel}>Creatividad</Text><Text style={styles.sliderValue}>{creatividad}%</Text></View>
-          <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={creatividad} onValueChange={setCreatividad} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
+        {/* SECCIÓN 1: SLIDERS */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>1. Configura el ADN de tu Marca</Text>
+
+          {/* Slider 1: Creatividad */}
+          <View style={styles.sliderGroup}>
+            <View style={styles.sliderHeader}>
+              <Text style={styles.sliderLabel}>Creatividad</Text>
+              <Text style={styles.sliderValue}>{creatividad}%</Text>
+            </View>
+            <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={creatividad} onValueChange={setCreatividad} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
+          </View>
+
+          {/* Slider 2: Seriedad */}
+          <View style={styles.sliderGroup}>
+            <View style={styles.sliderHeader}>
+              <Text style={styles.sliderLabel}>Seriedad</Text>
+              <Text style={styles.sliderValue}>{seriedad}%</Text>
+            </View>
+            <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={seriedad} onValueChange={setSeriedad} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
+          </View>
+
+          {/* Slider 3: Sociabilidad */}
+          <View style={styles.sliderGroup}>
+            <View style={styles.sliderHeader}>
+              <Text style={styles.sliderLabel}>Sociabilidad</Text>
+              <Text style={styles.sliderValue}>{sociabilidad}%</Text>
+            </View>
+            <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={sociabilidad} onValueChange={setSociabilidad} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
+          </View>
+
+          {/* Slider 4: Empatía */}
+          <View style={styles.sliderGroup}>
+            <View style={styles.sliderHeader}>
+              <Text style={styles.sliderLabel}>Empatía</Text>
+              <Text style={styles.sliderValue}>{empatia}%</Text>
+            </View>
+            <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={empatia} onValueChange={setEmpatia} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
+          </View>
+
+          {/* Slider 5: Estabilidad */}
+          <View style={styles.sliderGroup}>
+            <View style={styles.sliderHeader}>
+              <Text style={styles.sliderLabel}>Estabilidad</Text>
+              <Text style={styles.sliderValue}>{estabilidad}%</Text>
+            </View>
+            <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={estabilidad} onValueChange={setEstabilidad} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
+          </View>
         </View>
 
-        <View style={styles.sliderGroup}>
-          <View style={styles.sliderHeader}><Text style={styles.sliderLabel}>Seriedad</Text><Text style={styles.sliderValue}>{seriedad}%</Text></View>
-          <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={seriedad} onValueChange={setSeriedad} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
-        </View>
-
-        <View style={styles.sliderGroup}>
-          <View style={styles.sliderHeader}><Text style={styles.sliderLabel}>Sociabilidad</Text><Text style={styles.sliderValue}>{sociabilidad}%</Text></View>
-          <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={sociabilidad} onValueChange={setSociabilidad} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
-        </View>
-
-        <View style={styles.sliderGroup}>
-          <View style={styles.sliderHeader}><Text style={styles.sliderLabel}>Empatía</Text><Text style={styles.sliderValue}>{empatia}%</Text></View>
-          <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={empatia} onValueChange={setEmpatia} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
-        </View>
-
-        <View style={styles.sliderGroup}>
-          <View style={styles.sliderHeader}><Text style={styles.sliderLabel}>Estabilidad</Text><Text style={styles.sliderValue}>{estabilidad}%</Text></View>
-          <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={estabilidad} onValueChange={setEstabilidad} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
-        </View>
-
-        <View style={styles.sectionContainer}>
+        {/* SECCIÓN 2: BUSCADOR DE INFLUENCER */}
+        <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>2. Buscar Influencer</Text>
+          <Text style={styles.sectionSubtitle}>Selecciona un perfil de la base de datos:</Text>
           {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
 
           <TouchableOpacity style={styles.dropdownButton} onPress={() => setIsModalVisible(true)}>
-            <Text style={styles.dropdownText}>{selectedInfluencer ? `@${selectedInfluencer.username}` : "Elegir influencer..."}</Text>
+            <Text style={styles.dropdownText}>
+              {selectedInfluencer ? `@${selectedInfluencer.username}` : "Elegir influencer..."}
+            </Text>
             <Text style={styles.dropdownIcon}>▼</Text>
           </TouchableOpacity>
 
@@ -90,6 +122,7 @@ export default function ConfiguracionScreen({ navigation }) {
           )}
         </View>
 
+        {/* BOTÓN FINAL */}
         <View style={{ marginTop: 10 }}>
           {isCalculating ? (
             <View style={styles.loadingContainer}>
@@ -102,10 +135,12 @@ export default function ConfiguracionScreen({ navigation }) {
         </View>
       </ScrollView>
 
+      {/* MODAL (VENTANA EMERGENTE) */}
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Base de Datos</Text>
+            <Text style={styles.modalTitle}>Base de Datos de Influencers</Text>
+
             <FlatList
               data={influencers}
               keyExtractor={(item) => item.id}
@@ -116,34 +151,43 @@ export default function ConfiguracionScreen({ navigation }) {
                 </TouchableOpacity>
               )}
             />
+
             <CustomButton title="Cancelar" variant="primary" onPress={() => setIsModalVisible(false)} />
           </View>
         </View>
       </Modal>
+
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
-  scrollContent: { paddingHorizontal: 24, paddingTop: 40, paddingBottom: 40 },
-  title: { fontSize: 32, fontWeight: '900', color: COLORS.textLight, marginBottom: 8 },
-  subtitle: { fontSize: 16, color: COLORS.textMuted, marginBottom: 30 },
-  sliderGroup: { marginBottom: 24 },
-  sliderHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  sliderLabel: { color: COLORS.textLight, fontSize: 16, fontWeight: '600' },
-  sliderValue: { color: COLORS.action, fontSize: 16, fontWeight: 'bold' },
-  slider: { width: '100%', height: 40 },
-  sectionContainer: { marginTop: 10, marginBottom: 20 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textLight, marginBottom: 10 },
+  scrollContent: { paddingHorizontal: 20, paddingTop: 30, paddingBottom: 40 },
+  title: { fontSize: 28, fontWeight: '900', color: COLORS.textLight, marginBottom: 5, textAlign: 'center' },
+  subtitle: { fontSize: 14, color: COLORS.textMuted, marginBottom: 20, textAlign: 'center' },
+
+  sectionCard: { backgroundColor: 'rgba(30, 41, 59, 0.5)', borderRadius: 16, padding: 20, marginBottom: 15, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
+  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: COLORS.textLight, marginBottom: 15 },
+  sectionSubtitle: { fontSize: 12, color: COLORS.textMuted, marginBottom: 10 },
   errorText: { color: COLORS.action, fontSize: 14, marginBottom: 10, fontWeight: 'bold' },
+
+  sliderGroup: { marginBottom: 15 },
+  sliderHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 5 },
+  sliderLabel: { color: COLORS.textLight, fontSize: 14, fontWeight: '600' },
+  sliderValue: { color: COLORS.primary, fontSize: 14, fontWeight: 'bold' },
+  slider: { width: '100%', height: 30 },
+
   dropdownButton: { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: COLORS.card, padding: 15, borderRadius: 10, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' },
   dropdownText: { color: COLORS.textLight, fontSize: 14 },
   dropdownIcon: { color: COLORS.textMuted },
+
   infoBox: { marginTop: 10, padding: 10, backgroundColor: 'rgba(37,244,238,0.1)', borderRadius: 8, borderWidth: 1, borderColor: COLORS.primary },
   infoText: { color: COLORS.primary, fontSize: 12, marginBottom: 2 },
+
   loadingContainer: { alignItems: 'center', justifyContent: 'center', padding: 20 },
   loadingText: { color: COLORS.primary, marginTop: 10, fontWeight: 'bold' },
+
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)', justifyContent: 'flex-end' },
   modalContent: { backgroundColor: COLORS.background, borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 20, maxHeight: '70%' },
   modalTitle: { fontSize: 20, fontWeight: 'bold', color: COLORS.textLight, marginBottom: 15, textAlign: 'center' },

@@ -4,14 +4,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 import CustomButton from '../components/CustomButton';
 import RadarChart from '../components/RadarChart';
+import { ejecutarCalculoMatch } from '../../application/match/calculateMatch';
 
 export default function MatchScreen({ navigation, route }) {
+  // Recibimos los datos de la Configuración (Marca e Influencer)
   const { marca, influencer } = route.params;
-  
-  const promedioMarca = (marca.creatividad + marca.seriedad + marca.sociabilidad + marca.empatia + marca.estabilidad) / 5;
-  const promedioInfluencer = (influencer.bigfive.a + influencer.bigfive.r + influencer.bigfive.e + influencer.bigfive.am + influencer.bigfive.n) / 5;
-  let matchPct = Math.round(100 - Math.abs(promedioMarca - promedioInfluencer));
-  let status = matchPct > 70 ? "Match Excelente" : (matchPct > 50 ? "Match Bueno" : "Match Bajo");
+
+  // La regla de compatibilidad vive en el dominio (domain/match/MatchCalculator.js)
+  const { porcentaje: matchPct, estado: status } = ejecutarCalculoMatch(marca, influencer);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
