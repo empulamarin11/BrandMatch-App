@@ -20,7 +20,7 @@ En el marketing de influencers actual, las marcas toman decisiones basadas casi 
 
 ## 🎨 Prototipo Interactivo (Figma)
 
-* **Enlace directo:** [Ver Prototipo Interactivo en Figma](https://www.figma.com/proto/hZZLmnQJIWEa1W4fg9ImRf/BrandMatch-Prototipo?node-id=1-2&p=f&t=LkxIk6SB37UBjoMG-1&scaling=scale-down&content-scaling=responsive&page-id=0%3A1&starting-point-node-id=1%3A2)
+* **Enlace directo:** [Ver Prototipo Interactivo en Figma](https://www.figma.com/proto/hZZLmnQJlWEa1W4fg9ImRf/BrandMatch-Prototipo?node-id=1-2&p=f&t=UX6aI22ARr4mDOq1-1&scaling=scale-down&content-scaling=responsive&page-id=0%3A1&starting-point-node-id=1%3A2)
 * **Resolución de diseño:** Android Compacto (`412 × 917 px`) con sistema de diseño en modo oscuro (*Dark Mode*) y retícula espacial de `8px`.
 
 ---
