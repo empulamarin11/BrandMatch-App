@@ -27,11 +27,11 @@ En el marketing de influencers actual, las marcas toman decisiones basadas casi 
 
 ## 📱 Capturas de Pantalla (UI/UX)
 
-| Bienvenida (`Welcome`) | Autenticación (`Login`) | Configuración ADN (`Configuracion`) |
+| Bienvenida (`Welcome`) | Autenticación (`Login`) | Registrarse (`Registro`) |
 | :---: | :---: | :---: |
 | ![Welcome](./assets/screenshots/welcome.jpeg) | ![Login](./assets/screenshots/login.jpeg) | ![Registro](./assets/screenshots/registro.jpeg) |
 
-| Análisis de Match (`Match`) | Generador de Pitch IA (`Pitch`) |
+| Configuración ADN (`Configuracion`) | Análisis de Match (`Match`) | Generador de Pitch IA (`Pitch`) |
 | :---: | :---: | :---: |
 | ![Configuracion](./assets/screenshots/sliders.jpeg) | ![Match](./assets/screenshots/match.jpeg) | ![Pitch](./assets/screenshots/pitch.jpeg) |
 
