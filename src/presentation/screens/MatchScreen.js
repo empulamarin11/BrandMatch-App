@@ -1,65 +1,67 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BlurView } from 'expo-blur';
 import { COLORS } from '../theme/colors';
 import CustomButton from '../components/CustomButton';
 import RadarChart from '../components/RadarChart';
 
 export default function MatchScreen({ navigation, route }) {
-  // 1. Recibimos los datos de los sliders (si no vienen, usamos valores por defecto)
-  const { 
-    creatividad = 80, 
-    seriedad = 50, 
-    sociabilidad = 70, 
-    empatia = 60, 
-    estabilidad = 20 
-  } = route.params || {};
+  const { marca, influencer } = route.params;
+  
+  const promedioMarca = (marca.creatividad + marca.seriedad + marca.sociabilidad + marca.empatia + marca.estabilidad) / 5;
+  const promedioInfluencer = (influencer.bigfive.a + influencer.bigfive.r + influencer.bigfive.e + influencer.bigfive.am + influencer.bigfive.n) / 5;
+  let matchPct = Math.round(100 - Math.abs(promedioMarca - promedioInfluencer));
+  let status = matchPct > 70 ? "Match Excelente" : (matchPct > 50 ? "Match Bueno" : "Match Bajo");
 
-  // 2. Calculamos el "Match" basado en el promedio de los sliders
-  const promedio = (creatividad + seriedad + sociabilidad + empatia + estabilidad) / 5;
-  const porcentajeMatch = Math.round(promedio);
-
-  // 3. Animaciones de entrada
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const scaleAnim = useRef(new Animated.Value(0.95)).current;
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
-      Animated.spring(scaleAnim, { toValue: 1, friction: 5, useNativeDriver: true })
+      Animated.timing(fadeAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
+      Animated.spring(scaleAnim, { toValue: 1, friction: 6, useNativeDriver: true })
     ]).start();
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Análisis de Match</Text>
-        
-        {/* Contenedor animado */}
-        <Animated.View style={[styles.card, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
+        <Text style={styles.headerTitle}>BrandMatch</Text>
+        <Text style={styles.headerSubtitle}>Análisis de compatibilidad y ADN Digital</Text>
+
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.backButtonText}>Volver al buscador</Text>
+        </TouchableOpacity>
+
+        <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
           
-          {/* EFECTO CRISTAL (Glassmorphism) */}
-          <BlurView intensity={60} tint="dark" style={styles.blurContainer}>
-            
-            <View style={styles.matchCircle}>
-              <Text style={styles.matchNumber}>{porcentajeMatch}%</Text>
-              <Text style={styles.matchText}>MATCH</Text>
+          {/* TARJETA 1: Nivel de Compatibilidad */}
+          <View style={styles.card}>
+            <Text style={styles.cardLabel}>NIVEL DE COMPATIBILIDAD</Text>
+            <View style={styles.matchRow}>
+              <Text style={styles.percentage}>{matchPct}%</Text>
+              <Text style={[styles.matchStatus, { color: matchPct > 70 ? '#10B981' : '#F59E0B' }]}>{status}</Text>
             </View>
-            
-            <Text style={styles.influencerName}>@alex_acoustic</Text>
-            
-            <RadarChart />
+            <View style={styles.divider} />
+            <View style={styles.infoRow}><Text style={styles.infoLabel}>{influencer.name}</Text></View>
+            <View style={styles.infoRow}><Text style={styles.infoLabel}>Usuario</Text><Text style={styles.infoValue}>@{influencer.username}</Text></View>
+            <View style={styles.infoRow}><Text style={styles.infoLabel}>Seguidores</Text><Text style={styles.infoValue}>{influencer.seguidores}</Text></View>
+            <View style={styles.infoRow}><Text style={styles.infoLabel}>Arquetipo</Text><Text style={styles.infoValue}>{influencer.arquetipo}</Text></View>
+          </View>
 
-            <View style={{ marginTop: 20, width: '100%' }}>
-              <CustomButton 
-                title="Generar Pitch con IA" variant="primary" 
-                onPress={() => navigation.navigate('Pitch')} 
-              />
+          {/* TARJETA 2: Gráfico Radar */}
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Comparativa Big Five</Text>
+            <View style={styles.legendRow}>
+              <View style={styles.legendItem}><View style={[styles.dot, { backgroundColor: COLORS.primary }]} /><Text style={styles.legendText}>Influencer</Text></View>
+              <View style={styles.legendItem}><View style={[styles.dot, { backgroundColor: '#334155' }]} /><Text style={styles.legendText}>Tu Marca</Text></View>
             </View>
-            
-          </BlurView>
+            <RadarChart data={influencer.bigfive} />
+          </View>
 
+          <View style={styles.buttonWrapper}>
+            <CustomButton title="Generar correo de colaboración" variant="action" onPress={() => navigation.navigate('Pitch', { influencer })} />
+          </View>
         </Animated.View>
       </ScrollView>
     </SafeAreaView>
@@ -67,57 +69,25 @@ export default function MatchScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: COLORS.background 
-  },
-  content: { 
-    paddingHorizontal: 24, 
-    paddingTop: 40, 
-    paddingBottom: 40 
-  },
-  title: { 
-    fontSize: 32, 
-    fontWeight: '900', 
-    color: COLORS.textLight, 
-    marginBottom: 30 
-  },
-  card: { 
-    borderRadius: 20, 
-    overflow: 'hidden', // Crucial para que el cristal respete los bordes redondeados
-    borderWidth: 1, 
-    borderColor: 'rgba(255,255,255,0.15)' 
-  },
-  blurContainer: {
-    padding: 24, 
-    alignItems: 'center',
-    backgroundColor: 'rgba(30, 41, 59, 0.4)', // Le da un toque de color al cristal
-  },
-  matchCircle: { 
-    width: 120, 
-    height: 120, 
-    borderRadius: 60, 
-    borderWidth: 8, 
-    borderColor: COLORS.primary, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginBottom: 20 
-  },
-  matchNumber: { 
-    fontSize: 32, 
-    fontWeight: '900', 
-    color: COLORS.primary 
-  },
-  matchText: { 
-    fontSize: 12, 
-    color: COLORS.textMuted, 
-    fontWeight: 'bold', 
-    letterSpacing: 2 
-  },
-  influencerName: { 
-    fontSize: 20, 
-    color: COLORS.textLight, 
-    fontWeight: 'bold', 
-    marginBottom: 10 
-  }
+  container: { flex: 1, backgroundColor: COLORS.background },
+  content: { paddingHorizontal: 20, paddingTop: 30, paddingBottom: 40 },
+  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.textLight, textAlign: 'center', marginBottom: 4 },
+  headerSubtitle: { fontSize: 14, color: COLORS.textMuted, textAlign: 'center', marginBottom: 20 },
+  backButton: { backgroundColor: COLORS.action, paddingVertical: 10, paddingHorizontal: 16, borderRadius: 20, alignSelf: 'flex-start', marginBottom: 20 },
+  backButtonText: { color: '#FFF', fontWeight: 'bold', fontSize: 14 },
+  card: { backgroundColor: 'rgba(30, 41, 59, 0.5)', borderRadius: 16, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)' },
+  cardLabel: { fontSize: 12, fontWeight: 'bold', color: COLORS.textMuted, marginBottom: 8, letterSpacing: 1 },
+  cardTitle: { fontSize: 16, fontWeight: 'bold', color: COLORS.textLight, marginBottom: 15 },
+  matchRow: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 15 },
+  percentage: { fontSize: 48, fontWeight: '900', color: COLORS.primary },
+  matchStatus: { fontSize: 16, fontWeight: 'bold' },
+  divider: { height: 1, backgroundColor: 'rgba(255,255,255,0.1)', marginBottom: 15 },
+  infoRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
+  infoLabel: { fontSize: 14, color: COLORS.textMuted },
+  infoValue: { fontSize: 14, color: COLORS.textLight, fontWeight: '600' },
+  legendRow: { flexDirection: 'row', justifyContent: 'center', gap: 20, marginBottom: 10 },
+  legendItem: { flexDirection: 'row', alignItems: 'center' },
+  dot: { width: 8, height: 8, borderRadius: 4, marginRight: 6 },
+  legendText: { fontSize: 12, color: COLORS.textMuted },
+  buttonWrapper: { marginTop: 10 }
 });

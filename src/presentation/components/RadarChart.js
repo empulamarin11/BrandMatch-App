@@ -1,53 +1,88 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import Svg, { Polygon, Circle, Line } from 'react-native-svg';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import Svg, { Polygon, Line, Text as SvgText } from 'react-native-svg';
 import { COLORS } from '../theme/colors';
 
-export default function RadarChart() {
-  // Datos simulados del Big Five (0 a 100)
-  const data = [80, 50, 70, 60, 20]; 
-  const labels = ['Creatividad', 'Seriedad', 'Sociabilidad', 'Empatía', 'Estabilidad'];
-  
-  // Configuración del gráfico
-  const size = 200;
-  const center = size / 2;
-  const radius = 80;
+const { width } = Dimensions.get('window');
 
-  // Calcular los puntos del polígono basado en los datos
-  const points = data.map((value, index) => {
-    const angle = (Math.PI * 2 * index) / data.length - Math.PI / 2;
-    const x = center + (radius * (value / 100)) * Math.cos(angle);
-    const y = center + (radius * (value / 100)) * Math.sin(angle);
+export default function RadarChart({ data }) {
+  const rawData = data || { a: 30, r: 20, e: 30, am: 15, n: 5 };
+  const values = [rawData.r, rawData.a, rawData.n, rawData.am, rawData.e];
+  
+  // 🚨 SOLUCIÓN: Acortamos las palabras que son muy largas
+  const labels = ['Responsab.', 'Apertura', 'Neurot.', 'Amabilidad', 'Extraver.'];
+
+  const size = width - 120; 
+  const center = size / 2;
+  const radius = size * 0.3; 
+
+  const getPoint = (value, index) => {
+    const angle = (Math.PI * 2 * index) / values.length - Math.PI / 2;
+    return {
+      x: center + (radius * (value / 100)) * Math.cos(angle),
+      y: center + (radius * (value / 100)) * Math.sin(angle)
+    };
+  };
+
+  const polygonPoints = values.map((value, index) => {
+    const { x, y } = getPoint(value, index);
     return `${x},${y}`;
   }).join(' ');
 
   return (
     <View style={styles.container}>
       <Svg height={size} width={size}>
-        {/* Círculos de fondo (las líneas del radar) */}
-        <Circle cx={center} cy={center} r={radius} stroke={COLORS.card} strokeWidth="1" fill="none" />
-        <Circle cx={center} cy={center} r={radius * 0.66} stroke={COLORS.card} strokeWidth="1" fill="none" />
-        <Circle cx={center} cy={center} r={radius * 0.33} stroke={COLORS.card} strokeWidth="1" fill="none" />
-
-        {/* Líneas desde el centro */}
-        {data.map((_, index) => {
-          const angle = (Math.PI * 2 * index) / data.length - Math.PI / 2;
-          const x = center + radius * Math.cos(angle);
-          const y = center + radius * Math.sin(angle);
-          return <Line key={index} x1={center} y1={center} x2={x} y2={y} stroke={COLORS.card} strokeWidth="1" />;
+        {[0.33, 0.66, 1].map((level, i) => {
+          const webPoints = values.map((_, index) => {
+            const angle = (Math.PI * 2 * index) / values.length - Math.PI / 2;
+            return `${center + (radius * level) * Math.cos(angle)},${center + (radius * level) * Math.sin(angle)}`;
+          }).join(' ');
+          return <Polygon key={i} points={webPoints} stroke="#334155" strokeWidth="1" fill="none" />;
         })}
 
-        {/* El polígono de datos (Cian con transparencia) */}
-        <Polygon points={points} fill={COLORS.primary} fillOpacity="0.3" stroke={COLORS.primary} strokeWidth="2" />
+        {values.map((_, index) => {
+          const angle = (Math.PI * 2 * index) / values.length - Math.PI / 2;
+          return <Line key={index} x1={center} y1={center} x2={center + radius * Math.cos(angle)} y2={center + radius * Math.sin(angle)} stroke="#334155" strokeWidth="1" />;
+        })}
+
+        <Polygon points={polygonPoints} fill={COLORS.primary} fillOpacity="0.4" stroke={COLORS.primary} strokeWidth="2" />
+
+        {values.map((_, index) => {
+          const angle = (Math.PI * 2 * index) / values.length - Math.PI / 2;
+          
+          // Ajustamos las posiciones milimétricamente
+          const labelX = center + (radius + 20) * Math.cos(angle);
+          const labelY = center + (radius + 20) * Math.sin(angle);
+          
+          let textAnchor = "middle";
+          if (index === 1 || index === 2) textAnchor = "start";
+          if (index === 3 || index === 4) textAnchor = "end";
+
+          return (
+            <SvgText 
+              key={index} 
+              x={labelX} 
+              y={labelY + 4} 
+              fill={COLORS.textMuted} 
+              fontSize="9"
+              fontWeight="bold" 
+              textAnchor={textAnchor}
+            >
+              {labels[index]}
+            </SvgText>
+          );
+        })}
       </Svg>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 20,
+  container: { 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    marginVertical: 10,
+    width: '100%',
+    overflow: 'hidden'
   }
 });
