@@ -7,6 +7,7 @@ import ConfiguracionScreen from '../screens/ConfiguracionScreen';
 import MatchScreen from '../screens/MatchScreen';
 import PitchScreen from '../screens/PitchScreen';
 import RegistroScreen from '../screens/RegistroScreen';
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ export default function AppNavigator() {
       <Stack.Screen name="Match" component={MatchScreen} />
       <Stack.Screen name="Pitch" component={PitchScreen} />
       <Stack.Screen name="Registro" component={RegistroScreen} />
+      <Stack.Screen name="RecuperarPassword" component={ForgotPasswordScreen} />
     </Stack.Navigator>
   );
 }
