@@ -21,4 +21,15 @@ export class AuthRepository {
   async requestPasswordReset(email) {
     throw new Error('AuthRepository.requestPasswordReset() is not implemented.');
   }
+
+  /**
+   * Crea una cuenta nueva con datos ya validados.
+   * @param {import('./FullName').FullName} fullName
+   * @param {import('./Email').Email} email
+   * @param {import('./NewPassword').NewPassword} password
+   * @returns {Promise<unknown>} La cuenta creada que devuelva el backend.
+   */
+  async register(fullName, email, password) {
+    throw new Error('AuthRepository.register() is not implemented.');
+  }
 }

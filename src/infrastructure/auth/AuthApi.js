@@ -20,4 +20,15 @@ export class AuthApi extends AuthRepository {
     // TODO: sustituir por la llamada real cuando exista el backend.
     throw new NotConfiguredError('Password recovery is not configured yet.');
   }
+
+  async register(fullName, email, password) {
+    // TODO: sustituir por la llamada real cuando exista el backend, p. ej.:
+    //   const res = await fetch(`${API_URL}/auth/register`, { method: 'POST', ... });
+    //   if (!res.ok) throw new Error('Unable to create the account.');
+    //   return res.json();
+    //
+    // Mientras tanto no se guarda ninguna cuenta: solo se mantiene el flujo
+    // de navegación del prototipo.
+    return null;
+  }
 }
