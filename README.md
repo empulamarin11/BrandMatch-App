@@ -1,88 +1,148 @@
 # BrandMatch 🤝 - Pitch Deck & App Prototype
 
-BrandMatch es una plataforma SaaS B2B que utiliza Inteligencia Artificial y el modelo psicológico **Big Five** para emparejar marcas con los influencers perfectos, midiendo su afinidad real y no solo sus seguidores.
+**BrandMatch** es una plataforma SaaS B2B móvil que utiliza Inteligencia Artificial y el modelo psicológico **Big Five** para emparejar marcas con los creadores de contenido (influencers) ideales, midiendo su afinidad real de personalidad y valores por encima de métricas superficiales.
 
-Este repositorio contiene el **prototipo funcional de la aplicación móvil** desarrollado en **React Native** con **Expo**, trasladando fielmente el diseño UI/UX creado en Figma.
+Este repositorio contiene el **prototipo funcional de la aplicación móvil** desarrollado en **React Native con Expo Go**, estructurado bajo **Domain-Driven Design (DDD)** y **Atomic Design**, trasladando fielmente el diseño UI/UX creado en **Figma**.
+
+---
+
+## 🎯 Problema del Negocio y Solución
+
+En el marketing de influencers actual, las marcas toman decisiones basadas casi exclusivamente en métricas vanidosas (número de seguidores o likes), las cuales son fácilmente manipulables mediante audiencia falsa. Como resultado:
+
+* **El 60% de las campañas fracasan** por falta de afinidad real entre los valores de la marca y la personalidad del creador.
+* Las empresas desperdician presupuesto y exponen su reputación corporativa al asociarse con perfiles incoherentes.
+* Los equipos de marketing invierten días filtrando perfiles manualmente sin garantías de compatibilidad.
+
+**Propuesta de valor:** BrandMatch automatiza el perfilamiento psicográfico de creadores mediante el modelo **Big Five** (*Apertura, Responsabilidad, Extraversión, Amabilidad y Neuroticismo*), cruza esos rasgos con el "ADN Digital" configurado por la empresa para calcular un porcentaje reactivo de **Match** y genera automáticamente un correo de propuesta comercial (**Pitch**) personalizado con IA.
+
+---
+
+## 🎨 Prototipo Interactivo (Figma)
+
+* **Enlace directo:** [Ver Prototipo Interactivo en Figma](https://www.figma.com/proto/hZZLmnQJIWEa1W4fg9ImRf/BrandMatch-Prototipo?node-id=1-2&p=f&t=LkxIk6SB37UBjoMG-1&scaling=scale-down&content-scaling=responsive&page-id=0%3A1&starting-point-node-id=1%3A2)
+* **Resolución de diseño:** Android Compacto (`412 × 917 px`) con sistema de diseño en modo oscuro (*Dark Mode*) y retícula espacial de `8px`.
 
 ---
 
 ## 📱 Capturas de Pantalla (UI/UX)
 
-*(Aquí puedes subir las fotos de tu app. Si tienes las imágenes en tu PC, arrástralas aquí en VS Code y se crearán los enlaces automáticamente)*
-
-| Pantalla de Bienvenida | Login | Registro |
+| Bienvenida (`Welcome`) | Autenticación (`Login`) | Configuración ADN (`Configuracion`) |
 | :---: | :---: | :---: |
-| ![Welcome](./assets/screenshots/welcome.jpeg) | ![Login](./assets/screenshots/login.jpeg) | ![Registro](./assets/screenshots/registro.jpeg) |
+| ![Welcome](./assets/screenshots/welcome.jpeg) | ![Login](./assets/screenshots/login.jpeg) | ![Configuracion](./assets/screenshots/sliders.jpeg) |
 
-| Configuración ADN (Sliders) | Análisis de Match (Radar) | Pitch IA |
-| :---: | :---: | :---: |
-| ![Sliders](./assets/screenshots/sliders.jpeg) | ![Match](./assets/screenshots/match.jpeg) | ![Pitch](./assets/screenshots/pitch.jpeg) |
-
----
-
-## 🚀 Características Principales
-
-- **Autenticación simulada:** Flujo completo de Login y Registro con estados de carga (simulando latencia de red).
-- **Diseño interactivo:** Uso de la API nativa `Animated` para transiciones suaves, efecto "latido" y escalado en botones al presionar.
-- **Configuración Big Five:** Sliders interactivos que definen la personalidad buscada por la marca.
-- **Reactividad de Estado:** Los valores elegidos en los sliders afectan directamente el porcentaje final del Match.
-- **Data Visualization:** Gráfico de radar (SVG) para mostrar el ADN del influencer.
-- **Glassmorphism UI:** Implementación del efecto de cristal traslúcido en las tarjetas usando `expo-blur`.
+| Análisis de Match (`Match`) | Generador de Pitch IA (`Pitch`) |
+| :---: | :---: |
+| ![Match](./assets/screenshots/match.jpeg) | ![Pitch](./assets/screenshots/pitch.jpeg) |
 
 ---
 
-## 🛠️ Tecnologías y Librerías Utilizadas
+## 🏗️ Metodología y Arquitectura del Proyecto (DDD + Atomic Design)
 
-*   [React Native](https://reactnative.dev/) - Framework principal.
-*   [Expo](https://expo.dev/) - Plataforma de desarrollo.
-*   [React Navigation](https://reactnavigation.org/) - Navegación nativa entre pantallas (Native Stack).
-*   [@react-native-community/slider](https://github.com/callstack/react-native-slider) - Componente de deslizador nativo.
-*   [react-native-svg](https://github.com/software-mansion/react-native-svg) - Para dibujar el gráfico de radar (Big Five).
-*   [expo-blur](https://docs.expo.dev/versions/latest/sdk/blur-view/) - Para el efecto visual de cristal (Glassmorphism).
-
----
-
-## 📂 Arquitectura del Proyecto
-
-El proyecto sigue un diseño **modular y escalable** bajo los principios de Atomic Design:
+El proyecto aplica **Domain-Driven Design (DDD)** para aislar las reglas puras del negocio respecto a la interfaz gráfica, combinado con **Atomic Design** para la reutilización de componentes visuales:
 
 ```text
 PruebaBrandMatch/
 ├── src/
-│   ├── components/     # Componentes reutilizables (CustomButton, RadarChart)
-│   ├── navigation/     # Configuración de rutas y stack (AppNavigator)
-│   ├── screens/        # Pantallas de la app (Welcome, Login, Match, etc.)
-│   └── theme/          # Design System (Colores, fuentes globales)
-├── App.js              # Punto de entrada y contenedores principales
-└── package.json        # Dependencias del proyecto
+│   ├── domain/                 # 1. EL CEREBRO (Lógica pura de negocio, sin React)
+│   │   ├── auth/               # Reglas y entidades de autenticación
+│   │   │   ├── Email.js
+│   │   │   ├── Password.js
+│   │   │   └── AuthRepository.js
+│   │   ├── match/              # Reglas de emparejamiento psicográfico
+│   │   │   ├── Influencer.js
+│   │   │   └── MatchCalculator.js
+│   │   ├── pitch/              # Reglas de estructuración del correo comercial
+│   │   │   └── PitchGenerator.js
+│   │   └── profile/            # Reglas y normalización del perfil de marca
+│   │       └── BrandProfile.js
+│   │
+│   ├── application/            # 2. LOS CASOS DE USO (Orquestadores de flujo)
+│   │   ├── auth/               # loginUser.js
+│   │   ├── match/              # calculateMatch.js
+│   │   ├── pitch/              # generatePitch.js
+│   │   └── profile/            # saveBrandProfile.js
+│   │
+│   ├── infrastructure/         # 3. EL EXTERIOR (APIs simuladas, BD y servicios IA)
+│   │   ├── auth/               # AuthApi.js (Simula backend de login)
+│   │   ├── match/              # InfluencerRepository.js (Simula BD de influencers)
+│   │   └── pitch/              # AiApi.js (Simula conexión con motor LLM)
+│   │
+│   └── presentation/           # 4. LO VISUAL (Capa UI en React Native)
+│       ├── components/         # Átomos y moléculas (CustomButton, RadarChart)
+│       ├── navigation/         # Configuración de rutas (AppNavigator)
+│       ├── screens/            # Pantallas (Welcome, Login, Configuracion, Match, Pitch)
+│       └── theme/              # Tokens del Design System (colors.js)
+│
+├── App.js                      # Punto de entrada principal
+└── package.json                # Dependencias y scripts de Expo
 ```
+
+---
+
+## 🤖 Inteligencias Artificiales y Prompts Empleados
+
+### 1. Herramientas de Inteligencia Artificial Utilizadas
+
+| Herramienta / Modelo | Fase y Rol en el Proyecto | Aporte Técnico |
+| :--- | :--- | :--- |
+| **Gemini (Google)** | Punto de Partida — Prompt Maestro / General | Concepción del modelo de negocio SaaS B2B a partir de datos del mercado (60% de fracaso en campañas), mapeo completo de las 5 pantallas del prototipo y definición de la arquitectura base bajo DDD y Atomic Design. |
+| **DeepSeek** | Desarrollo Técnico — Prompts Principales y Secundarios | Generación del código fuente en React Native con Expo Go, implementación de las 4 capas DDD (`domain`, `application`, `infrastructure`, `presentation`), programación de `MatchCalculator.js` y trazado geométrico del gráfico de radar SVG. |
+| **Claude (Anthropic)** | Arquitectura de Software y Lógica de Dominio | Diseño de las 4 capas DDD (`domain`, `application`, `infrastructure`, `presentation`), desacoplamiento de entidades y formulación del cálculo matemático Big Five en `MatchCalculator.js`. |
+| **OpenAI Codex / GitHub Copilot** | Asistencia de Codificación y UI en VS Code | Maquetación de pantallas en React Native, exportación de tokens cromáticos de Figma a `colors.js` y cálculo trigonométrico de coordenadas para el gráfico de radar en `react-native-svg`. |
+| **Motor LLM (`AiApi.js`)** | IA Integrada en el Producto (Funcionalidad) | Perfilamiento psicográfico Big Five de creadores y redacción dinámica de propuestas comerciales (*Pitch*) adaptadas al estilo comunicativo del influencer. |
+
+### 2. Jerarquía de Prompts Empleados
+
+#### Nivel 1: Prompt Maestro / General — Punto de Partida (`Gemini`)
+> *"Actúa como arquitecto de producto digital y desarrollador móvil senior. A partir de los siguientes datos extraídos del mercado —el 60% de las campañas de influencer marketing fracasan porque las marcas seleccionan creadores solo por seguidores/likes sin evaluar afinidad de valores—, genera la propuesta completa de negocio y la estructura base de una aplicación móvil SaaS B2B llamada BrandMatch desarrollada en React Native con Expo Go. El sistema debe: 1) Analizar los 5 rasgos de personalidad del modelo psicológico Big Five (Apertura, Responsabilidad, Extraversión, Amabilidad y Neuroticismo); 2) Mapear el flujo completo en 5 pantallas de prototipo (Welcome, Login, Configuracion de ADN con sliders, Análisis de Match con gráfico de radar y Generador de Pitch comercial con IA); y 3) Organizar el código bajo Domain-Driven Design (DDD) en 4 capas (`domain`, `application`, `infrastructure`, `presentation`) junto con Atomic Design en modo oscuro (`#0B0F19`, acento cian `#25F4EE` y magenta `#FE2C55`)."*
+
+#### Nivel 2: Prompts Principales y Secundarios de Implementación (`DeepSeek`)
+
+* **Prompt Secundario 1 — Andamiaje de Capas DDD:**
+  > *"Tomando como base la arquitectura DDD de BrandMatch, genera el árbol completo de directorios y los archivos base en JavaScript puro. Crea dentro de `src/domain/` los subdominios `auth` (`Email.js`, `Password.js`, `AuthRepository.js`), `match` (`Influencer.js`, `MatchCalculator.js`), `pitch` (`PitchGenerator.js`) y `profile` (`BrandProfile.js`) sin importar librerías de React. Luego implementa los casos de uso orquestadores en `src/application/` y los adaptadores simulados en `src/infrastructure/`."*
+
+* **Prompt Secundario 2 — Motor Matemático de Emparejamiento Big Five:**
+  > *"Programa en JavaScript puro la clase `MatchCalculator.js`. Debe recibir el perfil de ADN configurado por la marca mediante 5 sliders (Apertura, Responsabilidad, Extraversión, Amabilidad y Neuroticismo en escala de 0 a 100) y compararlo contra el vector Big Five del influencer usando distancia euclidiana normalizada, devolviendo un porcentaje entero de compatibilidad entre 0% y 100% y el rasgo dominante compartido."*
+
+* **Prompt Secundario 3 — Interfaz Dark Mode, Glassmorphism y Radar Chart SVG:**
+  > *"Traslada el prototipo de Figma (`412 × 917 px`) a React Native con Expo Go. Configura los tokens en `src/presentation/theme/colors.js` (`#0B0F19` fondo, `#25F4EE` cian marca, `#FE2C55` magenta influencer). Construye el componente `RadarChart.js` con `react-native-svg` dibujando un pentágono de 5 ejes con dos polígonos superpuestos translúcidos, tarjetas con efecto Glassmorphism usando `expo-blur` y botones táctiles animados con la API `Animated`."*
+
+* **Prompt Secundario 4 — Generador Automatizado de Pitch Comercial:**
+  > *"Implementa el servicio `AiApi.js` y la entidad `PitchGenerator.js`. A partir de los datos del influencer seleccionado, su porcentaje de compatibilidad y sus dos rasgos Big Five más altos, estructura y redacta automáticamente un correo electrónico de propuesta comercial B2B persuasivo, profesional y adaptado al tono comunicativo del creador."*
+
+---
+
+## 🛠️ Stack Tecnológico y Librerías
+
+* **[React Native](https://reactnative.dev/) & [Expo Go](https://expo.dev/):** Desarrollo móvil multiplataforma con actualización en caliente (*Fast Refresh*) y pruebas inmediatas en dispositivos físicos.
+* **[React Navigation (Native Stack)](https://reactnavigation.org/):** Gestión nativa de pilas de navegación entre pantallas (`Welcome`, `Login`, `Configuracion`, `Match`, `Pitch`).
+* **[@react-native-community/slider](https://github.com/callstack/react-native-slider):** Controles deslizantes nativos para calibrar en tiempo real los rasgos de personalidad buscados por la marca.
+* **[react-native-svg](https://github.com/software-mansion/react-native-svg):** Renderizado vectorial del gráfico de radar comparativo de los 5 ejes Big Five.
+* **[expo-blur](https://docs.expo.dev/versions/latest/sdk/blur-view/):** Implementación nativa del efecto translúcido (*Glassmorphism*) en las tarjetas de perfil.
+
+---
 
 ## ⚙️ Cómo ejecutar el proyecto localmente
 
-Si deseas probar este prototipo en tu propia computadora, sigue estos sencillos pasos:
-
 ### Requisitos previos
+* Tener instalado **[Node.js](https://nodejs.org/)** (versión LTS recomendada).
+* Tener instalada la aplicación **Expo Go** en tu dispositivo móvil (Android / iOS) o un emulador configurado en Android Studio.
 
-* Tener instalado [Node.js](https://nodejs.org/) (versión LTS recomendada).
-* Tener instalada la aplicación **Expo Go** en tu celular (disponible en Play Store y App Store) o un emulador de Android (como Android Studio).
-* Contar con Visual Studio Code u otro editor de código.
-
-### Pasos para la instalación
+### Pasos de instalación
 
 1. **Clonar el repositorio:**
-   Abre tu terminal y ejecuta el siguiente comando para descargar el código:
    ```bash
-   git clone https://github.com/TU-USUARIO/BrandMatch-App.git
+   git clone [https://github.com/TU-USUARIO/BrandMatch-App.git](https://github.com/TU-USUARIO/BrandMatch-App.git)
    ```
-   *(Recuerda reemplazar `TU-USUARIO` con tu nombre de usuario real de GitHub).*
+   *(Reemplaza `TU-USUARIO` con tu usuario real de GitHub).*
 
-2. **Acceder a la carpeta del proyecto:**
+2. **Ingresar al directorio del proyecto:**
    ```bash
    cd BrandMatch-App
    ```
 
-3. **Instalar las dependencias:**
-   Descarga todas las librerías necesarias (React Navigation, Slider, Expo Blur, etc.):
+3. **Instalar dependencias:**
    ```bash
    npm install
    ```
@@ -91,17 +151,22 @@ Si deseas probar este prototipo en tu propia computadora, sigue estos sencillos 
    ```bash
    npx expo start
    ```
-   *(Si es la primera vez que lo ejecutas, puedes usar `npx expo start -c` para limpiar la caché y evitar errores).*
+   *(Si es la primera ejecución, puedes usar `npx expo start -c` para limpiar la caché).*
 
-5. **Abrir la aplicación:**
-   * **En un emulador:** Presiona la tecla `a` en la terminal para abrir la app en Android Studio.
-   * **En un dispositivo físico:** Escanea el código QR que aparece en la terminal con la cámara de tu celular (si usas iOS) o desde la app **Expo Go** (si usas Android).
-   * **En el navegador:** Presiona la tecla `w` para abrir la versión web.
+5. **Visualizar la aplicación:**
+   * **En dispositivo físico:** Escanea el código QR desde **Expo Go** (Android) o la cámara (iOS).
+   * **En emulador Android:** Presiona la tecla `a` en la terminal.
 
 ---
 
-## 👨‍💻 Autores
+## 👨‍💻 Integrantes / Autores
 
-**Kevin Amaguaña - Jordan Guaicha - Jefferson Marcaya - Dayana Pilatuña -Erick Pulamarín**
-* **Proyecto:** BrandMatch - Pitch Deck & App Prototype
-* **Área:** Desarrollo Frontend Móvil con React Native.
+* **Kevin Amaguaña**
+* **Jordan Guaicha**
+* **Jefferson Marcalla**
+* **Dayana Pilatuña**
+* **Erick Pulamarín**
+
+**Institución:** Universidad Central del Ecuador — Facultad de Ingeniería y Ciencias Aplicadas (Carrera de Sistemas de Información)  
+**Asignatura:** Programación para Dispositivos Móviles  
+**Docente:** Ing. Diego Noguera
