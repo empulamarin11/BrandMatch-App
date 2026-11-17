@@ -1,33 +1,41 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Clipboard,Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 import CustomButton from '../components/CustomButton';
 
-export default function PitchScreen({ navigation }) {
-  return (
-    <SafeAreaView style={styles.container}>
+export default function PitchScreen({ navigation, route}) {
+  // Recibimos directamente el influencer elegido en MatchScreen (sin datos quemados)
+      const {influencer} = route.params;
+  // Armamos el mensaje usando los datos reales del JSON seleccionado
+  const mensajePitch = `Hola ${influencer.name},\n\nHe estado siguiendo tu contenido y me encanta tu estilo (${influencer.arquetipo}) y cómo conectas con tu comunidad. Creemos que tu perfil encaja perfectamente con nuestra nueva línea premium.\n\n¿Te parece bien agendar una llamada esta semana?\n\nEl Equipo de Marketing.`;
+
+  const copiarAlPortapapeles = () =>{
+    Clipboard.setString(mensajePitch);
+    Alert.alert(
+        'Mensaje copiado exitosamente',
+        `El mensaje para @${influencer.username} ya está en tu portapapeles listo para pegar.`,
+        [{ text: 'Aceptar' }]
+         );
+      };
+      return (
+  <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Pitch Generado</Text>
-        
+
         <View style={styles.card}>
-          <Text style={styles.emailTo}>Para: @alex_acoustic</Text>
-          <Text style={styles.emailBody}>
-            Hola Alex,{"\n\n"}
-            He estado siguiendo tu contenido y me encanta cómo conectas con tu comunidad. Creemos que tu estilo encaja perfectamente con nuestra nueva línea premium.{"\n\n"}
-            ¿Te parece bien agendar una llamada esta semana?{"\n\n"}
-            El Equipo de Marketing.
-          </Text>
+          <Text style={styles.emailTo}>Para: @{influencer.username}</Text>
+          <Text style={styles.emailBody}>{mensajePitch}</Text>
         </View>
 
-        <CustomButton 
-          title="Copiar Mensaje" variant="action" 
-          onPress={() => navigation.navigate('Login')} 
+        <CustomButton
+          title="Copiar Mensaje" variant="action"
+          onPress={copiarAlPortapapeles}
         />
 
-        <CustomButton 
-          title="Cerrar Sesión" variant="action" 
-          onPress={() => navigation.navigate('Welcome')} 
+        <CustomButton
+          title="Cerrar Sesión" variant="action"
+          onPress={() => navigation.navigate('Welcome')}
         />
       </ScrollView>
     </SafeAreaView>
