@@ -20,7 +20,7 @@ En el marketing de influencers actual, las marcas toman decisiones basadas casi 
 
 ## 🎨 Prototipo Interactivo (Figma)
 
-* **Enlace directo:** [Ver Prototipo Interactivo en Figma](https://www.figma.com/proto/hZZLmnQJIWEa1W4fg9ImRf/BrandMatch-Prototipo?node-id=1-2&p=f&t=LkxIk6SB37UBjoMG-1&scaling=scale-down&content-scaling=responsive&page-id=0%3A1&starting-point-node-id=1%3A2)
+* **Enlace directo:** [Ver Prototipo Interactivo en Figma](https://www.figma.com/proto/hZZLmnQJlWEa1W4fg9ImRf/BrandMatch-Prototipo?node-id=1-2&starting-point-node-id=1%3A2&t=7Y00eWz3GUwOEqPF-1)
 * **Resolución de diseño:** Android Compacto (`412 × 917 px`) con sistema de diseño en modo oscuro (*Dark Mode*) y retícula espacial de `8px`.
 
 ---
@@ -37,44 +37,67 @@ En el marketing de influencers actual, las marcas toman decisiones basadas casi 
 
 ---
 
-## 🏗️ Metodología y Arquitectura del Proyecto (DDD + Atomic Design)
+## 🏗️ Metodología y Arquitectura del Proyecto
 
-El proyecto aplica **Domain-Driven Design (DDD)** para aislar las reglas puras del negocio respecto a la interfaz gráfica, combinado con **Atomic Design** para la reutilización de componentes visuales:
+El proyecto implementa una **Arquitectura en Capas basada en Domain-Driven Design (DDD)** —alineada con los principios de *Clean Architecture*—, complementada con **Inyección de Dependencias** para el desacoplamiento de servicios y **Atomic Design** para la construcción modular de la interfaz móvil.
+
+### 1. Capas Arquitectónicas
+
+| Capa | Directorio | Rol Arquitectónico | Componentes Implementados |
+| :--- | :--- | :--- | :--- |
+| **1. Dominio** | `src/domain/` | **El núcleo puro.** Contiene las reglas de negocio, validaciones y cálculos matemáticos sin dependencias de React ni librerías externas. | `Email.js`, `Password.js`, `FullName.js`, `NewPassword.js`, `AuthRepository.js`, `Influencer.js`, `MatchCalculator.js`, `PitchGenerator.js`, `BrandProfile.js` |
+| **2. Aplicación** | `src/application/` | **Orquestadores.** Definen los casos de uso del sistema; reciben datos de la vista, ejecutan reglas del dominio y coordinan la infraestructura. | `loginUser.js`, `registerUser.js`, `calculateMatch.js`, `generatePitch.js`, `saveBrandProfile.js` |
+| **3. Infraestructura** | `src/infrastructure/` | **El exterior.** Implementa los adaptadores técnicos, repositorios de datos y conexión con APIs externas (actualmente simuladas). | `AuthApi.js`, `InfluencerRepository.js`, `AiApi.js` |
+| **4. Presentación** | `src/presentation/` | **Lo visual (UI).** Se encarga exclusivamente de renderizar pantallas, gestionar rutas y capturar eventos táctiles en React Native. | `components/`, `navigation/`, `screens/` (`Welcome`, `Login`, `RegistroScreen`, `Configuracion`, `Match`, `Pitch`), `theme/` |
+
+### 2. Patrones Complementarios
+
+* **Inyección de Dependencias (`src/container.js`):** Actúa como *Composition Root* (raíz de composición), instanciando los servicios de infraestructura (`AuthApi`, `InfluencerRepository`, `AiApi`) e inyectándolos en los casos de uso para evitar acoplamiento directo desde las vistas.
+* **Atomic Design y Design System (`src/presentation/`):** Organiza la UI por jerarquía de reutilización: *Tokens* globales (`theme/colors.js`), *Átomos y Moléculas* (`components/CustomButton`, `RadarChart`), *Páginas* (`screens/`) y navegación nativa (`navigation/AppNavigator`).
+* **Regla de Dependencia hacia Adentro:** Toda la lógica psicográfica (*Big Five*) y las reglas de validación residen aisladas en `src/domain/`, permitiendo sustituir en el futuro las APIs simuladas por un backend real sin alterar la interfaz gráfica.
+
+### 3. Estructura de Directorios
 
 ```text
 PruebaBrandMatch/
+├── assets/
+│   └── screenshots/            # Capturas UI/UX del prototipo (Welcome, Login, Registro, etc.)
 ├── src/
 │   ├── domain/                 # 1. EL CEREBRO (Lógica pura de negocio, sin React)
-│   │   ├── auth/               # Reglas y entidades de autenticación
+│   │   ├── auth/               # Entidades y contratos de autenticación y registro
 │   │   │   ├── Email.js
 │   │   │   ├── Password.js
+│   │   │   ├── FullName.js
+│   │   │   ├── NewPassword.js
 │   │   │   └── AuthRepository.js
-│   │   ├── match/              # Reglas de emparejamiento psicográfico
+│   │   ├── match/              # Reglas de emparejamiento psicográfico Big Five
 │   │   │   ├── Influencer.js
 │   │   │   └── MatchCalculator.js
-│   │   ├── pitch/              # Reglas de estructuración del correo comercial
+│   │   ├── pitch/              # Reglas de estructuración de propuestas comerciales
 │   │   │   └── PitchGenerator.js
-│   │   └── profile/            # Reglas y normalización del perfil de marca
+│   │   └── profile/            # Reglas y normalización del ADN de marca
 │   │       └── BrandProfile.js
 │   │
 │   ├── application/            # 2. LOS CASOS DE USO (Orquestadores de flujo)
-│   │   ├── auth/               # loginUser.js
+│   │   ├── auth/               # loginUser.js, registerUser.js
 │   │   ├── match/              # calculateMatch.js
 │   │   ├── pitch/              # generatePitch.js
 │   │   └── profile/            # saveBrandProfile.js
 │   │
-│   ├── infrastructure/         # 3. EL EXTERIOR (APIs simuladas, BD y servicios IA)
-│   │   ├── auth/               # AuthApi.js (Simula backend de login)
-│   │   ├── match/              # InfluencerRepository.js (Simula BD de influencers)
+│   ├── infrastructure/         # 3. EL EXTERIOR (APIs simuladas y persistencia)
+│   │   ├── auth/               # AuthApi.js (Simula backend de login y registro)
+│   │   ├── match/              # InfluencerRepository.js (Simula BD de creadores)
 │   │   └── pitch/              # AiApi.js (Simula conexión con motor LLM)
 │   │
-│   └── presentation/           # 4. LO VISUAL (Capa UI en React Native)
-│       ├── components/         # Átomos y moléculas (CustomButton, RadarChart)
-│       ├── navigation/         # Configuración de rutas (AppNavigator)
-│       ├── screens/            # Pantallas (Welcome, Login, Configuracion, Match, Pitch)
-│       └── theme/              # Tokens del Design System (colors.js)
+│   ├── presentation/           # 4. LO VISUAL (Capa UI en React Native + Atomic Design)
+│   │   ├── components/         # Átomos y moléculas (CustomButton, RadarChart)
+│   │   ├── navigation/         # AppNavigator (Native Stack)
+│   │   ├── screens/            # Welcome, Login, RegistroScreen, Configuracion, Match, Pitch
+│   │   └── theme/              # colors.js (Tokens del Design System)
+│   │
+│   └── container.js            # Composition Root (Inyección de dependencias)
 │
-├── App.js                      # Punto de entrada principal
+├── App.js                      # Punto de entrada de la aplicación
 └── package.json                # Dependencias y scripts de Expo
 ```
 
