@@ -5,8 +5,10 @@
 import { AuthApi } from './infrastructure/auth/AuthApi';
 import { makeLoginUser } from './application/auth/loginUser';
 import { makeRequestPasswordReset } from './application/auth/requestPasswordReset';
+import { makeRegisterUser } from './application/auth/registerUser';
 
 const authRepository = new AuthApi();
 
 export const loginUser = makeLoginUser(authRepository);
 export const requestPasswordReset = makeRequestPasswordReset(authRepository);
+export const registerUser = makeRegisterUser(authRepository);
