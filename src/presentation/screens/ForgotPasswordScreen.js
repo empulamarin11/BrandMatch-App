@@ -12,31 +12,28 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { requestPasswordReset } from '../../container';
+import { ValidationError } from '../../domain/auth/AuthErrors';
 
 export default function ForgotPasswordScreen({ navigation, route }) {
   const [email, setEmail] = useState(route?.params?.email ?? '');
   const [error, setError] = useState('');
 
-  const handleSubmit = () => {
-    const trimmedEmail = email.trim();
-
-    if (!trimmedEmail) {
-      setError('Email is required.');
-      return;
+  // La validación y el envío los hace el caso de uso
+  // (application/auth/requestPasswordReset.js).
+  const handleSubmit = async () => {
+    setError('');
+    try {
+      await requestPasswordReset({ email });
+      Alert.alert('Password recovery', 'Check your inbox for the reset link.');
+    } catch (err) {
+      if (err instanceof ValidationError) {
+        setError(err.fieldErrors.email);
+      } else {
+        // Hoy el backend no existe: AuthApi lanza NotConfiguredError con un mensaje claro.
+        Alert.alert('Password recovery', err?.message || 'Something went wrong. Please try again.');
+      }
     }
-    if (!EMAIL_REGEX.test(trimmedEmail)) {
-      setError('Enter a valid email address.');
-      return;
-    }
-
-    // Sin backend todavía: no se envía ningún correo ni se simula el envío.
-    // Integrar aquí la llamada real de recuperación cuando exista.
-    Alert.alert(
-      'Password recovery',
-      'Password recovery is not configured yet.',
-    );
   };
 
   return (

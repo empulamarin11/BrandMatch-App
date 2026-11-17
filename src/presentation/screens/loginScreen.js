@@ -14,17 +14,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 import { AppleIcon, GoogleIcon, EyeIcon, EyeOffIcon } from '../components/AuthIcons';
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// Punto de integración de la autenticación.
-// Todavía no existe backend: aquí no se valida ninguna credencial ni se
-// muestra ningún mensaje de éxito. Cuando exista el servicio real, sustituir
-// el cuerpo por la llamada (p. ej. `await api.login(email, password)`) y
-// lanzar un Error con el mensaje adecuado si las credenciales no son válidas.
-async function signIn(_email, _password) {
-  return;
-}
+import { loginUser } from '../../container';
+import { ValidationError } from '../../domain/auth/AuthErrors';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -33,34 +24,23 @@ export default function LoginScreen({ navigation }) {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const validate = () => {
-    const nextErrors = {};
-    const trimmedEmail = email.trim();
-
-    if (!trimmedEmail) {
-      nextErrors.email = 'Email is required.';
-    } else if (!EMAIL_REGEX.test(trimmedEmail)) {
-      nextErrors.email = 'Enter a valid email address.';
-    }
-
-    if (!password) {
-      nextErrors.password = 'Password is required.';
-    }
-
-    setErrors(nextErrors);
-    return Object.keys(nextErrors).length === 0;
-  };
-
+  // La pantalla solo recoge datos y muestra resultados: la validación y la
+  // autenticación las hace el caso de uso (application/auth/loginUser.js).
   const handleLogin = async () => {
-    if (isLoading || !validate()) return;
+    if (isLoading) return;
 
+    setErrors({});
     setIsLoading(true);
     try {
-      await signIn(email.trim(), password);
+      await loginUser({ email, password });
       // Flujo existente de la app: tras iniciar sesión se pasa a Configuración.
       navigation.navigate('Configuracion');
     } catch (error) {
-      setErrors({ form: error?.message || 'Unable to log in. Please try again.' });
+      if (error instanceof ValidationError) {
+        setErrors(error.fieldErrors);
+      } else {
+        setErrors({ form: error?.message || 'Unable to log in. Please try again.' });
+      }
     } finally {
       setIsLoading(false);
     }
