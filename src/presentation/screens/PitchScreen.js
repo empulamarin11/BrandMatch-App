@@ -44,7 +44,7 @@ export default function PitchScreen({ navigation, route}) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
-  content: { paddingHorizontal: 24, paddingTop: 40 },
+  content: { paddingHorizontal: 24, paddingTop: 40, width:'100%', maxWidt: 600, alignSel: 'center', },
   title: { fontSize: 32, fontWeight: '900', color: COLORS.textLight, marginBottom: 20 },
   card: { backgroundColor: COLORS.card, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', marginBottom: 20 },
   emailTo: { color: COLORS.primary, fontSize: 14, fontWeight: 'bold', marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.1)', paddingBottom: 15 },

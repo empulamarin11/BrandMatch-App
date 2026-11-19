@@ -45,7 +45,8 @@ export default function ConfiguracionScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} >
+      
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Configura tu ADN</Text>
         <Text style={styles.subtitle}>Desliza para definir la personalidad de tu marca:</Text>
@@ -61,6 +62,7 @@ export default function ConfiguracionScreen({ navigation }) {
               <Text style={styles.sliderValue}>{creatividad}%</Text>
             </View>
             <Slider style={styles.slider} minimumValue={0} maximumValue={100} step={1} value={creatividad} onValueChange={setCreatividad} minimumTrackTintColor={COLORS.primary} maximumTrackTintColor={COLORS.card} thumbTintColor={COLORS.action} />
+            
           </View>
 
           {/* Slider 2: Seriedad */}
@@ -163,7 +165,7 @@ export default function ConfiguracionScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
-  scrollContent: { paddingHorizontal: 20, paddingTop: 30, paddingBottom: 40 },
+  scrollContent: { paddingHorizontal: 20, paddingTop: 30, paddingBottom: 40,width:'100%', maxWidt: 600, alignSel: 'center', },
   title: { fontSize: 28, fontWeight: '900', color: COLORS.textLight, marginBottom: 5, textAlign: 'center' },
   subtitle: { fontSize: 14, color: COLORS.textMuted, marginBottom: 20, textAlign: 'center' },
 

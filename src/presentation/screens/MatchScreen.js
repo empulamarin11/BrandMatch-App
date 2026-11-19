@@ -70,7 +70,7 @@ export default function MatchScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
-  content: { paddingHorizontal: 20, paddingTop: 30, paddingBottom: 40 },
+  content: { paddingHorizontal: 20, paddingTop: 30, paddingBottom: 40, width:'100%', maxWidt: 600, alignSel: 'center', },
   headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.textLight, textAlign: 'center', marginBottom: 4 },
   headerSubtitle: { fontSize: 14, color: COLORS.textMuted, textAlign: 'center', marginBottom: 20 },
   backButton: { backgroundColor: COLORS.action, paddingVertical: 10, paddingHorizontal: 16, borderRadius: 20, alignSelf: 'flex-start', marginBottom: 20 },
