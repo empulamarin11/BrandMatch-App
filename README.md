@@ -1,8 +1,19 @@
 # BrandMatch 🤝 - Plataforma SaaS B2B de Emparejamiento Marca–Creador
 
-**BrandMatch** es una aplicación móvil SaaS B2B que utiliza Inteligencia Artificial y el modelo psicológico **Big Five (OCEAN)** para emparejar marcas con creadores de contenido ideales, evaluando la afinidad real de personalidad y valores por encima de métricas superficiales.
+**BrandMatch** es una aplicación móvil SaaS B2B que utiliza Inteligencia Artificial y el modelo psicológico **Big Five (OCEAN)** para emparejar marcas con creadores de contenido ideales, midiendo la afinidad real de personalidad y valores por encima de métricas superficiales.
 
-El proyecto está desarrollado en **React Native con Expo Go** bajo los principios estratégicos y tácticos de **Domain-Driven Design (DDD)**, **Inyección de Dependencias** y **Atomic Design**, trasladando el sistema de diseño construido en **Figma** y alimentándose del pipeline de extracción y análisis psicométrico **PractScrapyTtk**.
+El proyecto está desarrollado en **React Native con Expo Go** bajo una **Arquitectura en Capas orientada al Dominio (DDD)** con principios de **Clean Architecture**, **Inyección de Dependencias** y **Atomic Design**, trasladando el sistema de diseño construido en **Figma** y alimentándose del pipeline de extracción y análisis psicométrico **PractScrapyTtk**.
+
+---
+
+## 🔗 Enlaces Oficiales y Entregables del Proyecto
+
+| Recurso / Entregable | Enlace Directo | Descripción |
+| :--- | :--- | :--- |
+| **🎨 Prototipo Interactivo (Figma)** | [Ver Prototipo en Figma](https://www.figma.com/proto/hZZLmnQJlWEa1W4fg9ImRf/BrandMatch-Prototipo?node-id=1-2&starting-point-node-id=1%3A2&t=7Y00eWz3GUwOEqPF-1) | Diseño UI/UX completo en Dark Mode (`8px` grid), Atomic Design y vistas responsivas (`9:16`, `16:9`, `1:1`). |
+| **📄 Informe Técnico Final** | [Ver Informe Final (`Reporte_Final_BrandMatch.pdf`)](./docs/Reporte_Final_BrandMatch.pdf) | Documento académico completo con fundamentos DDD, arquitectura, pruebas y trazabilidad *(actualizar enlace si se aloja en Drive/OneDrive)*. |
+| **📊 Presentación Ejecutiva (Diapositivas)** | [Ver Diapositivas de Sustentación](https://docs.google.com/presentation/d/1fKVn0Se_fRhxd-1JM1vqYXem5NBWvXEQ/edit?usp=sharing&ouid=115547854198529635935&rtpof=true&sd=true) | Presentación del problema, origen de datos, arquitectura `src/` y demostración responsiva *(reemplazar con el enlace final de la presentación)*. |
+| **🕷️ Repositorio del Scraper (`PractScrapyTtk`)** | [Ir al repositorio](https://github.com/empulamarin11/PractScrapyTtk.git) | Módulo Extractor TikTok + Groq LLM | Scraper en Python/Playwright que extrae métricas públicas y estima perfiles Big Five. |
 
 ---
 
@@ -11,9 +22,9 @@ El proyecto está desarrollado en **React Native con Expo Go** bajo los principi
 1. [Presentación, Objetivos y Alcance](#-1-presentación-objetivos-y-alcance)
 2. [Problema del Negocio y Pipeline de Datos](#-2-problema-del-negocio-y-pipeline-de-datos)
 3. [Modelo de Negocio](#-3-modelo-de-negocio)
-4. [Prototipo en Figma, Atomic Design y Responsividad](#-4-prototipo-en-figma-atomic-design-y-responsividad)
-5. [Metodología: Domain-Driven Design (DDD)](#-5-metodología-domain-driven-design-ddd)
-6. [Arquitectura y Estructura del Repositorio](#-6-arquitectura-y-estructura-del-repositorio)
+4. [Prototipo en Figma, Capturas de Pantalla y Responsividad](#-4-prototipo-en-figma-capturas-de-pantalla-y-responsividad)
+5. [Arquitectura de Software y Metodología DDD](#-5-arquitectura-de-software-y-metodología-ddd)
+6. [Estructura Real del Repositorio (`src/`)](#-6-estructura-real-del-repositorio-src)
 7. [Estado Real del Proyecto](#-7-estado-real-del-proyecto)
 8. [Inteligencia Artificial y Prompts Empleados](#-8-inteligencia-artificial-y-prompts-empleados)
 9. [Limitaciones Técnicas y Consideraciones Éticas](#-9-limitaciones-técnicas-y-consideraciones-éticas)
@@ -31,7 +42,7 @@ Desarrollar un prototipo funcional de aplicación móvil bajo **Domain-Driven De
 - Estructurar el código móvil en cuatro capas desacopladas (`domain`, `application`, `infrastructure`, `presentation`) con inversión de dependencias mediante un *Composition Root* (`src/container.js`).
 - Integrar perfiles psicográficos obtenidos desde el scraper de TikTok y análisis con LLM (**Groq**) en el dominio de emparejamiento (`src/domain/match/`).
 - Implementar reglas de validación inmutables (*Objetos de Valor*) para el flujo de autenticación y registro de marcas.
-- Adaptar la interfaz móvil en modo oscuro a relaciones de aspecto **`9:16`**, **`16:9`** y **`1:1`**, manteniendo legibilidad y proporción en distintas densidades de pantalla.
+- Adaptar la interfaz móvil en modo oscuro a relaciones de aspecto **`9:16`**, **`16:9`** y **`1:1`**, manteniendo legibilidad y proporción en distintas resoluciones y densidades de píxeles.
 
 ### Delimitación del Alcance
 
@@ -81,12 +92,27 @@ La información de los creadores que alimenta `src/domain/match/Influencer.js` p
 
 ---
 
-## 🎨 4. Prototipo en Figma, Atomic Design y Responsividad
+## 🎨 4. Prototipo en Figma, Capturas de Pantalla y Responsividad
 
-- **Prototipo Interactivo en Figma:** [Ver Prototipo en Figma](https://www.figma.com/proto/hZZLmnQJlWEa1W4fg9ImRf/BrandMatch-Prototipo?node-id=1-2&starting-point-node-id=1%3A2&t=7Y00eWz3GUwOEqPF-1)
-- **Sistema Visual:** Modo oscuro (`#0B0F19`), acento cian (`#25F4EE`), acción rosa (`#FE2C55`), tipografía **Inter** y retícula espacial de `8px`.
+### 4.1 Capturas de la Aplicación Móvil (Expo Go — Formato `9:16`)
 
-### Mapeo de Pantallas, Atomic Design y Contextos DDD
+| Bienvenida (`Welcome`) | Autenticación (`Login`) | Registrarse (`Registro`) |
+| :---: | :---: | :---: |
+| ![Welcome](./assets/screenshots/welcome.jpeg) | ![Login](./assets/screenshots/login.jpeg) | ![Registro](./assets/screenshots/registro.jpeg) |
+
+| Configuración ADN (`Configuracion`) | Análisis de Match (`Match`) | Generador de Pitch (`Pitch`) |
+| :---: | :---: | :---: |
+| ![Configuracion](./assets/screenshots/sliders.jpeg) | ![Match](./assets/screenshots/match.jpeg) | ![Pitch](./assets/screenshots/pitch.jpeg) |
+
+### 4.2 Evidencias del Prototipo en Figma y Pruebas Responsivas (`16:9` y `1:1`)
+
+| Sistema Atómico en Figma (Atomic Design) | Prueba en Formato `16:9` (Horizontal) | Prueba en Formato `1:1` (Cuadrado / Split) |
+| :---: | :---: | :---: |
+| ![Figma Atomic Design](./assets/screenshots/figma_atomic.png) | ![Vista 16:9](./assets/screenshots/responsive_16_9.png) | ![Vista 1:1](./assets/screenshots/responsive_1_1.png) |
+
+*(Nota: Guardar las capturas del lienzo de Figma y de las pruebas en orientación horizontal/cuadrada en `assets/screenshots/` con esos nombres para su visualización automática).*
+
+### 4.3 Mapeo de Pantallas, Atomic Design y Contextos DDD
 
 | # | Pantalla | Acción del Usuario | Nivel Atomic Design / Componentes | Contexto DDD Asociado |
 | :---: | :--- | :--- | :--- | :--- |
@@ -98,20 +124,48 @@ La información de los creadores que alimenta `src/domain/match/Influencer.js` p
 | 6 | `MatchScreen` | Evalúa el porcentaje de afinidad y el pentágono Big Five. | Organismo (`RadarChart` SVG + Tarjetas métricas + `CustomButton`). | Emparejamiento (`match`) |
 | 7 | `PitchScreen` | Revisa y copia el correo personalizado de colaboración. | Página + Tarjeta de propuesta + `CustomButton` + `Clipboard`. | Emparejamiento (`match`) |
 
-### Adaptación a Relaciones de Aspecto (`9:16`, `16:9` y `1:1`) y Densidad de Píxeles
+### 4.4 Adaptación a Relaciones de Aspecto (`9:16`, `16:9` y `1:1`) y Densidad de Píxeles
 
 | Variable de Pantalla | Implementación Técnica en React Native |
 | :--- | :--- |
 | **Relación `9:16` (Vertical)** | Estructura vertical adaptable con `SafeAreaView` y `ScrollView` que respeta barras de estado y gestos del sistema. |
-| **Relación `16:9` (Horizontal)** | Hook `useWindowDimensions()` para compactar espaciados verticales en `WelcomeScreen` (evitando recortes del botón *Start*) y contenedores centrados (`maxWidth: 480` en autenticación y `maxWidth: 600` en pantallas principales) para evitar deformación horizontal. |
+| **Relación `16:9` (Horizontal)** | Hook `useWindowDimensions()` para compactar espaciados verticales en `WelcomeScreen` (evitando recortes del botón *Start*) y contenedores centrados (`maxWidth: 480` en autenticación y `maxWidth: 600` en pantallas principales) para evitar estiramiento horizontal. |
 | **Relación `1:1` (Cuadrado)** | Dimensionamiento dinámico del gráfico de radar mediante `Math.min(width, height)` para que el pentágono SVG y sus 5 etiquetas se reescalen sin salirse de su tarjeta en ventanas cuadradas o pantalla dividida. |
-| **Resolución y Densidad (`dp`)** | Todas las dimensiones y textos emplean píxeles independientes de densidad (`dp`) escalados automáticamente según el `PixelRatio` del dispositivo, mientras que `RadarChart` y `AuthIcons` son gráficos vectoriales (`react-native-svg`) libres de pixelación. |
+| **Resolución y Densidad (`dp`)** | Todas las dimensiones y tipografías emplean **píxeles independientes de densidad (`dp`)** escalados automáticamente según el `PixelRatio` del dispositivo (`mdpi`, `xhdpi`, `xxhdpi`), mientras que `RadarChart` y `AuthIcons` son gráficos vectoriales (`react-native-svg`) libres de pixelación. |
 
 ---
 
-## 🏗️ 5. Metodología: Domain-Driven Design (DDD)
+## 🏗️ 5. Arquitectura de Software y Metodología DDD
 
-### 5.1 Diseño Estratégico
+### 5.1 Arquitectura Implementada: Arquitectura en Capas (Layered Architecture)
+
+El frontend móvil de **BrandMatch** implementa una **Arquitectura en Capas (*Layered Architecture*)** guiada por **Domain-Driven Design (DDD)** y conectada mediante **Inyección de Dependencias** (`src/container.js`).
+
+#### ¿Por qué es Arquitectura en Capas y no otro patrón?
+- **No es Microservicios:** Toda la aplicación móvil se compila y ejecuta como una sola unidad dentro del dispositivo (Expo Go), sin múltiples servidores independientes comunicándose por red.
+- **Diferencia frente a Hexagonal:** Siguiendo el criterio definido por el equipo, se optó por una **Arquitectura en Capas** tradicional y limpia porque se adapta de forma directa a las 4 carpetas principales dentro de `src/`, facilitando la lectura y el mantenimiento por módulos.
+- **¿Por qué sí es en Capas? (Organización desde `src/`):** El código divide el sistema en cuatro niveles jerárquicos donde cada carpeta cumple una única responsabilidad y respeta la **regla de dependencia hacia adentro** (`Presentation → Application → Domain`):
+
+| Nivel / Capa | Carpeta en `src/` | Responsabilidad en el Sistema |
+| :--- | :--- | :--- |
+| **1. Presentación** | `src/presentation/` | Renderiza las 7 pantallas en React Native, componentes atómicos (`CustomButton`, `RadarChart`), estilos (`Theme/`) y navegación (`AppNavigator.js`). No realiza cálculos de negocio. |
+| **2. Aplicación** | `src/application/` | Contiene los casos de uso (`loginUser.js`, `registerUser.js`, `calculateMatch.js`) que reciben las acciones de la interfaz y coordinan la ejecución del dominio. |
+| **3. Dominio** | `src/domain/` | **El núcleo puro.** Aloja las reglas de validación (`Email`, `Password`, `FullName`, `NewPassword`) y la fórmula matemática Big Five (`MatchCalculator.js`) en **JavaScript puro**, sin importar nada de React Native ni Expo. |
+| **4. Infraestructura** | `src/infrastructure/` | Gestiona el acceso a datos y servicios externos (`InfluencerRepository.js` y `AuthApi.js`). Permite conectar una API real en el futuro sin modificar las pantallas ni el dominio. |
+
+```text
+[ Presentation (Screens / UI) ] ──▶ [ Application (Casos de Uso) ] ──▶ [ Domain (Reglas Puras) ]
+                                            ▲                                   ▲
+                                            │ (Inyección en container.js)       │ (Implementa contrato)
+                                    [ Infrastructure (AuthApi / InfluencerRepository) ]
+```
+
+**Ventaja clave:** Al mantener `src/domain/` completamente aislado de React Native y conectar `src/infrastructure/` mediante `src/container.js`, cualquier cambio en la interfaz gráfica o migración hacia un servidor backend real se realiza sin alterar la lógica principal del negocio.
+```
+
+---
+
+### 5.2 Diseño Estratégico (DDD)
 
 #### Dominio y Actores
 - **Dominio:** Emparejamiento inteligente entre marcas y creadores de contenido de TikTok basado en afinidad psicológica Big Five.
@@ -126,7 +180,7 @@ La información de los creadores que alimenta `src/domain/match/Influencer.js` p
 | **Creator Profiling (`PractScrapyTtk`)** | **De soporte** | Abastece al sistema con métricas públicas, arquetipos y puntajes Big Five verificados. |
 | **Extracción TikTok / Proveedor LLM** | **Genérico** | Componentes intercambiables (Playwright, Groq) aislados del núcleo matemático de la app. |
 
-#### Contextos Acotados y Relaciones
+#### Contextos Acotados
 
 | Contexto Acotado | Responsabilidad (Qué hace) | Fuera de Responsabilidad (Qué NO hace) |
 | :--- | :--- | :--- |
@@ -148,10 +202,7 @@ La información de los creadores que alimenta `src/domain/match/Influencer.js` p
 
 ---
 
-### 5.2 Diseño Táctico
-
-#### Regla de Dependencia
-Las dependencias apuntan estrictamente hacia el interior (`Presentation → Application → Domain`). La capa `src/domain/` está escrita en JavaScript puro y **no importa ni depende de React Native, Expo ni librerías de UI**.
+### 5.3 Diseño Táctico e Invariantes del Dominio
 
 #### Bloques Tácticos, Contratos y Adaptadores
 
@@ -180,12 +231,14 @@ Las dependencias apuntan estrictamente hacia el interior (`Presentation → Appl
 
 ---
 
-## 📂 6. Arquitectura y Estructura del Repositorio
+## 📂 6. Estructura Real del Repositorio (`src/`)
 
 ```text
 PruebaBrandMatch/
 ├── assets/
-│   └── screenshots/                # Capturas UI/UX del prototipo
+│   └── screenshots/                # Capturas UI/UX de la app y del prototipo Figma
+├── docs/
+│   └── Reporte_Final_BrandMatch.pdf # Informe técnico institucional
 ├── src/
 │   ├── domain/                     # 1. DOMINIO (Reglas puras e invariantes, sin React)
 │   │   ├── auth/
@@ -266,19 +319,24 @@ PruebaBrandMatch/
 | Herramienta / Modelo | Ámbito | Rol Técnico en el Proyecto |
 | :--- | :--- | :--- |
 | **Groq LLM (`PractScrapyTtk`)** | **Dentro del producto** | Procesa biografías, descripciones de videos y emojis extraídos de TikTok para puntuar los rasgos Big Five (`0–100`) y clasificar el arquetipo del creador. |
-| **Gemini (Google)** | **Durante el desarrollo** | Prompt maestro de concepción del producto SaaS B2B, flujo de pantallas, arquitectura DDD y adaptación responsiva (`9:16`, `16:9`, `1:1`). |
+| **Gemini (Google)** | **Durante el desarrollo** | Prompt maestro de concepción del producto SaaS B2B, flujo de pantallas, arquitectura DDD en capas y adaptación responsiva (`9:16`, `16:9`, `1:1`). |
 | **Claude (Anthropic)** | **Durante el desarrollo** | Diseño táctico del subdominio `auth`, objetos de valor inmutables (`Email`, `NewPassword`), manejo de errores y *Composition Root* (`src/container.js`). |
 | **DeepSeek** | **Durante el desarrollo** | Implementación de pantallas interactivas (`ConfiguracionScreen`, `MatchScreen`, `PitchScreen`), `MatchCalculator.js` y geometría SVG de `RadarChart.js`. |
 | **OpenAI Codex / GitHub Copilot** | **Durante el desarrollo** | Asistencia en VS Code para iconos vectoriales (`AuthIcons.js`), animaciones nativas (`Animated`) y tokens visuales en `colors.js`. |
 
-### 8.2 Prompts Principales Utilizados
+### 8.2 Jerarquía de Prompts Empleados
 
-1. **Prompt Maestro de Arquitectura y Producto (`Gemini`):**
-   > *"Actúa como arquitecto de producto digital y desarrollador móvil senior. A partir del problema de mercado donde el 60% de las campañas de influencer marketing fracasan por falta de afinidad de valores, diseña BrandMatch en React Native con Expo Go bajo Domain-Driven Design (DDD) en 4 capas (`domain`, `application`, `infrastructure`, `presentation`) y Atomic Design en modo oscuro (`#0B0F19`, `#25F4EE`, `#FE2C55`), evaluando los 5 rasgos del modelo Big Five."*
-2. **Prompt de Dominio de Autenticación e Inyección de Dependencias (`Claude`):**
-   > *"Implementa bajo DDD el subdominio `auth` en JavaScript puro. Crea objetos de valor inmutables (`Email`, `Password`, `FullName`, `NewPassword`), errores tipados (`ValidationError`, `NotConfiguredError`), el contrato `AuthRepository`, el adaptador `AuthApi` y los casos de uso conectados mediante `src/container.js`."*
-3. **Prompt de Sliders, Modal y Gráfico Radar SVG (`DeepSeek`):**
-   > *"Desarrolla `ConfiguracionScreen.js`, `MatchScreen.js` y `RadarChart.js` en React Native con Expo Go. Usa `@react-native-community/slider` para calibrar 5 rasgos de marca, un `Modal` con `FlatList` alimentado por `getInfluencers()` y `react-native-svg` con `useWindowDimensions()` para renderizar el pentágono Big Five adaptable a `9:16`, `16:9` y `1:1`."*
+1. **Nivel 1 — Prompt Maestro de Arquitectura y Producto (`Gemini`):**
+   > *"Actúa como arquitecto de producto digital y desarrollador móvil senior. A partir de los datos extraídos del mercado —el 60% de las campañas de influencer marketing fracasan porque las marcas seleccionan creadores solo por seguidores/likes sin evaluar afinidad de valores—, genera la propuesta completa de negocio y la estructura base de una aplicación móvil SaaS B2B llamada BrandMatch desarrollada en React Native con Expo Go. El sistema debe: 1) Analizar los 5 rasgos de personalidad del modelo psicológico Big Five (Apertura, Responsabilidad, Extraversión, Amabilidad y Neuroticismo); 2) Mapear el flujo completo en 7 pantallas (Welcome, Login, Registro, Recuperar Contraseña, Configuración de ADN con sliders, Análisis de Match con gráfico de radar y Generador de Pitch); y 3) Organizar el código bajo Domain-Driven Design (DDD) en 4 capas (`domain`, `application`, `infrastructure`, `presentation`) junto con Atomic Design en modo oscuro (`#0B0F19`, acento cian `#25F4EE` y magenta `#FE2C55`)."*
+
+2. **Nivel 2 — Andamiaje de Dominio e Inyección de Dependencias (`Claude`):**
+   > *"Implementa bajo DDD el subdominio `auth` en JavaScript puro sin importar librerías de React. Crea objetos de valor inmutables (`Email`, `Password`, `FullName`, `NewPassword`) con validación estática, errores tipados (`ValidationError`, `NotConfiguredError`), el contrato `AuthRepository`, el adaptador `AuthApi` y los casos de uso (`makeLoginUser`, `makeRegisterUser`, `makeRequestPasswordReset`) conectados mediante un Composition Root en `src/container.js`."*
+
+3. **Nivel 3 — Motor Matemático Big Five, Sliders y Gráfico Radar SVG (`DeepSeek`):**
+   > *"Desarrolla `MatchCalculator.js`, `ConfiguracionScreen.js` y `MatchScreen.js` en React Native con Expo Go. Usa `@react-native-community/slider` para calibrar los 5 rasgos de marca, un `Modal` con `FlatList` alimentado por `getInfluencers()` y `react-native-svg` con `useWindowDimensions()` para dibujar el pentágono Big Five en `RadarChart.js` adaptable a relaciones de aspecto `9:16`, `16:9` y `1:1` sin recortes ni desbordamientos."*
+
+4. **Nivel 4 — Generador de Pitch Comercial y Microinteracciones (`DeepSeek` / `Codex`):**
+   > *"Implementa `PitchScreen.js` y el átomo reutilizable `CustomButton.js` con animaciones nativas (`Animated.spring` con `useNativeDriver: true`). En `PitchScreen`, recibe el perfil del creador seleccionado, redacta dinámicamente la propuesta comercial B2B personalizada con su nombre y arquetipo comunicativo y permite copiarla al portapapeles con `Clipboard.setString`."*
 
 ---
 
@@ -304,13 +362,13 @@ PruebaBrandMatch/
 
 ### Asignación de Roles del Equipo
 
-| Integrante | Rol Principal | Responsabilidades y Módulos |
+| Integrante | Rol Principal | Responsabilidades y Entregables Técnicos |
 | :--- | :--- | :--- |
-| **Erick Pulamarín** | Arquitectura DDD, Core Match y Pipeline Big Five | Estructura en 4 capas DDD, `MatchCalculator.js`, `InfluencerRepository.js`, `ConfiguracionScreen.js`, `MatchScreen.js`, `RadarChart.js` y extracción TikTok/Groq. |
-| **Kevin Amaguaña** | Dominio de Autenticación e Inyección de Dependencias | Subdominio `domain/auth` (`Email`, `Password`, `FullName`, `NewPassword`), `AuthErrors.js`, `src/container.js`, `loginScreen.js` y `ForgotPasswordScreen.js`. |
-| **Jordan Guaicha** | Registro de Usuarios y Enrutamiento | Caso de uso `registerUser.js`, pantalla `RegistroScreen.js`, manejo de errores por campo y navegación en `AppNavigator.js`. |
-| **Jefferson Marcalla** | Módulo Pitch, Componentes UI y Responsividad | Pantalla `PitchScreen.js`, átomo animado `CustomButton.js`, iconos `AuthIcons.js` y pruebas de adaptación en `9:16`, `16:9` y `1:1`. |
-| **Dayana Pilatuña** | Diseño UI/UX en Figma, Design System y Documentación | Prototipo interactivo en Figma (Atomic Design), tokens `colors.js`, manuales por módulo (`README_*.md`) y documentación académica. |
+| **Erick Pulamarín** | Líder de Proyecto, Ingeniería de Datos & Diseño Base (*Product Owner*) | Concepción de la propuesta de negocio SaaS B2B; desarrollo del pipeline de extracción de datos en TikTok y análisis psicométrico Big Five mediante Groq LLM serializado en formato JSON para su consumo en la app; programación de la primera versión funcional completa del frontend; diseño inicial del prototipo en Figma, documentación base y coordinación de la colaboración y flujo de trabajo del equipo. |
+| **Jefferson Marcalla** | Arquitectura DDD & Módulo de Autenticación | Reestructuración y organización integral del proyecto hacia una **Arquitectura en Capas** guiada por **Domain-Driven Design (DDD)** (`domain`, `application`, `infrastructure`, `presentation` y `src/container.js`); implementación del flujo de acceso (`loginScreen.js`, `ForgotPasswordScreen.js`), objetos de valor y validaciones puras (`Email.js`, `Password.js`, `AuthErrors.js`), además de auditoría y correcciones técnicas en el `README.md`. |
+| **Kevin Amaguaña** | Módulo de Registro, Enrutamiento & Documentación Principal | Implementación del flujo de registro de marcas (`RegistroScreen.js`), caso de uso `registerUser.js` e invariantes de dominio (`FullName.js`, `NewPassword.js`); integración y pruebas de navegación en `AppNavigator.js`, validación de estados de error en formularios y edición estructurada del `README.md` principal del repositorio. |
+| **Jordan Guaicha** | Experiencia de Bienvenida, Animaciones & Diseño Adaptativo | Desarrollo de la interfaz de entrada (`WelcomeScreen.js`) con microinteracciones fluidas a 60 FPS mediante la API nativa `Animated` (`useNativeDriver: true`); ingeniería de adaptación responsiva multi-formato para relaciones de aspecto **`9:16`**, **`16:9`** y **`1:1`** utilizando `useWindowDimensions()`, gestión de densidad de píxeles (`dp`) y contenedores flexibles libres de recortes en cualquier resolución. |
+| **Dayana Pilatuña** | Módulo Pitch B2B, Sistema Tipográfico & Documentación Final | Desarrollo del generador dinámico de propuestas comerciales (`PitchScreen.js`) con personalización por arquetipo y copiado al portapapeles; integración global de la familia tipográfica **Inter** (`@expo-google-fonts/inter` y `expo-font`) en `App.js` y tokens del *Design System* para garantizar fidelidad estética con Figma; redacción de manuales técnicos y consolidación del informe académico final. |
 
 ---
 
