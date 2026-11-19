@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Alert,
   StyleSheet,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
@@ -18,14 +19,16 @@ import { loginUser } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
 
 export default function LoginScreen({ navigation }) {
+  const { height } = useWindowDimensions();
+  const compact = height < 520; // 16:9 horizontal o 1:1 compacto
+  const styles = useMemo(() => createStyles(compact), [compact]);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  // La pantalla solo recoge datos y muestra resultados: la validación y la
-  // autenticación las hace el caso de uso (application/auth/loginUser.js).
   const handleLogin = async () => {
     if (isLoading) return;
 
@@ -33,7 +36,6 @@ export default function LoginScreen({ navigation }) {
     setIsLoading(true);
     try {
       await loginUser({ email, password });
-      // Flujo existente de la app: tras iniciar sesión se pasa a Configuración.
       navigation.navigate('Configuracion');
     } catch (error) {
       if (error instanceof ValidationError) {
@@ -46,23 +48,22 @@ export default function LoginScreen({ navigation }) {
     }
   };
 
-  // Login social: no hay integración OAuth configurada en el proyecto.
-  // No se simula ningún acceso; se informa al usuario.
   const handleSocialLogin = (provider) => {
-    Alert.alert(
-      `${provider} login`,
-      `${provider} sign-in is not configured yet.`,
-    );
+    Alert.alert(`${provider} login`, `${provider} sign-in is not configured yet.`);
   };
 
   const handleEmailChange = (value) => {
     setEmail(value);
-    if (errors.email || errors.form) setErrors((prev) => ({ ...prev, email: undefined, form: undefined }));
+    if (errors.email || errors.form) {
+      setErrors((prev) => ({ ...prev, email: undefined, form: undefined }));
+    }
   };
 
   const handlePasswordChange = (value) => {
     setPassword(value);
-    if (errors.password || errors.form) setErrors((prev) => ({ ...prev, password: undefined, form: undefined }));
+    if (errors.password || errors.form) {
+      setErrors((prev) => ({ ...prev, password: undefined, form: undefined }));
+    }
   };
 
   return (
@@ -77,11 +78,10 @@ export default function LoginScreen({ navigation }) {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.content}>
-            {/* 1-2. Encabezado */}
             <Text style={styles.title}>BrandMatch</Text>
             <Text style={styles.subtitle}>Access your analytics workspace</Text>
 
-            {/* 3-4. Email */}
+            {/* Email */}
             <Text style={styles.label}>Email</Text>
             <TextInput
               style={[styles.input, errors.email && styles.inputError]}
@@ -99,7 +99,7 @@ export default function LoginScreen({ navigation }) {
             />
             {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
 
-            {/* 5-6. Password */}
+            {/* Password */}
             <Text style={[styles.label, styles.labelSpacing]}>Password</Text>
             <View style={[styles.input, styles.passwordWrapper, errors.password && styles.inputError]}>
               <TextInput
@@ -129,7 +129,7 @@ export default function LoginScreen({ navigation }) {
             </View>
             {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
 
-            {/* 7. Forgot Password */}
+            {/* Forgot Password */}
             <Pressable
               onPress={() => navigation.navigate('RecuperarPassword', { email: email.trim() })}
               hitSlop={8}
@@ -141,7 +141,7 @@ export default function LoginScreen({ navigation }) {
 
             {errors.form ? <Text style={[styles.errorText, styles.formError]}>{errors.form}</Text> : null}
 
-            {/* 8. Botón Login */}
+            {/* Botón Login */}
             <Pressable
               onPress={handleLogin}
               disabled={isLoading}
@@ -156,14 +156,14 @@ export default function LoginScreen({ navigation }) {
               )}
             </Pressable>
 
-            {/* 9. Separador */}
+            {/* Separador */}
             <View style={styles.dividerRow}>
               <View style={styles.dividerLine} />
               <Text style={styles.dividerText}>Or login with</Text>
               <View style={styles.dividerLine} />
             </View>
 
-            {/* 10. Apple / Google */}
+            {/* Apple / Google */}
             <View style={styles.socialRow}>
               <Pressable
                 onPress={() => handleSocialLogin('Apple')}
@@ -192,7 +192,7 @@ export default function LoginScreen({ navigation }) {
               </Pressable>
             </View>
 
-            {/* 11. Register */}
+            {/* Register */}
             <View style={styles.registerRow}>
               <Text style={styles.registerText}>Don’t have account? </Text>
               <Pressable
@@ -212,144 +212,117 @@ export default function LoginScreen({ navigation }) {
 }
 
 const RADIUS = 14;
-const CONTROL_HEIGHT = 50;
 
-const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: COLORS.background },
-  flex: { flex: 1 },
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 24,
-  },
-  // Formulario anclado arriba; el espacio libre queda debajo, como en la referencia.
-  content: { width: '100%', maxWidth: 480, alignSelf: 'center' },
+const createStyles = (compact) => {
+  const CONTROL_HEIGHT = compact ? 42 : 50;
 
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: COLORS.textMuted,
-    textAlign: 'center',
-    marginTop: 10,
-    marginBottom: 30,
-  },
+  return StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: COLORS.background },
+    flex: { flex: 1 },
+    scrollContent: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      paddingHorizontal: 20,
+      paddingVertical: compact ? 12 : 24,
+    },
+    content: { width: '100%', maxWidth: 480, alignSelf: 'center' },
 
-  label: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    marginBottom: 8,
-  },
-  labelSpacing: { marginTop: 22 },
+    title: {
+      fontSize: compact ? 22 : 28,
+      fontWeight: '800',
+      color: '#FFFFFF',
+      textAlign: 'center',
+      letterSpacing: -0.5,
+    },
+    subtitle: {
+      fontSize: compact ? 13 : 14,
+      color: COLORS.textMuted,
+      textAlign: 'center',
+      marginTop: compact ? 4 : 10,
+      marginBottom: compact ? 14 : 30,
+    },
 
-  input: {
-    height: CONTROL_HEIGHT,
-    backgroundColor: COLORS.inputBackground,
-    borderRadius: RADIUS,
-    borderWidth: 1,
-    borderColor: COLORS.inputBorder,
-    paddingHorizontal: 14,
-    color: '#FFFFFF',
-    fontSize: 14,
-  },
-  inputError: { borderColor: COLORS.error },
-  passwordWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingRight: 10,
-  },
-  passwordInput: {
-    flex: 1,
-    height: '100%',
-    color: '#FFFFFF',
-    fontSize: 14,
-    paddingVertical: 0,
-  },
-  eyeButton: { padding: 4, marginLeft: 8 },
+    label: {
+      fontSize: 13,
+      fontWeight: '600',
+      color: '#FFFFFF',
+      marginBottom: compact ? 4 : 8,
+    },
+    labelSpacing: { marginTop: compact ? 10 : 22 },
 
-  errorText: {
-    color: COLORS.error,
-    fontSize: 12,
-    marginTop: 6,
-  },
-  formError: { textAlign: 'center', marginTop: 12 },
+    input: {
+      height: CONTROL_HEIGHT,
+      backgroundColor: COLORS.inputBackground,
+      borderRadius: RADIUS,
+      borderWidth: 1,
+      borderColor: COLORS.inputBorder,
+      paddingHorizontal: 14,
+      color: '#FFFFFF',
+      fontSize: 14,
+    },
+    inputError: { borderColor: COLORS.error },
+    passwordWrapper: { flexDirection: 'row', alignItems: 'center', paddingRight: 10 },
+    passwordInput: {
+      flex: 1,
+      height: '100%',
+      color: '#FFFFFF',
+      fontSize: 14,
+      paddingVertical: 0,
+    },
+    eyeButton: { padding: 4, marginLeft: 8 },
 
-  forgotWrapper: { alignSelf: 'flex-end', marginTop: 12 },
-  link: {
-    fontSize: 14,
-    color: COLORS.accent,
-    textDecorationLine: 'underline',
-  },
+    errorText: { color: COLORS.error, fontSize: 12, marginTop: compact ? 3 : 6 },
+    formError: { textAlign: 'center', marginTop: compact ? 8 : 12 },
 
-  primaryButton: {
-    height: CONTROL_HEIGHT,
-    borderRadius: RADIUS,
-    backgroundColor: COLORS.authButton,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 22,
-  },
-  primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '700',
-  },
+    forgotWrapper: { alignSelf: 'flex-end', marginTop: compact ? 8 : 12 },
+    link: { fontSize: 14, color: COLORS.accent, textDecorationLine: 'underline' },
 
-  dividerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 18,
-    marginBottom: 16,
-  },
-  dividerLine: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: COLORS.divider,
-  },
-  dividerText: {
-    color: COLORS.textMuted,
-    fontSize: 14,
-    marginHorizontal: 12,
-  },
+    primaryButton: {
+      height: CONTROL_HEIGHT,
+      borderRadius: RADIUS,
+      backgroundColor: COLORS.authButton,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: compact ? 14 : 22,
+    },
+    primaryButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
 
-  socialRow: { flexDirection: 'row' },
-  socialGap: { width: 12 },
-  socialButton: {
-    flex: 1,
-    height: 52,
-    borderRadius: RADIUS,
-    backgroundColor: COLORS.authButton,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  socialIcon: { marginRight: 10 },
-  socialText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-  },
+    dividerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: compact ? 10 : 18,
+      marginBottom: compact ? 10 : 16,
+    },
+    dividerLine: { flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: COLORS.divider },
+    dividerText: { color: COLORS.textMuted, fontSize: 14, marginHorizontal: 12 },
 
-  registerRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    marginTop: 22,
-  },
-  registerText: { color: COLORS.textMuted, fontSize: 14 },
-  registerLink: { fontWeight: '700' },
+    socialRow: { flexDirection: 'row' },
+    socialGap: { width: 12 },
+    socialButton: {
+      flex: 1,
+      height: compact ? 44 : 52,
+      borderRadius: RADIUS,
+      backgroundColor: COLORS.authButton,
+      borderWidth: 1,
+      borderColor: 'rgba(255,255,255,0.08)',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    socialIcon: { marginRight: 10 },
+    socialText: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
 
-  // Retroalimentación visual al presionar
-  pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
-  pressedLight: { opacity: 0.6 },
-});
+    registerRow: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      marginTop: compact ? 12 : 22,
+    },
+    registerText: { color: COLORS.textMuted, fontSize: 14 },
+    registerLink: { fontWeight: '700' },
+
+    pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
+    pressedLight: { opacity: 0.6 },
+  });
+};
