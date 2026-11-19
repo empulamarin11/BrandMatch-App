@@ -1,3 +1,80 @@
+<p align="left">
+  <img src="assets/logo-uce.png" alt="Logo Universidad Central del Ecuador" width="90">
+</p>
+
+<div align="center">
+
+## UNIVERSIDAD CENTRAL DEL ECUADOR
+
+<hr>
+
+<br>
+
+**FACULTAD DE INGENIERÍA Y CIENCIAS APLICADAS**
+
+<br>
+
+**SISTEMAS DE INFORMACIÓN**
+
+<br>
+
+**ASIGNATURA:**
+
+Programación para Dispositivos Móviles
+
+<br>
+
+**TÍTULO:**
+
+Reporte - BrandMatch 🤝
+
+<br>
+
+**DOCENTE:**
+
+Ing. Diego Noguera
+
+<br>
+
+**INTEGRANTES:**
+
+\- Amaguaña Kevin<br>
+\- Guaicha Jordan<br>
+\- Marcalla Jefferson<br>
+\- Pilatuña Dayana<br>
+\- Pulamarín Erick
+
+<br>
+
+**FECHA:**
+
+17/11/2026
+
+<br>
+
+**2026 - 2027**
+
+</div>
+
+<p align="left">
+  <img src="assets/logo-uce.png" alt="Logo Universidad Central del Ecuador" width="90">
+</p>
+
+<br>
+
+<div align="center">
+
+![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Expo](https://img.shields.io/badge/Expo_Go-000020?style=for-the-badge&logo=expo&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Figma](https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
+
+*"El futuro del marketing no es adivinar. Es hacer Match."*
+
+</div>
+
+---
+
 # BrandMatch 🤝 - Plataforma SaaS B2B de Emparejamiento Marca–Creador
 
 **BrandMatch** es una aplicación móvil SaaS B2B que utiliza Inteligencia Artificial y el modelo psicológico **Big Five (OCEAN)** para emparejar marcas con creadores de contenido ideales, midiendo la afinidad real de personalidad y valores por encima de métricas superficiales.
@@ -13,7 +90,7 @@ El proyecto está desarrollado en **React Native con Expo Go** bajo una **Arquit
 | **🎨 Prototipo Interactivo (Figma)** | [Ver Prototipo en Figma](https://www.figma.com/proto/hZZLmnQJlWEa1W4fg9ImRf/BrandMatch-Prototipo?node-id=1-2&starting-point-node-id=1%3A2&t=7Y00eWz3GUwOEqPF-1) | Diseño UI/UX completo en Dark Mode (`8px` grid), Atomic Design y vistas responsivas (`9:16`, `16:9`, `1:1`). |
 | **📄 Informe Técnico Final** | [Ver Informe Final (`Reporte_Final_BrandMatch.pdf`)](./docs/Reporte_Final_BrandMatch.pdf) | Documento académico completo con fundamentos DDD, arquitectura, pruebas y trazabilidad *(actualizar enlace si se aloja en Drive/OneDrive)*. |
 | **📊 Presentación Ejecutiva (Diapositivas)** | [Ver Diapositivas de Sustentación](https://docs.google.com/presentation/d/1fKVn0Se_fRhxd-1JM1vqYXem5NBWvXEQ/edit?usp=sharing&ouid=115547854198529635935&rtpof=true&sd=true) | Presentación del problema, origen de datos, arquitectura `src/` y demostración responsiva *(reemplazar con el enlace final de la presentación)*. |
-| **🕷️ Repositorio del Scraper (`PractScrapyTtk`)** | [Ir al repositorio](https://github.com/empulamarin11/PractScrapyTtk.git) | Módulo Extractor TikTok + Groq LLM | Scraper en Python/Playwright que extrae métricas públicas y estima perfiles Big Five. |
+| **🕷️ Repositorio del Scraper (`PractScrapyTtk`)** | [Ir al repositorio](https://github.com/empulamarin11/PractScrapyTtk.git) | Módulo extractor TikTok + Groq LLM: scraper en Python/Playwright que extrae métricas públicas y estima perfiles Big Five. |
 
 ---
 
@@ -315,7 +392,7 @@ PruebaBrandMatch/
 
 ```bash
 # 1. Clonar el repositorio
-git clone [https://github.com/empulamarin11/BrandMatch-App.git](https://github.com/empulamarin11/BrandMatch-App.git)
+git clone https://github.com/empulamarin11/BrandMatch-App.git
 
 # 2. Ingresar al directorio
 cd BrandMatch-App
@@ -341,3 +418,44 @@ git grep -n "MOCK_INFLUENCERS"
 
 ---
 
+## 👥 Distribución del trabajo y mejoras por pantalla
+
+Cada integrante fue responsable de desarrollar una o más pantallas del prototipo. La columna **"Aspectos a mejorar"** recoge las observaciones identificadas al comparar cada pantalla implementada con el diseño de Figma y el Design System del proyecto.
+
+| Código | Integrante | Pantalla(s) | Archivo(s) | Aspectos a mejorar |
+|:--:|:--|:--|:--|:--|
+| **P1** | Jordan Guaicha | Bienvenida (Welcome) | `WelcomeScreen.js` | • Ocultar el ícono de configuración ⚙️, ya que en la bienvenida aún no hay sesión iniciada.<br>• Completar el eslogan: falta la segunda parte *"Es hacer Match."*<br>• Unificar el emoji de marca (🤝 en la app y 💌 en el pitch deck).<br>• Aprovechar el espacio vacío central con una breve propuesta de valor o ilustración. |
+| **P2** | Jefferson Marcalla | Autenticación (Login) | `loginScreen.js` | • Agregar el enlace *"¿Olvidaste tu contraseña?"*, que ya existe como `ForgotPasswordScreen.js` pero no es accesible desde el login.<br>• Incorporar el botón de mostrar/ocultar contraseña usando `EyeIcon` / `EyeOffIcon` de `AuthIcons.js`.<br>• Aumentar la altura de los campos a 48 px (área táctil mínima del Design System).<br>• Mejorar el contraste del texto de los *placeholders*. |
+| **P3** | Kevin Amaguaña | Registro | `RegistroScreen.js` | • Añadir los íconos a los botones de **Google** y **TikTok** (`GoogleIcon` ya está disponible en `AuthIcons.js`).<br>• Incluir confirmación de contraseña e indicador de requisitos de seguridad.<br>• Mostrar los mensajes de validación debajo de cada campo (nombre, correo y contraseña).<br>• Ocultar el ícono de configuración ⚙️ antes de iniciar sesión. |
+| **P4** | Dayana Pilatuña | Configuración del ADN | `ConfiguracionScreen.js` | • Aclarar la equivalencia entre los sliders (Creatividad, Seriedad, Sociabilidad, Empatía, Estabilidad) y los rasgos Big Five.<br>• Mostrar los porcentajes en cian (`#25F4EE`): el rojo-rosa (`#FE2C55`) está reservado para botones y alertas.<br>• Agregar una breve descripción de cada rasgo para orientar a la marca.<br>• Hacer visible el acceso a la *"Base de Datos de Influencers"*. |
+| **P5** | Erick Pulamarín | Análisis de Match y Pitch IA | `MatchScreen.js`<br>`PitchScreen.js` | **Match:**<br>• Agregar etiquetas a los 5 ejes del gráfico de radar y una leyenda (Marca vs. Influencer).<br>• Mostrar el rasgo dominante compartido que calcula `MatchCalculator.js`.<br>• Permitir ver un ranking de varios influencers, no solo uno.<br>**Pitch:**<br>• Personalizar el mensaje con el porcentaje de match y los rasgos Big Five del creador (hoy es un texto genérico).<br>• Añadir un botón para regresar al análisis, además de *"Cerrar sesión"*. |
+
+> 📝 **Observación general:** la lista `MOCK_INFLUENCERS` (datos simulados) se encuentra actualmente en `src/domain/match/Influencer.js`. Siguiendo la regla de dependencia de DDD, se recomienda moverla a `src/infrastructure/match/`, dejando en el dominio únicamente las reglas de negocio.
+
+---
+
+## 🛠️ Stack tecnológico y librerías
+
+| Tecnología | Uso en el proyecto |
+|:--|:--|
+| **React Native & Expo Go** | Desarrollo móvil multiplataforma con *Fast Refresh* y pruebas inmediatas en dispositivos físicos. |
+| **React Navigation (Native Stack)** | Navegación nativa entre pantallas (Welcome, Login, Registro, Configuración, Match, Pitch). |
+| **@react-native-community/slider** | Controles deslizantes para calibrar en tiempo real los rasgos que busca la marca. |
+| **react-native-svg** | Renderizado vectorial del gráfico de radar comparativo de los 5 ejes Big Five. |
+| **expo-blur** | Efecto translúcido (Glassmorphism) en las tarjetas de perfil. |
+
+---
+
+<div align="center">
+
+<br>
+
+**Universidad Central del Ecuador** — Facultad de Ingeniería y Ciencias Aplicadas<br>
+Carrera de Sistemas de Información · Programación para Dispositivos Móviles<br>
+Docente: Ing. Diego Noguera
+
+<br>
+
+*BrandMatch 🤝 — El futuro del marketing no es adivinar. Es hacer Match.*
+
+</div>
