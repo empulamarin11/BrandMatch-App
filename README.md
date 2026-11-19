@@ -37,24 +37,100 @@ En el marketing de influencers actual, las marcas toman decisiones basadas casi 
 
 ---
 
-## 🏗️ Metodología y Arquitectura del Proyecto
+## 🏗️ 5. Arquitectura de Software y Metodología DDD
 
-El proyecto implementa una **Arquitectura en Capas basada en Domain-Driven Design (DDD)** —alineada con los principios de *Clean Architecture*—, complementada con **Inyección de Dependencias** para el desacoplamiento de servicios y **Atomic Design** para la construcción modular de la interfaz móvil.
+### 5.1 Arquitectura Implementada: Arquitectura en Capas (Layered Architecture)
 
-### 1. Capas Arquitectónicas
+El frontend móvil de **BrandMatch** implementa una **Arquitectura en Capas (*Layered Architecture*)** guiada por **Domain-Driven Design (DDD)** y conectada mediante **Inyección de Dependencias** (`src/container.js`).
 
-| Capa | Directorio | Rol Arquitectónico | Componentes Implementados |
+#### ¿Por qué es Arquitectura en Capas y no otro patrón?
+- **No es Microservicios:** Toda la aplicación móvil se compila y ejecuta como una sola unidad dentro del dispositivo (Expo Go), sin múltiples servidores independientes comunicándose por red.
+- **Diferencia frente a Hexagonal:** Siguiendo el criterio definido por el equipo, se optó por una **Arquitectura en Capas** tradicional y limpia porque se adapta de forma directa a las 4 carpetas principales dentro de `src/`, facilitando la lectura y el mantenimiento por módulos.
+- **¿Por qué sí es en Capas? (Organización desde `src/`):** El código divide el sistema en cuatro niveles jerárquicos donde cada carpeta cumple una única responsabilidad y respeta la **regla de dependencia hacia adentro** (`Presentation → Application → Domain`):
+
+| Nivel / Capa | Carpeta en `src/` | Responsabilidad en el Sistema |
+| :--- | :--- | :--- |
+| **1. Presentación** | `src/presentation/` | Renderiza las 7 pantallas en React Native, componentes atómicos (`CustomButton`, `RadarChart`), estilos (`Theme/`) y navegación (`AppNavigator.js`). No realiza cálculos de negocio. |
+| **2. Aplicación** | `src/application/` | Contiene los casos de uso (`loginUser.js`, `registerUser.js`, `calculateMatch.js`) que reciben las acciones de la interfaz y coordinan la ejecución del dominio. |
+| **3. Dominio** | `src/domain/` | **El núcleo puro.** Aloja las reglas de validación (`Email`, `Password`, `FullName`, `NewPassword`) y la fórmula matemática Big Five (`MatchCalculator.js`) en **JavaScript puro**, sin importar nada de React Native ni Expo. |
+| **4. Infraestructura** | `src/infrastructure/` | Gestiona el acceso a datos y servicios externos (`InfluencerRepository.js` y `AuthApi.js`). Permite conectar una API real en el futuro sin modificar las pantallas ni el dominio. |
+
+```text
+[ Presentation (Screens / UI) ] ──▶ [ Application (Casos de Uso) ] ──▶ [ Domain (Reglas Puras) ]
+                                            ▲                                   ▲
+                                            │ (Inyección en container.js)       │ (Implementa contrato)
+                                    [ Infrastructure (AuthApi / InfluencerRepository) ]
+```
+
+**Ventaja clave:** Al mantener `src/domain/` completamente aislado de React Native y conectar `src/infrastructure/` mediante `src/container.js`, cualquier cambio en la interfaz gráfica o migración hacia un servidor backend real se realiza sin alterar la lógica principal del negocio.
+
+
+---
+
+### 5.2 Diseño Estratégico (DDD)
+
+#### Dominio y Actores
+- **Dominio:** Emparejamiento inteligente entre marcas y creadores de contenido de TikTok basado en afinidad psicológica Big Five.
+- **Actores:** **Marca / Empresa** (usuario activo que configura su ADN, consulta perfiles y genera propuestas) y **Creador / Influencer** (perfil público analizado y almacenado en el catálogo).
+
+#### Clasificación de Subdominios
+
+| Subdominio | Tipo | Justificación Estratégica |
+| :--- | :--- | :--- |
+| **Brand Matching (`match`)** | **Principal (*Core*)** | Constituye el diferenciador del negocio: calcula la compatibilidad psicográfica entre marca y creador. |
+| **Identity & Access (`auth`)** | **De soporte** | Gestiona el acceso, registro y validación estricta de credenciales de las marcas usuarias. |
+| **Creator Profiling (`PractScrapyTtk`)** | **De soporte** | Abastece al sistema con métricas públicas, arquetipos y puntajes Big Five verificados. |
+| **Extracción TikTok / Proveedor LLM** | **Genérico** | Componentes intercambiables (Playwright, Groq) aislados del núcleo matemático de la app. |
+
+#### Contextos Acotados
+
+| Contexto Acotado | Responsabilidad (Qué hace) | Fuera de Responsabilidad (Qué NO hace) |
+| :--- | :--- | :--- |
+| **Autenticación (`auth`)** | Validar formatos de correo, longitud de contraseña, coincidencia de registro y delegar la sesión al contrato `AuthRepository`. | No almacena contraseñas en texto plano ni ejecuta reglas de cálculo Big Five. |
+| **Emparejamiento (`match`)** | Proveer el catálogo de creadores (`InfluencerRepository`), calcular el porcentaje de afinidad (`MatchCalculator`) y clasificar el nivel de match. | No realiza scraping directo ni valida credenciales de inicio de sesión. |
+
+#### Lenguaje Ubicuo (*Ubiquitous Language*)
+
+| Término del Dominio | En el Código | Significado en el Negocio | Contexto |
 | :--- | :--- | :--- | :--- |
-| **1. Dominio** | `src/domain/` | **El núcleo puro.** Contiene las reglas de negocio, validaciones y cálculos matemáticos sin dependencias de React ni librerías externas. | `Email.js`, `Password.js`, `FullName.js`, `NewPassword.js`, `AuthRepository.js`, `Influencer.js`, `MatchCalculator.js`, `PitchGenerator.js`, `BrandProfile.js` |
-| **2. Aplicación** | `src/application/` | **Orquestadores.** Definen los casos de uso del sistema; reciben datos de la vista, ejecutan reglas del dominio y coordinan la infraestructura. | `loginUser.js`, `registerUser.js`, `calculateMatch.js`, `generatePitch.js`, `saveBrandProfile.js` |
-| **3. Infraestructura** | `src/infrastructure/` | **El exterior.** Implementa los adaptadores técnicos, repositorios de datos y conexión con APIs externas (actualmente simuladas). | `AuthApi.js`, `InfluencerRepository.js`, `AiApi.js` |
-| **4. Presentación** | `src/presentation/` | **Lo visual (UI).** Se encarga exclusivamente de renderizar pantallas, gestionar rutas y capturar eventos táctiles en React Native. | `components/`, `navigation/`, `screens/` (`Welcome`, `Login`, `RegistroScreen`, `Configuracion`, `Match`, `Pitch`), `theme/` |
+| **ADN Digital (Marca)** | `marca` (`creatividad`, `seriedad`, `sociabilidad`, `empatia`, `estabilidad`) | Vector de personalidad ideal calibrado por la empresa en escala `0–100`. | `match` |
+| **Perfil Big Five** | `bigfive` (`a`, `r`, `e`, `am`, `n`) | Puntajes psicográficos del creador en Apertura, Responsabilidad, Extraversión, Amabilidad y Neuroticismo. | `match` |
+| **Arquetipo** | `arquetipo` | Categoría comunicativa dominante del creador derivada de sus videos y emojis. | `match` |
+| **Puntaje de Match** | `porcentaje` / `matchPct` | Índice entero de compatibilidad (`0%–100%`) calculado por `calcularCompatibilidad()`. | `match` |
+| **Estado de Afinidad** | `estado` / `status` | Clasificación cualitativa: *Match Excelente* (`>75%`), *Match Bueno* (`>50%`) o *Match Bajo* (`≤50%`). | `match` |
+| **Pitch Comercial** | `mensajePitch` | Propuesta de colaboración personalizada construida con el nombre y arquetipo del creador. | `match` |
+| **Objetos de Valor** | `Email`, `Password`, `FullName`, `NewPassword` | Clases inmutables (`Object.freeze`) que encapsulan sus propias reglas de validación. | `auth` |
+| **Composition Root** | `src/container.js` | Punto único donde se instancian los adaptadores y se inyectan en los casos de uso. | Global |
 
-### 2. Patrones Complementarios
+---
 
-* **Inyección de Dependencias (`src/container.js`):** Actúa como *Composition Root* (raíz de composición), instanciando los servicios de infraestructura (`AuthApi`, `InfluencerRepository`, `AiApi`) e inyectándolos en los casos de uso para evitar acoplamiento directo desde las vistas.
-* **Atomic Design y Design System (`src/presentation/`):** Organiza la UI por jerarquía de reutilización: *Tokens* globales (`theme/colors.js`), *Átomos y Moléculas* (`components/CustomButton`, `RadarChart`), *Páginas* (`screens/`) y navegación nativa (`navigation/AppNavigator`).
-* **Regla de Dependencia hacia Adentro:** Toda la lógica psicográfica (*Big Five*) y las reglas de validación residen aisladas en `src/domain/`, permitiendo sustituir en el futuro las APIs simuladas por un backend real sin alterar la interfaz gráfica.
+### 5.3 Diseño Táctico e Invariantes del Dominio
+
+#### Bloques Tácticos, Contratos y Adaptadores
+
+| Capa | Elemento / Archivo | Rol Táctico |
+| :--- | :--- | :--- |
+| **Dominio** | `Email`, `Password`, `FullName`, `NewPassword` | **Objetos de Valor** inmutables con métodos estáticos `validate()` y `create()`. |
+| **Dominio** | `ValidationError`, `NotConfiguredError` | **Excepciones de Dominio** tipadas por campo (`fieldErrors`). |
+| **Dominio** | `MatchCalculator.js` (`calcularCompatibilidad`) | **Servicio de Dominio** puro que computa la afinidad entre marca e influencer. |
+| **Dominio** | `AuthRepository.js` | **Contrato (Puerto)** que define las operaciones `login()`, `register()` y `requestPasswordReset()`. |
+| **Aplicación** | `loginUser.js`, `registerUser.js`, `requestPasswordReset.js` | **Casos de Uso** con inyección de dependencias (`makeLoginUser(authRepository)`). |
+| **Aplicación** | `calculateMatch.js` (`ejecutarCalculoMatch`) | **Caso de Uso** que orquesta el cálculo de compatibilidad desde `MatchScreen`. |
+| **Infraestructura** | `AuthApi.js` | **Adaptador** que implementa `AuthRepository` (listo para conectar a endpoints REST). |
+| **Infraestructura** | `InfluencerRepository.js` (`getInfluencers`) | **Repositorio** que abastece los 11 perfiles simulados de `MOCK_INFLUENCERS`. |
+
+#### Invariantes del Dominio (Reglas de Negocio Verificables)
+
+| # | Regla de Negocio (Invariante) | Dónde se Aplica |
+| :---: | :--- | :--- |
+| 1 | Todo correo electrónico es obligatorio, se normaliza con `.trim()` y debe cumplir el patrón `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`. | `domain/auth/Email.js` |
+| 2 | El nombre completo de registro debe tener al menos **3 caracteres** sin espacios vacíos. | `domain/auth/FullName.js` |
+| 3 | Toda contraseña de cuenta nueva exige mínimo **6 caracteres** y debe coincidir exactamente con `repeatPassword`. | `domain/auth/NewPassword.js` |
+| 4 | Los objetos de valor instanciados son inmutables mediante `Object.freeze(this)`. | `Email`, `Password`, `FullName`, `NewPassword` |
+| 5 | Cada rasgo del ADN de marca se calibra de forma independiente entre `0` y `100` con incremento entero (`step = 1`). | `presentation/Screens/ConfiguracionScreen.js` |
+| 6 | El porcentaje de compatibilidad siempre se entrega como entero redondeado (`Math.round`) entre `0%` y `100%`. | `domain/match/MatchCalculator.js` |
+| 7 | No se permite calcular un match sin haber seleccionado previamente un creador del catálogo. | `presentation/Screens/ConfiguracionScreen.js` |
+
 
 ### 3. Estructura de Directorios
 
