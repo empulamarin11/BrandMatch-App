@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import {
   View,
+  Text,
   StyleSheet,
   ScrollView,
   Clipboard,
@@ -9,7 +10,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperPlaneTilt } from 'phosphor-react-native';
-import { AppText } from '../components/atoms/AppText';
 import { COLORS } from '../theme/colors';
 import CustomButton from '../components/CustomButton';
 
@@ -17,8 +17,8 @@ export default function PitchScreen({ navigation, route }) {
   const { influencer } = route.params;
 
   const { width, height } = useWindowDimensions();
-  const compact = height < 520;                    // 16:9 horizontal o 1:1 compacto
-  const row = width > height && width >= 600;      // horizontal con espacio para 2 columnas
+  const compact = height < 520;
+  const row = width > height && width >= 600;
   const styles = useMemo(() => createStyles(compact, row), [compact, row]);
 
   const mensajePitch = `Hola ${influencer.name},
@@ -43,19 +43,13 @@ El Equipo de Marketing.`;
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
           <PaperPlaneTilt size={compact ? 22 : 28} color={COLORS.primary} weight="bold" />
-          <AppText variant="title" style={styles.titleSpacing}>
-            Pitch Generado
-          </AppText>
+          <Text style={styles.titleSpacing}>Pitch Generado</Text>
         </View>
 
         <View style={styles.body}>
           <View style={styles.card}>
-            <AppText variant="subtitle" color="primary" style={styles.emailTo}>
-              Para: @{influencer.username}
-            </AppText>
-            <AppText variant="body" color="textMuted" style={styles.emailBody}>
-              {mensajePitch}
-            </AppText>
+            <Text style={styles.emailTo}>Para: @{influencer.username}</Text>
+            <Text style={styles.emailBody}>{mensajePitch}</Text>
           </View>
 
           <View style={styles.actions}>
@@ -98,9 +92,10 @@ const createStyles = (compact, row) =>
 
     titleSpacing: {
       fontSize: compact ? 22 : 28,
+      fontWeight: '900',
+      color: COLORS.textLight,
     },
 
-    // En horizontal: mensaje a la izquierda, botones a la derecha
     body: row ? { flexDirection: 'row', alignItems: 'center', gap: 20 } : {},
     actions: row ? { flex: 1 } : {},
 
@@ -115,6 +110,9 @@ const createStyles = (compact, row) =>
     },
 
     emailTo: {
+      color: COLORS.primary,
+      fontSize: 14,
+      fontWeight: 'bold',
       marginBottom: compact ? 8 : 15,
       borderBottomWidth: 1,
       borderBottomColor: 'rgba(255,255,255,0.1)',
@@ -122,6 +120,7 @@ const createStyles = (compact, row) =>
     },
 
     emailBody: {
+      color: COLORS.textMuted,
       fontSize: compact ? 13 : 15,
       lineHeight: compact ? 19 : 22,
     },
