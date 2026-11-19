@@ -1,5 +1,5 @@
 <p align="left">
-  <img src="assets/logo-uce.png" alt="Logo Universidad Central del Ecuador" width="90">
+  <img src="./assets/screenshots/uce.png" alt="Logo Universidad Central del Ecuador" width="90">
 </p>
 
 <div align="center">
@@ -57,7 +57,7 @@ Ing. Diego Noguera
 </div>
 
 <p align="left">
-  <img src="assets/logo-uce.png" alt="Logo Universidad Central del Ecuador" width="90">
+  <img src="./assets/screenshots/uce.png" alt="Logo Universidad Central del Ecuador" width="90">
 </p>
 
 <br>
@@ -88,7 +88,7 @@ El proyecto está desarrollado en **React Native con Expo Go** bajo una **Arquit
 | Recurso / Entregable | Enlace Directo | Descripción |
 | :--- | :--- | :--- |
 | **🎨 Prototipo Interactivo (Figma)** | [Ver Prototipo en Figma](https://www.figma.com/proto/hZZLmnQJlWEa1W4fg9ImRf/BrandMatch-Prototipo?node-id=1-2&starting-point-node-id=1%3A2&t=7Y00eWz3GUwOEqPF-1) | Diseño UI/UX completo en Dark Mode (`8px` grid), Atomic Design y vistas responsivas (`9:16`, `16:9`, `1:1`). |
-| **📄 Informe Técnico Final** | [Ver Informe Final (`Reporte_Final_BrandMatch.pdf`)](./docs/Reporte_Final_BrandMatch.pdf) | Documento académico completo con fundamentos DDD, arquitectura, pruebas y trazabilidad *(actualizar enlace si se aloja en Drive/OneDrive)*. |
+| **📄 Informe Técnico Final** | [Ver Informe Final (`Reporte_Final_BrandMatch.pdf`)](https://drive.google.com/file/d/1Gtnupbabo1rw2CrlRGnTgfWgMqMsTt5w/view?usp=sharing) | Documento académico completo con fundamentos DDD, arquitectura, pruebas y trazabilidad *(actualizar enlace si se aloja en Drive/OneDrive)*. |
 | **📊 Presentación Ejecutiva (Diapositivas)** | [Ver Diapositivas de Sustentación](https://docs.google.com/presentation/d/1fKVn0Se_fRhxd-1JM1vqYXem5NBWvXEQ/edit?usp=sharing&ouid=115547854198529635935&rtpof=true&sd=true) | Presentación del problema, origen de datos, arquitectura `src/` y demostración responsiva *(reemplazar con el enlace final de la presentación)*. |
 | **🕷️ Repositorio del Scraper (`PractScrapyTtk`)** | [Ir al repositorio](https://github.com/empulamarin11/PractScrapyTtk.git) | Módulo extractor TikTok + Groq LLM: scraper en Python/Playwright que extrae métricas públicas y estima perfiles Big Five. |
 
@@ -183,9 +183,9 @@ La información de los creadores que alimenta `src/domain/match/Influencer.js` p
 
 ### 4.2 Evidencias del Prototipo en Figma y Pruebas Responsivas (`16:9` y `1:1`)
 
-| Sistema Atómico en Figma (Atomic Design) | Prueba en Formato `16:9` (Horizontal) | Prueba en Formato `1:1` (Cuadrado / Split) |
+| Prueba en Formato 9:16 (vertical) | Prueba en Formato `16:9` (Horizontal) | Prueba en Formato `1:1` (Cuadrado / Split) |
 | :---: | :---: | :---: |
-| ![Figma Atomic Design](./assets/screenshots/figma_atomic.png) | ![Vista 16:9](./assets/screenshots/responsive_16_9.png) | ![Vista 1:1](./assets/screenshots/responsive_1_1.png) |
+| ![Vista 9:16](./assets/screenshots/9_16.jpeg) | ![Vista 16:9](./assets/screenshots/16_9.jpeg) | ![Vista 1:1](./assets/screenshots/1_1.jpeg) |
 
 *(Nota: Guardar las capturas del lienzo de Figma y de las pruebas en orientación horizontal/cuadrada en `assets/screenshots/` con esos nombres para su visualización automática).*
 
