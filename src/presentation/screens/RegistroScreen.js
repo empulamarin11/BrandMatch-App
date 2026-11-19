@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
+import { AppText } from '../components/atoms/AppText';
 import {
   View,
-  Text,
   TextInput,
   Pressable,
   ScrollView,
@@ -72,11 +72,18 @@ export default function RegistroScreen({ navigation }) {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.content}>
-            <Text style={styles.title}>Registration</Text>
-            <Text style={styles.subtitle}>Create your BrandMatch account</Text>
-
+            <AppText variant="title" color="#FFFFFF" style={styles.title}>
+              Registration
+            </AppText>
+            <AppText variant="body" color="textMuted" style={styles.subtitle}>
+              Create your BrandMatch account
+            </AppText>
             {/* Full Name */}
-            <Text style={styles.label}>Full Name</Text>
+            <AppText variant="caption" color="#FFFFFF" style={styles.label}>
+              Full Name
+            </AppText>
+
+
             <TextInput
               style={[styles.input, errors.fullName && styles.inputError]}
               value={fullName}
@@ -89,10 +96,16 @@ export default function RegistroScreen({ navigation }) {
               returnKeyType="next"
               editable={!isLoading && !isSuccess}
             />
-            {errors.fullName ? <Text style={styles.errorText}>{errors.fullName}</Text> : null}
+            {errors.fullName ?(
+                <AppText variant="caption" color="error" style={styles.errorText}>
+                  {errors.fullName}
+                </AppText>
+              ) : null}
 
             {/* Email */}
-            <Text style={[styles.label, styles.labelSpacing]}>Email</Text>
+            <AppText variant="caption" color="#FFFFFF" style={[styles.label, styles.labelSpacing]}>
+              Email
+            </AppText>
             <TextInput
               style={[styles.input, errors.email && styles.inputError]}
               value={email}
@@ -107,10 +120,16 @@ export default function RegistroScreen({ navigation }) {
               returnKeyType="next"
               editable={!isLoading && !isSuccess}
             />
-            {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+            {errors.email ? (
+                <AppText variant="caption" color="error" style={styles.errorText}>
+                  {errors.email}
+                </AppText>
+              ) : null}
 
             {/* Password */}
-            <Text style={[styles.label, styles.labelSpacing]}>Password</Text>
+            <AppText variant="caption" color="#FFFFFF" style={[styles.label, styles.labelSpacing]}>
+              Password
+            </AppText>
             <View style={[styles.input, styles.passwordWrapper, errors.password && styles.inputError]}>
               <TextInput
                 style={styles.passwordInput}
@@ -136,10 +155,15 @@ export default function RegistroScreen({ navigation }) {
                 {isPasswordHidden ? <EyeIcon /> : <EyeOffIcon />}
               </Pressable>
             </View>
-            {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
-
+            {errors.password ?(
+                <AppText variant="caption" color="error" style={styles.errorText}>
+                  {errors.password}
+                </AppText>
+              ) : null}
             {/* Repeat Password */}
-            <Text style={[styles.label, styles.labelSpacing]}>Repeat Password</Text>
+            <AppText variant="caption" color="#FFFFFF" style={[styles.label, styles.labelSpacing]}>
+              Repeat Password
+            </AppText>
             <View style={[styles.input, styles.passwordWrapper, errors.repeatPassword && styles.inputError]}>
               <TextInput
                 style={styles.passwordInput}
@@ -166,10 +190,17 @@ export default function RegistroScreen({ navigation }) {
                 {isRepeatHidden ? <EyeIcon /> : <EyeOffIcon />}
               </Pressable>
             </View>
-            {errors.repeatPassword ? <Text style={styles.errorText}>{errors.repeatPassword}</Text> : null}
+            {errors.repeatPassword ? (
+                    <AppText variant="caption" color="error" style={styles.errorText}>
+                      {errors.repeatPassword}
+                    </AppText>
+            ) : null}
 
-            {errors.form ? <Text style={[styles.errorText, styles.formError]}>{errors.form}</Text> : null}
-
+            {errors.form ? (
+                <AppText variant="caption" color="error" style={[styles.errorText, styles.formError]}>
+                  {errors.form}
+                </AppText>
+            ) : null}
             {/* Botón Register */}
             <Pressable
               onPress={handleRegister}
@@ -184,23 +215,34 @@ export default function RegistroScreen({ navigation }) {
             >
               {isLoading ? (
                 <ActivityIndicator color="#FFFFFF" />
+              ) : isSuccess ? (
+                  <View style={styles.successRow}>
+                    <CheckCircle size={20} color={COLORS.background} weight="bold" />
+                    <AppText variant="subtitle" color="background" style={styles.primaryButtonText}>
+                      Account Created!
+                    </AppText>
+                  </View>
               ) : (
-                <Text style={[styles.primaryButtonText, isSuccess && styles.successButtonText]}>
-                  {isSuccess ? '✓ Account Created!' : 'Register'}
-                </Text>
+                  <AppText variant="subtitle" color="#FFFFFF" style={styles.primaryButtonText}>
+                    Register
+                  </AppText>
               )}
             </Pressable>
 
             {/* I have account? Log in */}
             <View style={styles.loginRow}>
-              <Text style={styles.loginText}>I have account? </Text>
+              <AppText variant="body" color="textMuted" style={styles.loginText}>
+                I have account?{' '}
+              </AppText>
               <Pressable
                 onPress={() => navigation.navigate('Login')}
                 hitSlop={8}
                 style={({ pressed }) => pressed && styles.pressedLight}
                 accessibilityRole="link"
               >
-                <Text style={[styles.link, styles.loginLink]}>Log in</Text>
+                <AppText variant="subtitle" color="accent" style={styles.link}>
+                  Log in
+                </AppText>
               </Pressable>
             </View>
           </View>
