@@ -1,107 +1,57 @@
-# BrandMatch 🤝 - Pitch Deck & App Prototype
+# BrandMatch 🤝 - Plataforma SaaS B2B de Emparejamiento Marca–Creador
 
-BrandMatch es una plataforma SaaS B2B que utiliza Inteligencia Artificial y el modelo psicológico **Big Five** para emparejar marcas con los influencers perfectos, midiendo su afinidad real y no solo sus seguidores.
+**BrandMatch** es una aplicación móvil SaaS B2B que utiliza Inteligencia Artificial y el modelo psicológico **Big Five (OCEAN)** para emparejar marcas con creadores de contenido ideales, midiendo la afinidad real de personalidad y valores por encima de métricas superficiales.
 
-Este repositorio contiene el **prototipo funcional de la aplicación móvil** desarrollado en **React Native** con **Expo**, trasladando fielmente el diseño UI/UX creado en Figma.
-
----
-
-## 📱 Capturas de Pantalla (UI/UX)
-
-*(Aquí puedes subir las fotos de tu app. Si tienes las imágenes en tu PC, arrástralas aquí en VS Code y se crearán los enlaces automáticamente)*
-
-| Pantalla de Bienvenida | Login | Registro |
-| :---: | :---: | :---: |
-| ![Welcome](./assets/screenshots/welcome.jpeg) | ![Login](./assets/screenshots/login.jpeg) | ![Registro](./assets/screenshots/registro.jpeg) |
-
-| Configuración ADN (Sliders) | Análisis de Match (Radar) | Pitch IA |
-| :---: | :---: | :---: |
-| ![Sliders](./assets/screenshots/sliders.jpeg) | ![Match](./assets/screenshots/match.jpeg) | ![Pitch](./assets/screenshots/pitch.jpeg) |
+El proyecto está desarrollado en **React Native con Expo Go** bajo una **Arquitectura en Capas orientada al Dominio (DDD)** con principios de **Clean Architecture**, **Inyección de Dependencias** y **Atomic Design**, trasladando el sistema de diseño construido en **Figma** y alimentándose del pipeline de extracción y análisis psicométrico **PractScrapyTtk**.
 
 ---
 
-## 🚀 Características Principales
+## 🔗 Enlaces Oficiales y Entregables del Proyecto
 
-- **Autenticación simulada:** Flujo completo de Login y Registro con estados de carga (simulando latencia de red).
-- **Diseño interactivo:** Uso de la API nativa `Animated` para transiciones suaves, efecto "latido" y escalado en botones al presionar.
-- **Configuración Big Five:** Sliders interactivos que definen la personalidad buscada por la marca.
-- **Reactividad de Estado:** Los valores elegidos en los sliders afectan directamente el porcentaje final del Match.
-- **Data Visualization:** Gráfico de radar (SVG) para mostrar el ADN del influencer.
-- **Glassmorphism UI:** Implementación del efecto de cristal traslúcido en las tarjetas usando `expo-blur`.
-
----
-
-## 🛠️ Tecnologías y Librerías Utilizadas
-
-*   [React Native](https://reactnative.dev/) - Framework principal.
-*   [Expo](https://expo.dev/) - Plataforma de desarrollo.
-*   [React Navigation](https://reactnavigation.org/) - Navegación nativa entre pantallas (Native Stack).
-*   [@react-native-community/slider](https://github.com/callstack/react-native-slider) - Componente de deslizador nativo.
-*   [react-native-svg](https://github.com/software-mansion/react-native-svg) - Para dibujar el gráfico de radar (Big Five).
-*   [expo-blur](https://docs.expo.dev/versions/latest/sdk/blur-view/) - Para el efecto visual de cristal (Glassmorphism).
+| Recurso / Entregable | Enlace Directo | Descripción |
+| :--- | :--- | :--- |
+| **🎨 Prototipo Interactivo (Figma)** | [Ver Prototipo en Figma](https://www.figma.com/proto/hZZLmnQJlWEa1W4fg9ImRf/BrandMatch-Prototipo?node-id=1-2&starting-point-node-id=1%3A2&t=7Y00eWz3GUwOEqPF-1) | Diseño UI/UX completo en Dark Mode (`8px` grid), Atomic Design y vistas responsivas (`9:16`, `16:9`, `1:1`). |
+| **📄 Informe Técnico Final** | [Ver Informe Final (`Reporte_Final_BrandMatch.pdf`)](./docs/Reporte_Final_BrandMatch.pdf) | Documento académico completo con fundamentos DDD, arquitectura, pruebas y trazabilidad *(actualizar enlace si se aloja en Drive/OneDrive)*. |
+| **📊 Presentación Ejecutiva (Diapositivas)** | [Ver Diapositivas de Sustentación](https://docs.google.com/presentation/d/1fKVn0Se_fRhxd-1JM1vqYXem5NBWvXEQ/edit?usp=sharing&ouid=115547854198529635935&rtpof=true&sd=true) | Presentación del problema, origen de datos, arquitectura `src/` y demostración responsiva *(reemplazar con el enlace final de la presentación)*. |
+| **🕷️ Repositorio del Scraper (`PractScrapyTtk`)** | [Ir al repositorio](https://github.com/empulamarin11/PractScrapyTtk.git) | Módulo Extractor TikTok + Groq LLM | Scraper en Python/Playwright que extrae métricas públicas y estima perfiles Big Five. |
 
 ---
 
-## 📂 Arquitectura del Proyecto
+## 📋 Tabla de Contenido
 
-El proyecto sigue un diseño **modular y escalable** bajo los principios de Atomic Design:
-
-```text
-PruebaBrandMatch/
-├── src/
-│   ├── components/     # Componentes reutilizables (CustomButton, RadarChart)
-│   ├── navigation/     # Configuración de rutas y stack (AppNavigator)
-│   ├── screens/        # Pantallas de la app (Welcome, Login, Match, etc.)
-│   └── theme/          # Design System (Colores, fuentes globales)
-├── App.js              # Punto de entrada y contenedores principales
-└── package.json        # Dependencias del proyecto
-```
-
-## ⚙️ Cómo ejecutar el proyecto localmente
-
-Si deseas probar este prototipo en tu propia computadora, sigue estos sencillos pasos:
-
-### Requisitos previos
-
-* Tener instalado [Node.js](https://nodejs.org/) (versión LTS recomendada).
-* Tener instalada la aplicación **Expo Go** en tu celular (disponible en Play Store y App Store) o un emulador de Android (como Android Studio).
-* Contar con Visual Studio Code u otro editor de código.
-
-### Pasos para la instalación
-
-1. **Clonar el repositorio:**
-   Abre tu terminal y ejecuta el siguiente comando para descargar el código:
-   ```bash
-   git clone https://github.com/TU-USUARIO/BrandMatch-App.git
-   ```
-   *(Recuerda reemplazar `TU-USUARIO` con tu nombre de usuario real de GitHub).*
-
-2. **Acceder a la carpeta del proyecto:**
-   ```bash
-   cd BrandMatch-App
-   ```
-
-3. **Instalar las dependencias:**
-   Descarga todas las librerías necesarias (React Navigation, Slider, Expo Blur, etc.):
-   ```bash
-   npm install
-   ```
-
-4. **Iniciar el servidor de desarrollo de Expo:**
-   ```bash
-   npx expo start
-   ```
-   *(Si es la primera vez que lo ejecutas, puedes usar `npx expo start -c` para limpiar la caché y evitar errores).*
-
-5. **Abrir la aplicación:**
-   * **En un emulador:** Presiona la tecla `a` en la terminal para abrir la app en Android Studio.
-   * **En un dispositivo físico:** Escanea el código QR que aparece en la terminal con la cámara de tu celular (si usas iOS) o desde la app **Expo Go** (si usas Android).
-   * **En el navegador:** Presiona la tecla `w` para abrir la versión web.
+1. [Presentación, Objetivos y Alcance](#-1-presentación-objetivos-y-alcance)
+2. [Problema del Negocio y Pipeline de Datos](#-2-problema-del-negocio-y-pipeline-de-datos)
+3. [Modelo de Negocio](#-3-modelo-de-negocio)
+4. [Prototipo en Figma, Capturas de Pantalla y Responsividad](#-4-prototipo-en-figma-capturas-de-pantalla-y-responsividad)
+5. [Arquitectura de Software y Metodología DDD](#-5-arquitectura-de-software-y-metodología-ddd)
+6. [Estructura Real del Repositorio (`src/`)](#-6-estructura-real-del-repositorio-src)
+7. [Estado Real del Proyecto](#-7-estado-real-del-proyecto)
+8. [Inteligencia Artificial y Prompts Empleados](#-8-inteligencia-artificial-y-prompts-empleados)
+9. [Limitaciones Técnicas y Consideraciones Éticas](#-9-limitaciones-técnicas-y-consideraciones-éticas)
+10. [Flujo de Trabajo en Git y Responsables](#-10-flujo-de-trabajo-en-git-y-responsables)
+11. [Ejecución Local](#-11-ejecución-local)
 
 ---
 
-## 👨‍💻 Autores
+## 🎯 1. Presentación, Objetivos y Alcance
 
-**Kevin Amaguaña - Jordan Guaicha - Jefferson Marcaya - Dayana Pilatuña -Erick Pulamarín**
-* **Proyecto:** BrandMatch - Pitch Deck & App Prototype
-* **Área:** Desarrollo Frontend Móvil con React Native.
+### Objetivo General
+Desarrollar un prototipo funcional de aplicación móvil bajo **Domain-Driven Design (DDD)** que permita a las marcas calibrar su identidad psicológica (**ADN Digital**), calcular su nivel de compatibilidad con creadores de contenido perfilados mediante el modelo **Big Five** y generar propuestas comerciales personalizadas (**Pitch**).
+
+### Objetivos Específicos
+- Estructurar el código móvil en cuatro capas desacopladas (`domain`, `application`, `infrastructure`, `presentation`) con inversión de dependencias mediante un *Composition Root* (`src/container.js`).
+- Integrar perfiles psicográficos obtenidos desde el scraper de TikTok y análisis con LLM (**Groq**) en el dominio de emparejamiento (`src/domain/match/`).
+- Implementar reglas de validación inmutables (*Objetos de Valor*) para el flujo de autenticación y registro de marcas.
+- Adaptar la interfaz móvil en modo oscuro a relaciones de aspecto **`9:16`**, **`16:9`** y **`1:1`**, manteniendo legibilidad y proporción en distintas resoluciones y densidades de píxeles.
+
+### Delimitación del Alcance
+
+| Incluye (Implementado en el Prototipo) | No Incluye (Fases Posteriores) |
+| :--- | :--- |
+| Flujo completo de 7 pantallas navegables en Expo Go (`Welcome`, `Login`, `Registro`, `ForgotPassword`, `Configuracion`, `Match`, `Pitch`). | Conexión en tiempo real a un servidor backend o base de datos relacional en la nube. |
+| Validaciones de dominio puras e inmutables (`Email`, `FullName`, `Password`, `NewPassword`) y manejo tipado de errores (`ValidationError`, `NotConfiguredError`). | Autenticación OAuth real con proveedores externos (Apple / Google Sign-In) ni envío real de correos de recuperación. |
+| Calibración interactiva de 5 rasgos de marca (`0%–100%`), catálogo de creadores perfilados con Big Five y cálculo matemático de compatibilidad. | Diagnóstico psicológico clínico validado (los puntajes Big Five son estimaciones comerciales orientativas). |
+| Visualización vectorial pentagonal (`RadarChart.js` en SVG) y generación dinámica de *Pitch* con copiado al portapapeles. | Envío automatizado de correos B2B desde la app ni extracción en vivo desde TikTok dentro del dispositivo móvil. |
+
+---
+
