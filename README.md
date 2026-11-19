@@ -161,7 +161,7 @@ El frontend móvil de **BrandMatch** implementa una **Arquitectura en Capas (*La
 ```
 
 **Ventaja clave:** Al mantener `src/domain/` completamente aislado de React Native y conectar `src/infrastructure/` mediante `src/container.js`, cualquier cambio en la interfaz gráfica o migración hacia un servidor backend real se realiza sin alterar la lógica principal del negocio.
-```
+
 
 ---
 
