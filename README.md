@@ -164,6 +164,87 @@ Welcome ──► Login ──► Configuración ADN ──► Análisis de Matc
 
 ---
 
+## 📂 6. Estructura Real del Repositorio (`src/`)
+
+```text
+PruebaBrandMatch/
+├── assets/
+│   └── screenshots/                # Capturas UI/UX de la app y del prototipo Figma
+├── docs/
+│   └── Reporte_Final_BrandMatch.pdf # Informe técnico institucional
+├── src/
+│   ├── domain/                     # 1. DOMINIO (Reglas puras e invariantes, sin React)
+│   │   ├── auth/
+│   │   │   ├── AuthErrors.js
+│   │   │   ├── AuthRepository.js
+│   │   │   ├── Email.js
+│   │   │   ├── FullName.js
+│   │   │   ├── NewPassword.js
+│   │   │   └── Password.js
+│   │   └── match/
+│   │       ├── Influencer.js
+│   │       └── MatchCalculator.js
+│   │
+│   ├── application/                # 2. APLICACIÓN (Casos de uso)
+│   │   ├── auth/
+│   │   │   ├── loginUser.js
+│   │   │   ├── registerUser.js
+│   │   │   └── requestPasswordReset.js
+│   │   └── match/
+│   │       └── calculateMatch.js
+│   │
+│   ├── infrastructure/             # 3. INFRAESTRUCTURA (Adaptadores externos)
+│   │   ├── auth/
+│   │   │   └── AuthApi.js
+│   │   └── match/
+│   │       └── InfluencerRepository.js
+│   │
+│   ├── presentation/               # 4. PRESENTACIÓN (UI React Native + Atomic Design)
+│   │   ├── components/
+│   │   │   ├── AuthIcons.js
+│   │   │   ├── CustomButton.js
+│   │   │   └── RadarChart.js
+│   │   ├── Navigation/
+│   │   │   └── AppNavigator.js
+│   │   ├── Screens/
+│   │   │   ├── ConfiguracionScreen.js
+│   │   │   ├── ForgotPasswordScreen.js
+│   │   │   ├── loginScreen.js
+│   │   │   ├── MatchScreen.js
+│   │   │   ├── PitchScreen.js
+│   │   │   ├── RegistroScreen.js
+│   │   │   └── WelcomeScreen.js
+│   │   └── Theme/
+│   │       └── colors.js
+│   │
+│   └── container.js                # Composition Root (Inyección de dependencias)
+│
+├── App.js                          # Punto de entrada y carga de tipografía Inter
+├── package.json                    # Dependencias y scripts de Expo
+├── README.md                       # Documentación principal del sistema
+├── README_CONFIGURACION.md         # Manual técnico del módulo Configuración ADN
+├── README_LOGIN.md                 # Manual técnico del módulo Login
+├── README_MATCH.md                 # Manual técnico del módulo Match y Radar
+└── README_REGISTRO.md              # Manual técnico del módulo Registro
+```
+
+---
+
+## 📊 7. Estado Real del Proyecto
+
+| Componente / Funcionalidad | Estado Actual | Detalle Técnico |
+| :--- | :--- | :--- |
+| Ejecución en Expo Go y navegación Native Stack (7 pantallas) | **Funciona** | Operativo en Android e iOS sin encabezados nativos invasivos. |
+| Validaciones de dominio en Login y Registro (`Email`, `NewPassword`, `FullName`) | **Funciona** | Validación por campo en tiempo real mediante `ValidationError`. |
+| Calibración de 5 sliders Big Five y buscador modal (`FlatList`) | **Funciona** | Actualización reactiva y validación de selección obligatoria. |
+| Cálculo matemático de compatibilidad (`MatchCalculator.js`) | **Funciona** | Computa porcentaje entero y clasificación por umbrales. |
+| Gráfico pentagonal vectorial (`RadarChart.js`) y responsividad (`9:16`, `16:9`, `1:1`) | **Funciona** | Redimensionamiento dinámico con `useWindowDimensions()` y SVG. |
+| Generación y copiado al portapapeles de propuesta comercial (`PitchScreen.js`) | **Funciona** | Plantilla personalizada con `Clipboard.setString` y alerta nativa. |
+| Persistencia de usuarios, recuperación de contraseña y OAuth | **Simulado / Pendiente** | `AuthApi.js` mantiene el flujo navegable y lanza `NotConfiguredError` en recuperación. |
+| Conexión en vivo con API backend de scraping | **En progreso** | Consume los 11 perfiles estructurados en `MOCK_INFLUENCERS`. |
+
+---
+
 ## 🤖 8. Inteligencia Artificial y Prompts Empleados
 
 ### 8.1 IA dentro del Producto vs. IA en el Desarrollo
