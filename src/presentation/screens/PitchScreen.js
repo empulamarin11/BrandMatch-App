@@ -14,9 +14,9 @@ import { COLORS } from '../theme/colors';
 import CustomButton from '../components/CustomButton';
 
 export default function PitchScreen({ navigation, route }) {
-    const { influencer } = route.params;
+    const {influencer} = route.params;
 
-    const { width, height } = useWindowDimensions();
+    const {width, height} = useWindowDimensions();
     const compact = height < 520;
     const row = width > height && width >= 600;
     const styles = useMemo(() => createStyles(compact, row), [compact, row]);
@@ -29,12 +29,13 @@ He estado siguiendo tu contenido y me encanta tu estilo (${influencer.arquetipo}
 
 El Equipo de Marketing.`;
 
+
     const copiarAlPortapapeles = () => {
         Clipboard.setString(mensajePitch);
         Alert.alert(
             'Mensaje copiado exitosamente',
             `El mensaje para @${influencer.username} ya está en tu portapapeles listo para pegar.`,
-            [{ text: 'Aceptar' }]
+            [{text: 'Aceptar'}]
         );
     };
 
@@ -42,7 +43,7 @@ El Equipo de Marketing.`;
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
                 <View style={styles.headerRow}>
-                    <PaperPlaneTilt size={compact ? 22 : 28} color={COLORS.primary} weight="bold" />
+                    <PaperPlaneTilt size={compact ? 22 : 28} color={COLORS.primary} weight="bold"/>
                     <AppText variant="title" style={styles.titleSpacing}>
                         Pitch Generado
                     </AppText>
@@ -59,7 +60,7 @@ El Equipo de Marketing.`;
                     </View>
 
                     <View style={styles.actions}>
-                        <CustomButton title="Copiar Mensaje" variant="action" onPress={copiarAlPortapapeles} />
+                        <CustomButton title="Copiar Mensaje" variant="action" onPress={copiarAlPortapapeles}/>
                         <View style={styles.logoutButton}>
                             <CustomButton
                                 title="Cerrar Sesión"
@@ -124,6 +125,7 @@ const createStyles = (compact, row) =>
             fontSize: compact ? 13 : 15,
             lineHeight: compact ? 19 : 22,
         },
+
 
         logoutButton: { marginTop: 12 },
     });
