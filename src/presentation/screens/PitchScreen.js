@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Clipboard,Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, Clipboard, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { PaperPlaneTilt } from 'phosphor-react-native';
+import { AppText } from '../components/atoms/AppText';
 import { COLORS } from '../theme/colors';
 import CustomButton from '../components/CustomButton';
 
@@ -21,12 +23,22 @@ export default function PitchScreen({ navigation, route}) {
       return (
   <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Pitch Generado</Text>
+          <View style={styles.headerRow}>
+              <PaperPlaneTilt size={28} color={COLORS.primary} weight="bold" />
+              <AppText variant="title" style={styles.titleSpacing}>
+                  Pitch Generado
+              </AppText>
+          </View>
 
-        <View style={styles.card}>
-          <Text style={styles.emailTo}>Para: @{influencer.username}</Text>
-          <Text style={styles.emailBody}>{mensajePitch}</Text>
-        </View>
+          <View style={styles.card}>
+              <AppText variant="subtitle" color="primary" style={styles.emailTo}>
+                  Para: @{influencer.username}
+              </AppText>
+              <AppText variant="body" color="textMuted">
+                  {mensajePitch}
+              </AppText>
+          </View>
+
 
         <CustomButton
           title="Copiar Mensaje" variant="action"
@@ -43,10 +55,22 @@ export default function PitchScreen({ navigation, route}) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.background },
-  content: { paddingHorizontal: 24, paddingTop: 40 },
-  title: { fontSize: 32, fontWeight: '900', color: COLORS.textLight, marginBottom: 20 },
-  card: { backgroundColor: COLORS.card, borderRadius: 20, padding: 20, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', marginBottom: 20 },
-  emailTo: { color: COLORS.primary, fontSize: 14, fontWeight: 'bold', marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.1)', paddingBottom: 15 },
-  emailBody: { color: COLORS.textMuted, fontSize: 15, lineHeight: 22 }
+    container: { flex: 1, backgroundColor: COLORS.background },
+    content: { paddingHorizontal: 24, paddingTop: 40 },
+    headerRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 20, gap: 10 },
+    titleSpacing: { fontSize: 28 },
+    card: {
+        backgroundColor: COLORS.card,
+        borderRadius: 20,
+        padding: 20,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.1)',
+        marginBottom: 20,
+    },
+    emailTo: {
+        marginBottom: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255,255,255,0.1)',
+        paddingBottom: 15,
+    },
 });
