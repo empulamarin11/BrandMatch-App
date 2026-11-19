@@ -135,6 +135,35 @@ La información de los creadores que alimenta `src/domain/match/Influencer.js` p
 
 ---
 
+## 🏗️ 5. Arquitectura de Software y Metodología DDD
+
+El proyecto implementa una **arquitectura en capas basada en Domain-Driven Design (DDD)**, alineada con los principios de **Clean Architecture**, complementada con **Inyección de Dependencias** para el desacoplamiento de servicios y **Atomic Design** para la construcción modular de la interfaz.
+
+### 1. Capas arquitectónicas
+
+| Capa | Directorio | Rol arquitectónico | Componentes implementados |
+|:--|:--|:--|:--|
+| **1. Dominio** | `src/domain/` | El núcleo puro. Reglas de negocio, validaciones y cálculos matemáticos sin dependencias de React ni librerías externas. | `Email.js`, `Password.js`, `FullName.js`, `NewPassword.js`, `AuthRepository.js`, `Influencer.js`, `MatchCalculator.js`, `PitchGenerator.js`, `BrandProfile.js` |
+| **2. Aplicación** | `src/application/` | Orquestadores. Casos de uso que reciben datos de la vista, ejecutan reglas del dominio y coordinan la infraestructura. | `loginUser.js`, `registerUser.js`, `calculateMatch.js`, `generatePitch.js`, `saveBrandProfile.js` |
+| **3. Infraestructura** | `src/infrastructure/` | El exterior. Adaptadores técnicos, repositorios de datos y conexión con APIs externas (actualmente simuladas). | `AuthApi.js`, `InfluencerRepository.js`, `AiApi.js` |
+| **4. Presentación** | `src/presentation/` | Lo visual. Renderiza pantallas, gestiona rutas y captura eventos táctiles en React Native. | `components/`, `navigation/`, `screens/`, `theme/` |
+
+### 2. Patrones complementarios
+
+- **Inyección de Dependencias (`src/container.js`):** actúa como *Composition Root*, instanciando los servicios de infraestructura (`AuthApi`, `InfluencerRepository`, `AiApi`) e inyectándolos en los casos de uso para evitar el acoplamiento directo desde las vistas.
+- **Atomic Design y Design System (`src/presentation/`):** organiza la UI por jerarquía de reutilización: tokens globales (`theme/colors.js`), átomos y moléculas (`CustomButton`, `RadarChart`), páginas (`screens/`) y navegación nativa (`navigation/AppNavigator`).
+- **Regla de dependencia hacia adentro:** toda la lógica psicográfica (Big Five) y las reglas de validación residen aisladas en `src/domain/`, lo que permite sustituir en el futuro las APIs simuladas por un backend real sin alterar la interfaz gráfica.
+
+### 3. Flujo de la aplicación
+
+```
+Welcome ──► Login ──► Configuración ADN ──► Análisis de Match ──► Pitch IA
+              │
+              └──► Registro
+```
+
+---
+
 ## 🤖 8. Inteligencia Artificial y Prompts Empleados
 
 ### 8.1 IA dentro del Producto vs. IA en el Desarrollo
