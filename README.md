@@ -329,47 +329,47 @@ PruebaBrandMatch/
 
 ---
 
-## ⚙️ Cómo ejecutar el proyecto localmente
+## 🌿 10. Flujo de Trabajo en Git y Responsables
 
-### Requisitos previos
+### Estrategia de Ramas y Commits
+- **`main`:** Rama principal de entrega estable.
+- **`features` / `feature/<módulo>`:** Ramas de trabajo independiente por funcionalidad (`login-rediseno`, `features`, `feature/match-radar`, `feature/pitch-ui`) integradas hacia `main` mediante **Pull Requests (PR)** y mensajes semánticos (*Conventional Commits*: `feat:`, `fix:`, `docs:`, `refactor:`).
 
-- [Node.js](https://nodejs.org/) (versión LTS recomendada).
-- Aplicación **Expo Go** en tu dispositivo móvil (Android / iOS) o un emulador configurado en Android Studio.
+### Asignación de Roles del Equipo
 
-### Pasos de instalación
+| Integrante | Rol Principal | Responsabilidades y Entregables Técnicos |
+| :--- | :--- | :--- |
+| **Erick Pulamarín** | Líder de Proyecto, Ingeniería de Datos & Diseño Base (*Product Owner*) | Concepción de la propuesta de negocio SaaS B2B; desarrollo del pipeline de extracción de datos en TikTok y análisis psicométrico Big Five mediante Groq LLM serializado en formato JSON para su consumo en la app; programación de la primera versión funcional completa del frontend; diseño inicial del prototipo en Figma, documentación base y coordinación de la colaboración y flujo de trabajo del equipo. |
+| **Jefferson Marcalla** | Arquitectura DDD & Módulo de Autenticación | Reestructuración y organización integral del proyecto hacia una **Arquitectura en Capas** guiada por **Domain-Driven Design (DDD)** (`domain`, `application`, `infrastructure`, `presentation` y `src/container.js`); implementación del flujo de acceso (`loginScreen.js`, `ForgotPasswordScreen.js`), objetos de valor y validaciones puras (`Email.js`, `Password.js`, `AuthErrors.js`), además de auditoría y correcciones técnicas en el `README.md`. |
+| **Kevin Amaguaña** | Módulo de Registro, Enrutamiento & Documentación Principal | Implementación del flujo de registro de marcas (`RegistroScreen.js`), caso de uso `registerUser.js` e invariantes de dominio (`FullName.js`, `NewPassword.js`); integración y pruebas de navegación en `AppNavigator.js`, validación de estados de error en formularios y edición estructurada del `README.md` principal del repositorio. |
+| **Jordan Guaicha** | Experiencia de Bienvenida, Animaciones & Diseño Adaptativo | Desarrollo de la interfaz de entrada (`WelcomeScreen.js`) con microinteracciones fluidas a 60 FPS mediante la API nativa `Animated` (`useNativeDriver: true`); ingeniería de adaptación responsiva multi-formato para relaciones de aspecto **`9:16`**, **`16:9`** y **`1:1`** utilizando `useWindowDimensions()`, gestión de densidad de píxeles (`dp`) y contenedores flexibles libres de recortes en cualquier resolución. |
+| **Dayana Pilatuña** | Módulo Pitch B2B, Sistema Tipográfico & Documentación Final | Desarrollo del generador dinámico de propuestas comerciales (`PitchScreen.js`) con personalización por arquetipo y copiado al portapapeles; integración global de la familia tipográfica **Inter** (`@expo-google-fonts/inter` y `expo-font`) en `App.js` y tokens del *Design System* para garantizar fidelidad estética con Figma; redacción de manuales técnicos y consolidación del informe académico final. |
 
-**1. Clonar el repositorio**
+---
+
+## ⚙️ 11. Ejecución Local
+
+### Requisitos Previos
+- **[Node.js](https://nodejs.org/)** (versión LTS).
+- Aplicación **Expo Go** instalada en Android/iOS o emulador en Android Studio.
+
+### Instalación y Arranque
 
 ```bash
-git clone https://github.com/TU-USUARIO/BrandMatch-App.git
-```
+# 1. Clonar el repositorio
+git clone [https://github.com/empulamarin11/BrandMatch-App.git](https://github.com/empulamarin11/BrandMatch-App.git)
 
-> Reemplaza `TU-USUARIO` con tu usuario real de GitHub.
-
-**2. Ingresar al directorio del proyecto**
-
-```bash
+# 2. Ingresar al directorio
 cd BrandMatch-App
-```
 
-**3. Instalar dependencias**
-
-```bash
+# 3. Instalar dependencias
 npm install
+
+# 4. Iniciar servidor de desarrollo Expo (limpiando caché)
+npx expo start -c
 ```
 
-**4. Iniciar el servidor de desarrollo de Expo**
-
-```bash
-npx expo start
-```
-
-> Si es la primera ejecución, usa `npx expo start -c` para limpiar la caché.
-
-**5. Visualizar la aplicación**
-
-- **En dispositivo físico:** escanea el código QR desde Expo Go (Android) o con la cámara (iOS).
-- **En emulador Android:** presiona la tecla `a` en la terminal.
+Escanea el código QR desde **Expo Go** en tu teléfono o presiona `a` en la terminal para abrirlo en el emulador de Android.
 
 ### Ver los datos simulados
 
@@ -382,16 +382,6 @@ git grep -n "MOCK_INFLUENCERS"
 ```
 
 ---
-
-## 👨‍💻 Integrantes / Autores
-
-| Integrante | Responsabilidad |
-|:--|:--|
-| Jordan Guaicha | P1 — Pantalla de Bienvenida |
-| Jefferson Marcalla | P2 — Pantalla de Login |
-| Kevin Amaguaña | P3 — Pantalla de Registro |
-| Dayana Pilatuña | P4 — Configuración del ADN |
-| Erick Pulamarín | P5 — Análisis de Match y Pitch IA |
 
 <div align="center">
 
