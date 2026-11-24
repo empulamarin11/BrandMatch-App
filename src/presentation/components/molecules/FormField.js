@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
-import AppText from '../atoms/AppText';
+import { AppText } from '../atoms/AppText';
 import { COLORS } from '../../theme/colors';
 
 export default function FormField({

@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 import { requestPasswordReset } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
-import AppText from '../components/atoms/AppText';
+import { AppText } from '../components/atoms/AppText';
 import CustomButton from '../components/atoms/CustomButton';
 import FormField from '../components/molecules/FormField';
 

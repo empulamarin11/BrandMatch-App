@@ -13,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 import { AppleIcon, GoogleIcon, EyeIcon, EyeOffIcon } from '../components/atoms/AuthIcons';
-import AppText from '../components/atoms/AppText';
+import { AppText } from '../components/atoms/AppText';
 import FormField from '../components/molecules/FormField';
 import { loginUser } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
