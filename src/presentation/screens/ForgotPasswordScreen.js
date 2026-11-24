@@ -1,8 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
   View,
-  Text,
-  TextInput,
   Pressable,
   ScrollView,
   KeyboardAvoidingView,
@@ -15,6 +13,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 import { requestPasswordReset } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
+import AppText from '../components/atoms/AppText';
+import CustomButton from '../components/atoms/CustomButton';
+import FormField from '../components/molecules/FormField';
 
 export default function ForgotPasswordScreen({ navigation, route }) {
   const { height } = useWindowDimensions();
@@ -39,62 +40,60 @@ export default function ForgotPasswordScreen({ navigation, route }) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+        <KeyboardAvoidingView
+            style={styles.flex}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <View style={styles.content}>
-            <Text style={styles.title}>Forgot Password</Text>
-            <Text style={styles.subtitle}>
-              Enter your email to receive a password reset link
-            </Text>
+          <ScrollView
+              contentContainerStyle={styles.scrollContent}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.content}>
+              <AppText style={styles.title}>Forgot Password</AppText>
+              <AppText style={styles.subtitle}>
+                Enter your email to receive a password reset link
+              </AppText>
 
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={[styles.input, error && styles.inputError]}
-              value={email}
-              onChangeText={(value) => {
-                setEmail(value);
-                if (error) setError('');
-              }}
-              placeholder="Email"
-              placeholderTextColor={COLORS.textMuted}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="email"
-              textContentType="emailAddress"
-              returnKeyType="send"
-              onSubmitEditing={handleSubmit}
-            />
-            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+              <FormField
+                  label="Email"
+                  value={email}
+                  onChangeText={(value) => {
+                    setEmail(value);
+                    if (error) setError('');
+                  }}
+                  placeholder="Email"
+                  error={error}
+                  compact={compact}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="email"
+                  textContentType="emailAddress"
+                  returnKeyType="send"
+                  onSubmitEditing={handleSubmit}
+              />
 
-            <Pressable
-              onPress={handleSubmit}
-              style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}
-              accessibilityRole="button"
-            >
-              <Text style={styles.primaryButtonText}>Send reset link</Text>
-            </Pressable>
+              <CustomButton
+                  title="Send reset link"
+                  onPress={handleSubmit}
+                  style={styles.primaryButton}
+                  textStyle={styles.primaryButtonText}
+              />
 
-            <Pressable
-              onPress={() => navigation.goBack()}
-              hitSlop={8}
-              style={({ pressed }) => [styles.backWrapper, pressed && styles.pressedLight]}
-              accessibilityRole="link"
-            >
-              <Text style={styles.link}>Back to Login</Text>
-            </Pressable>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+              <Pressable
+                  onPress={() => navigation.goBack()}
+                  hitSlop={8}
+                  style={({ pressed }) => [styles.backWrapper, pressed && styles.pressedLight]}
+                  accessibilityRole="link"
+              >
+                <AppText style={styles.link}>Back to Login</AppText>
+              </Pressable>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 }
 
@@ -125,19 +124,6 @@ const createStyles = (compact) => {
       marginTop: compact ? 4 : 10,
       marginBottom: compact ? 14 : 30,
     },
-    label: { fontSize: 13, fontWeight: '600', color: '#FFFFFF', marginBottom: compact ? 4 : 8 },
-    input: {
-      height: CONTROL_HEIGHT,
-      backgroundColor: COLORS.inputBackground,
-      borderRadius: 14,
-      borderWidth: 1,
-      borderColor: COLORS.inputBorder,
-      paddingHorizontal: 14,
-      color: '#FFFFFF',
-      fontSize: 14,
-    },
-    inputError: { borderColor: COLORS.error },
-    errorText: { color: COLORS.error, fontSize: 12, marginTop: compact ? 3 : 6 },
     primaryButton: {
       height: CONTROL_HEIGHT,
       borderRadius: 14,
@@ -149,7 +135,6 @@ const createStyles = (compact) => {
     primaryButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
     backWrapper: { alignSelf: 'center', marginTop: compact ? 12 : 22 },
     link: { fontSize: 14, color: COLORS.accent, textDecorationLine: 'underline' },
-    pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
     pressedLight: { opacity: 0.6 },
   });
 };
