@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import {
   View,
+<<<<<<< HEAD
   TextInput,
+=======
+>>>>>>> 92b62ff80c8a0b134b4894be6d974f9d136ca5e7
   Pressable,
   ScrollView,
   KeyboardAvoidingView,
@@ -16,6 +19,9 @@ import { COLORS } from '../theme/colors';
 import { TYPOGRAPHY } from '../theme/typography';
 import { requestPasswordReset } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
+import { AppText } from '../components/atoms/AppText';
+import CustomButton from '../components/atoms/CustomButton';
+import FormField from '../components/molecules/FormField';
 
 export default function ForgotPasswordScreen({ navigation, route }) {
   const [email, setEmail] = useState(route?.params?.email ?? '');
@@ -39,16 +45,12 @@ export default function ForgotPasswordScreen({ navigation, route }) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+        <KeyboardAvoidingView
+            style={styles.flex}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
+<<<<<<< HEAD
           <View style={styles.content}>
             {/* Ícono Phosphor del encabezado */}
             <View style={styles.iconCircle}>
@@ -191,3 +193,98 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
   pressedLight: { opacity: 0.6 },
 });
+=======
+          <ScrollView
+              contentContainerStyle={styles.scrollContent}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.content}>
+              <AppText style={styles.title}>Forgot Password</AppText>
+              <AppText style={styles.subtitle}>
+                Enter your email to receive a password reset link
+              </AppText>
+
+              <FormField
+                  label="Email"
+                  value={email}
+                  onChangeText={(value) => {
+                    setEmail(value);
+                    if (error) setError('');
+                  }}
+                  placeholder="Email"
+                  error={error}
+                  compact={compact}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="email"
+                  textContentType="emailAddress"
+                  returnKeyType="send"
+                  onSubmitEditing={handleSubmit}
+              />
+
+              <CustomButton
+                  title="Send reset link"
+                  onPress={handleSubmit}
+                  style={styles.primaryButton}
+                  textStyle={styles.primaryButtonText}
+              />
+
+              <Pressable
+                  onPress={() => navigation.goBack()}
+                  hitSlop={8}
+                  style={({ pressed }) => [styles.backWrapper, pressed && styles.pressedLight]}
+                  accessibilityRole="link"
+              >
+                <AppText style={styles.link}>Back to Login</AppText>
+              </Pressable>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+  );
+}
+
+const createStyles = (compact) => {
+  const CONTROL_HEIGHT = compact ? 42 : 50;
+
+  return StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: COLORS.background },
+    flex: { flex: 1 },
+    scrollContent: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      paddingHorizontal: 20,
+      paddingVertical: compact ? 12 : 24,
+    },
+    content: { width: '100%', maxWidth: 480, alignSelf: 'center' },
+    title: {
+      fontSize: compact ? 22 : 28,
+      fontWeight: '800',
+      color: '#FFFFFF',
+      textAlign: 'center',
+      letterSpacing: -0.5,
+    },
+    subtitle: {
+      fontSize: compact ? 13 : 14,
+      color: COLORS.textMuted,
+      textAlign: 'center',
+      marginTop: compact ? 4 : 10,
+      marginBottom: compact ? 14 : 30,
+    },
+    primaryButton: {
+      height: CONTROL_HEIGHT,
+      borderRadius: 14,
+      backgroundColor: COLORS.authButton,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: compact ? 14 : 22,
+    },
+    primaryButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
+    backWrapper: { alignSelf: 'center', marginTop: compact ? 12 : 22 },
+    link: { fontSize: 14, color: COLORS.accent, textDecorationLine: 'underline' },
+    pressedLight: { opacity: 0.6 },
+  });
+};
+>>>>>>> 92b62ff80c8a0b134b4894be6d974f9d136ca5e7

@@ -1,8 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import {
   View,
-  Text,
-  TextInput,
   Pressable,
   ScrollView,
   KeyboardAvoidingView,
@@ -14,13 +12,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
-import { AppleIcon, GoogleIcon, EyeIcon, EyeOffIcon } from '../components/AuthIcons';
+import { AppleIcon, GoogleIcon, EyeIcon, EyeOffIcon } from '../components/atoms/AuthIcons';
+import { AppText } from '../components/atoms/AppText';
+import FormField from '../components/molecules/FormField';
 import { loginUser } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
 
 export default function LoginScreen({ navigation }) {
   const { height } = useWindowDimensions();
-  const compact = height < 520; // 16:9 horizontal o 1:1 compacto
+  const compact = height < 520;
   const styles = useMemo(() => createStyles(compact), [compact]);
 
   const [email, setEmail] = useState('');
@@ -67,147 +67,147 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+        <KeyboardAvoidingView
+            style={styles.flex}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <View style={styles.content}>
-            <Text style={styles.title}>BrandMatch</Text>
-            <Text style={styles.subtitle}>Access your analytics workspace</Text>
+          <ScrollView
+              contentContainerStyle={styles.scrollContent}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.content}>
+              <AppText style={styles.title}>BrandMatch</AppText>
+              <AppText style={styles.subtitle}>Access your analytics workspace</AppText>
 
-            {/* Email */}
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={[styles.input, errors.email && styles.inputError]}
-              value={email}
-              onChangeText={handleEmailChange}
-              placeholder="Email"
-              placeholderTextColor={COLORS.textMuted}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="email"
-              textContentType="emailAddress"
-              returnKeyType="next"
-              editable={!isLoading}
-            />
-            {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
-
-            {/* Password */}
-            <Text style={[styles.label, styles.labelSpacing]}>Password</Text>
-            <View style={[styles.input, styles.passwordWrapper, errors.password && styles.inputError]}>
-              <TextInput
-                style={styles.passwordInput}
-                value={password}
-                onChangeText={handlePasswordChange}
-                placeholder="Password"
-                placeholderTextColor={COLORS.textMuted}
-                secureTextEntry={isPasswordHidden}
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoComplete="password"
-                textContentType="password"
-                returnKeyType="done"
-                onSubmitEditing={handleLogin}
-                editable={!isLoading}
+              {/* Email (Molécula FormField) */}
+              <FormField
+                  label="Email"
+                  value={email}
+                  onChangeText={handleEmailChange}
+                  placeholder="Email"
+                  error={errors.email}
+                  compact={compact}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="email"
+                  textContentType="emailAddress"
+                  returnKeyType="next"
+                  editable={!isLoading}
               />
+
+              {/* Password (Molécula FormField + Átomo EyeIcon) */}
+              <View style={styles.labelSpacing}>
+                <FormField
+                    label="Password"
+                    value={password}
+                    onChangeText={handlePasswordChange}
+                    placeholder="Password"
+                    error={errors.password}
+                    compact={compact}
+                    secureTextEntry={isPasswordHidden}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoComplete="password"
+                    textContentType="password"
+                    returnKeyType="done"
+                    onSubmitEditing={handleLogin}
+                    editable={!isLoading}
+                    rightElement={
+                      <Pressable
+                          onPress={() => setIsPasswordHidden((hidden) => !hidden)}
+                          hitSlop={10}
+                          style={({ pressed }) => [styles.eyeButton, pressed && styles.pressedLight]}
+                          accessibilityRole="button"
+                          accessibilityLabel={isPasswordHidden ? 'Show password' : 'Hide password'}
+                      >
+                        {isPasswordHidden ? <EyeOffIcon /> : <EyeIcon />}
+                      </Pressable>
+                    }
+                />
+              </View>
+
+              {/* Forgot Password */}
               <Pressable
-                onPress={() => setIsPasswordHidden((hidden) => !hidden)}
-                hitSlop={10}
-                style={({ pressed }) => [styles.eyeButton, pressed && styles.pressedLight]}
-                accessibilityRole="button"
-                accessibilityLabel={isPasswordHidden ? 'Show password' : 'Hide password'}
+                  onPress={() => navigation.navigate('RecuperarPassword', { email: email.trim() })}
+                  hitSlop={8}
+                  style={({ pressed }) => [styles.forgotWrapper, pressed && styles.pressedLight]}
+                  accessibilityRole="link"
               >
-                {isPasswordHidden ? <EyeOffIcon /> : <EyeIcon />}
-              </Pressable>
-            </View>
-            {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
-
-            {/* Forgot Password */}
-            <Pressable
-              onPress={() => navigation.navigate('RecuperarPassword', { email: email.trim() })}
-              hitSlop={8}
-              style={({ pressed }) => [styles.forgotWrapper, pressed && styles.pressedLight]}
-              accessibilityRole="link"
-            >
-              <Text style={styles.link}>Forgot Password</Text>
-            </Pressable>
-
-            {errors.form ? <Text style={[styles.errorText, styles.formError]}>{errors.form}</Text> : null}
-
-            {/* Botón Login */}
-            <Pressable
-              onPress={handleLogin}
-              disabled={isLoading}
-              style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}
-              accessibilityRole="button"
-              accessibilityState={{ busy: isLoading, disabled: isLoading }}
-            >
-              {isLoading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <Text style={styles.primaryButtonText}>Login</Text>
-              )}
-            </Pressable>
-
-            {/* Separador */}
-            <View style={styles.dividerRow}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>Or login with</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            {/* Apple / Google */}
-            <View style={styles.socialRow}>
-              <Pressable
-                onPress={() => handleSocialLogin('Apple')}
-                style={({ pressed }) => [styles.socialButton, pressed && styles.pressed]}
-                accessibilityRole="button"
-                accessibilityLabel="Login with Apple"
-              >
-                <View style={styles.socialIcon}>
-                  <AppleIcon size={26} />
-                </View>
-                <Text style={styles.socialText}>Apple</Text>
+                <AppText style={styles.link}>Forgot Password</AppText>
               </Pressable>
 
-              <View style={styles.socialGap} />
+              {errors.form ? <AppText style={[styles.errorText, styles.formError]}>{errors.form}</AppText> : null}
 
+              {/* Botón Login */}
               <Pressable
-                onPress={() => handleSocialLogin('Google')}
-                style={({ pressed }) => [styles.socialButton, pressed && styles.pressed]}
-                accessibilityRole="button"
-                accessibilityLabel="Login with Google"
+                  onPress={handleLogin}
+                  disabled={isLoading}
+                  style={({ pressed }) => [styles.primaryButton, pressed && styles.pressed]}
+                  accessibilityRole="button"
+                  accessibilityState={{ busy: isLoading, disabled: isLoading }}
               >
-                <View style={styles.socialIcon}>
-                  <GoogleIcon size={26} />
-                </View>
-                <Text style={styles.socialText}>Google</Text>
+                {isLoading ? (
+                    <ActivityIndicator color="#FFFFFF" />
+                ) : (
+                    <AppText style={styles.primaryButtonText}>Login</AppText>
+                )}
               </Pressable>
-            </View>
 
-            {/* Register */}
-            <View style={styles.registerRow}>
-              <Text style={styles.registerText}>Don’t have account? </Text>
-              <Pressable
-                onPress={() => navigation.navigate('Registro')}
-                hitSlop={8}
-                style={({ pressed }) => pressed && styles.pressedLight}
-                accessibilityRole="link"
-              >
-                <Text style={[styles.link, styles.registerLink]}>Register</Text>
-              </Pressable>
+              {/* Separador */}
+              <View style={styles.dividerRow}>
+                <View style={styles.dividerLine} />
+                <AppText style={styles.dividerText}>Or login with</AppText>
+                <View style={styles.dividerLine} />
+              </View>
+
+              {/* Apple / Google */}
+              <View style={styles.socialRow}>
+                <Pressable
+                    onPress={() => handleSocialLogin('Apple')}
+                    style={({ pressed }) => [styles.socialButton, pressed && styles.pressed]}
+                    accessibilityRole="button"
+                    accessibilityLabel="Login with Apple"
+                >
+                  <View style={styles.socialIcon}>
+                    <AppleIcon size={26} />
+                  </View>
+                  <AppText style={styles.socialText}>Apple</AppText>
+                </Pressable>
+
+                <View style={styles.socialGap} />
+
+                <Pressable
+                    onPress={() => handleSocialLogin('Google')}
+                    style={({ pressed }) => [styles.socialButton, pressed && styles.pressed]}
+                    accessibilityRole="button"
+                    accessibilityLabel="Login with Google"
+                >
+                  <View style={styles.socialIcon}>
+                    <GoogleIcon size={26} />
+                  </View>
+                  <AppText style={styles.socialText}>Google</AppText>
+                </Pressable>
+              </View>
+
+              {/* Register */}
+              <View style={styles.registerRow}>
+                <AppText style={styles.registerText}>Don’t have account? </AppText>
+                <Pressable
+                    onPress={() => navigation.navigate('Registro')}
+                    hitSlop={8}
+                    style={({ pressed }) => pressed && styles.pressedLight}
+                    accessibilityRole="link"
+                >
+                  <AppText style={[styles.link, styles.registerLink]}>Register</AppText>
+                </Pressable>
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 }
 
@@ -241,34 +241,7 @@ const createStyles = (compact) => {
       marginTop: compact ? 4 : 10,
       marginBottom: compact ? 14 : 30,
     },
-
-    label: {
-      fontSize: 13,
-      fontWeight: '600',
-      color: '#FFFFFF',
-      marginBottom: compact ? 4 : 8,
-    },
     labelSpacing: { marginTop: compact ? 10 : 22 },
-
-    input: {
-      height: CONTROL_HEIGHT,
-      backgroundColor: COLORS.inputBackground,
-      borderRadius: RADIUS,
-      borderWidth: 1,
-      borderColor: COLORS.inputBorder,
-      paddingHorizontal: 14,
-      color: '#FFFFFF',
-      fontSize: 14,
-    },
-    inputError: { borderColor: COLORS.error },
-    passwordWrapper: { flexDirection: 'row', alignItems: 'center', paddingRight: 10 },
-    passwordInput: {
-      flex: 1,
-      height: '100%',
-      color: '#FFFFFF',
-      fontSize: 14,
-      paddingVertical: 0,
-    },
     eyeButton: { padding: 4, marginLeft: 8 },
 
     errorText: { color: COLORS.error, fontSize: 12, marginTop: compact ? 3 : 6 },
