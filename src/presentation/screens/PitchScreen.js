@@ -11,7 +11,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperPlaneTilt } from 'phosphor-react-native';
 import { AppText } from '../components/atoms/AppText';
 import { COLORS } from '../theme/colors';
-import CustomButton from '../components/atoms/CustomButton';
+import CustomButton from '../components/CustomButton';
+import { ejecutarGeneracionPitch } from '../../application/match/generatePitch';
 
 export default function PitchScreen({ navigation, route }) {
     const { influencer } = route.params;
@@ -21,19 +22,14 @@ export default function PitchScreen({ navigation, route }) {
     const row = width > height && width >= 600;
     const styles = useMemo(() => createStyles(compact, row), [compact, row]);
 
-    const mensajePitch = `Hola ${influencer.name},
-
-He estado siguiendo tu contenido y me encanta tu estilo (${influencer.arquetipo}) y cómo conectas con tu comunidad. Creemos que tu perfil encaja perfectamente con nuestra nueva línea premium.
-
-¿Te parece bien agendar una llamada esta semana?
-
-El Equipo de Marketing.`;
+    const pitch = useMemo(() => ejecutarGeneracionPitch(influencer), [influencer]);
+    const mensajePitch = pitch.mensaje;
 
     const copiarAlPortapapeles = () => {
         Clipboard.setString(mensajePitch);
         Alert.alert(
             'Mensaje copiado exitosamente',
-            `El mensaje para @${influencer.username} ya está en tu portapapeles listo para pegar.`,
+            `El mensaje para ${pitch.destinatario} ya está en tu portapapeles listo para pegar.`,
             [{ text: 'Aceptar' }]
         );
     };
@@ -51,7 +47,7 @@ El Equipo de Marketing.`;
                 <View style={styles.body}>
                     <View style={styles.card}>
                         <AppText variant="subtitle" color="primary" style={styles.emailTo}>
-                            Para: @{influencer.username}
+                            Para: {pitch.destinatario}
                         </AppText>
                         <AppText variant="body" color="textMuted" style={styles.emailBody}>
                             {mensajePitch}
