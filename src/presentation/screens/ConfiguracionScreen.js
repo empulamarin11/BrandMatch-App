@@ -1,35 +1,53 @@
+/**
+ * ConfiguracionScreen
+ *
+ * Pantalla de configuración ADN de marca.
+ * - Usa AppText (Inter) en lugar de <Text> nativo.
+ * - Usa Phosphor Icons para el dropdown y la info del influencer.
+ * - Usa el organismo DnaSliderGroup para los sliders Big Five.
+ * - Usa AuthTemplate como contenedor responsivo (9:16 y 16:9).
+ */
+
 import React, { useState, useMemo } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   Modal,
   FlatList,
   ActivityIndicator,
   useWindowDimensions,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Slider from '@react-native-community/slider';
+import {
+  CaretDown,
+  MagnifyingGlass,
+  User,
+  Users,
+  Star,
+  Warning,
+  CircleNotch,
+} from 'phosphor-react-native';
+
 import { COLORS } from '../theme/colors';
+import { AppText } from '../components/atoms/AppText';
+import { DnaSliderGroup } from '../components/organisms/DnaSliderGroup';
+import { AuthTemplate } from '../components/templates/AuthTemplate';
 import CustomButton from '../components/CustomButton';
 import { getInfluencers } from '../../infrastructure/match/InfluencerRepository';
 
 export default function ConfiguracionScreen({ navigation }) {
   const { width, height } = useWindowDimensions();
-  const compact = height < 520;                    // 16:9 horizontal o 1:1 compacto
-  const row = width > height && width >= 600;      // horizontal con espacio para 2 columnas
-  const styles = useMemo(() => createStyles(compact, row), [compact, row]);
+  const compact = height < 520;                    // 16:9 horizontal o compacto
+  const row = width > height && width >= 600;      // horizontal con 2 columnas
 
-  // ESTADOS DEL BIG FIVE (5 SLIDERS)
+  // ── ESTADOS BIG FIVE ────────────────────────────────────────────────────────
   const [creatividad, setCreatividad] = useState(80);
   const [seriedad, setSeriedad] = useState(50);
   const [sociabilidad, setSociabilidad] = useState(70);
   const [empatia, setEmpatia] = useState(60);
   const [estabilidad, setEstabilidad] = useState(20);
 
-  // ESTADOS DEL BUSCADOR
+  // ── ESTADOS BUSCADOR ────────────────────────────────────────────────────────
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedInfluencer, setSelectedInfluencer] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -38,13 +56,14 @@ export default function ConfiguracionScreen({ navigation }) {
   const influencers = getInfluencers();
 
   const sliders = [
-    { label: 'Creatividad', value: creatividad, onChange: setCreatividad },
-    { label: 'Seriedad', value: seriedad, onChange: setSeriedad },
+    { label: 'Creatividad',  value: creatividad,  onChange: setCreatividad  },
+    { label: 'Seriedad',     value: seriedad,     onChange: setSeriedad     },
     { label: 'Sociabilidad', value: sociabilidad, onChange: setSociabilidad },
-    { label: 'Empatía', value: empatia, onChange: setEmpatia },
-    { label: 'Estabilidad', value: estabilidad, onChange: setEstabilidad },
+    { label: 'Empatía',      value: empatia,      onChange: setEmpatia      },
+    { label: 'Estabilidad',  value: estabilidad,  onChange: setEstabilidad  },
   ];
 
+  // ── HANDLERS ────────────────────────────────────────────────────────────────
   const handleSelectInfluencer = (influencer) => {
     setSelectedInfluencer(influencer);
     setIsModalVisible(false);
@@ -53,15 +72,12 @@ export default function ConfiguracionScreen({ navigation }) {
 
   const handleBuscar = () => {
     if (!selectedInfluencer) {
-      setErrorMsg('⚠️ Selecciona un influencer primero.');
+      setErrorMsg('Selecciona un influencer primero.');
       return;
     }
-
     setIsCalculating(true);
-
     setTimeout(() => {
       setIsCalculating(false);
-
       navigation.navigate('Match', {
         marca: { creatividad, seriedad, sociabilidad, empatia, estabilidad },
         influencer: selectedInfluencer,
@@ -69,81 +85,121 @@ export default function ConfiguracionScreen({ navigation }) {
     }, 1200);
   };
 
+  // ── ESTILOS DINÁMICOS ───────────────────────────────────────────────────────
+  const styles = useMemo(() => createStyles(compact, row), [compact, row]);
+
+  // ── RENDER ──────────────────────────────────────────────────────────────────
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <Text style={styles.title}>Configura tu ADN</Text>
-        <Text style={styles.subtitle}>Desliza para definir la personalidad de tu marca:</Text>
+    <AuthTemplate scrollable>
+      {/* ── ENCABEZADO ── */}
+      <AppText
+        variant="title"
+        color="textLight"
+        style={[styles.title, compact && styles.titleCompact]}
+      >
+        Configura tu ADN
+      </AppText>
+      <AppText
+        variant="body"
+        color="textMuted"
+        style={styles.subtitle}
+      >
+        Desliza para definir la personalidad de tu marca:
+      </AppText>
 
-        <View style={styles.cardsRow}>
-          {/* SECCIÓN 1: SLIDERS */}
-          <View style={styles.sectionCard}>
-            <Text style={styles.sectionTitle}>1. Configura el ADN de tu Marca</Text>
+      {/* ── CARDS ROW (layout horizontal) ── */}
+      <View style={row ? styles.cardsRow : null}>
 
-            {sliders.map((item) => (
-              <View key={item.label} style={styles.sliderGroup}>
-                <View style={styles.sliderHeader}>
-                  <Text style={styles.sliderLabel}>{item.label}</Text>
-                  <Text style={styles.sliderValue}>{item.value}%</Text>
-                </View>
+        {/* ── SECCIÓN 1: SLIDERS BIG FIVE ── */}
+        <View style={[styles.sectionCard, row && styles.sectionCardRow]}>
+          <AppText variant="subtitle" color="textLight" style={styles.sectionTitle}>
+            1. Configura el ADN de tu Marca
+          </AppText>
 
-                <Slider
-                  style={styles.slider}
-                  minimumValue={0}
-                  maximumValue={100}
-                  step={1}
-                  value={item.value}
-                  onValueChange={item.onChange}
-                  minimumTrackTintColor={COLORS.primary}
-                  maximumTrackTintColor={COLORS.card}
-                  thumbTintColor={COLORS.action}
-                />
-              </View>
-            ))}
-          </View>
-
-          {/* SECCIÓN 2: BUSCADOR DE INFLUENCER */}
-          <View style={styles.sectionCard}>
-            <Text style={styles.sectionTitle}>2. Buscar Influencer</Text>
-            <Text style={styles.sectionSubtitle}>Selecciona un perfil de la base de datos:</Text>
-
-            {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
-
-            <TouchableOpacity style={styles.dropdownButton} onPress={() => setIsModalVisible(true)}>
-              <Text style={styles.dropdownText}>
-                {selectedInfluencer ? `@${selectedInfluencer.username}` : 'Elegir influencer...'}
-              </Text>
-              <Text style={styles.dropdownIcon}>▼</Text>
-            </TouchableOpacity>
-
-            {selectedInfluencer && (
-              <View style={styles.infoBox}>
-                <Text style={styles.infoText}>Nombre: {selectedInfluencer.name}</Text>
-                <Text style={styles.infoText}>Seguidores: {selectedInfluencer.seguidores}</Text>
-                <Text style={styles.infoText}>Arquetipo: {selectedInfluencer.arquetipo}</Text>
-              </View>
-            )}
-          </View>
+          <DnaSliderGroup sliders={sliders} compact={compact} />
         </View>
 
-        {/* BOTÓN FINAL */}
-        <View style={styles.finalButton}>
-          {isCalculating ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color={COLORS.primary} />
-              <Text style={styles.loadingText}>Calculando Match...</Text>
+        {/* ── SECCIÓN 2: BUSCADOR DE INFLUENCER ── */}
+        <View style={[styles.sectionCard, row && styles.sectionCardRow]}>
+          <AppText variant="subtitle" color="textLight" style={styles.sectionTitle}>
+            2. Buscar Influencer
+          </AppText>
+          <AppText variant="caption" color="textMuted" style={styles.sectionSubtitle}>
+            Selecciona un perfil de la base de datos:
+          </AppText>
+
+          {/* Mensaje de error */}
+          {errorMsg ? (
+            <View style={styles.errorRow}>
+              <Warning size={16} color={COLORS.action} weight="bold" />
+              <AppText variant="body" color="action" style={styles.errorText}>
+                {errorMsg}
+              </AppText>
             </View>
-          ) : (
-            <CustomButton title="Ver Análisis Match" variant="action" onPress={handleBuscar} />
+          ) : null}
+
+          {/* Dropdown */}
+          <TouchableOpacity
+            style={styles.dropdownButton}
+            onPress={() => setIsModalVisible(true)}
+            activeOpacity={0.8}
+          >
+            <View style={styles.dropdownLeft}>
+              <MagnifyingGlass size={16} color={COLORS.textMuted} />
+              <AppText variant="body" color={selectedInfluencer ? 'textLight' : 'textMuted'} style={styles.dropdownText}>
+                {selectedInfluencer ? `@${selectedInfluencer.username}` : 'Elegir influencer...'}
+              </AppText>
+            </View>
+            <CaretDown size={16} color={COLORS.textMuted} />
+          </TouchableOpacity>
+
+          {/* Info del influencer seleccionado */}
+          {selectedInfluencer && (
+            <View style={styles.infoBox}>
+              <View style={styles.infoRow}>
+                <User size={14} color={COLORS.primary} />
+                <AppText variant="caption" color="primary" style={styles.infoText}>
+                  {selectedInfluencer.name}
+                </AppText>
+              </View>
+              <View style={styles.infoRow}>
+                <Users size={14} color={COLORS.primary} />
+                <AppText variant="caption" color="primary" style={styles.infoText}>
+                  {selectedInfluencer.seguidores} seguidores
+                </AppText>
+              </View>
+              <View style={styles.infoRow}>
+                <Star size={14} color={COLORS.primary} />
+                <AppText variant="caption" color="primary" style={styles.infoText}>
+                  {selectedInfluencer.arquetipo}
+                </AppText>
+              </View>
+            </View>
           )}
         </View>
-      </ScrollView>
+      </View>
 
-      {/* MODAL: VENTANA EMERGENTE */}
-      <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+      {/* ── BOTÓN FINAL ── */}
+      <View style={styles.finalButton}>
+        {isCalculating ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+            <AppText variant="body" color="primary" style={styles.loadingText}>
+              Calculando Match...
+            </AppText>
+          </View>
+        ) : (
+          <CustomButton title="Ver Análisis Match" variant="action" onPress={handleBuscar} />
+        )}
+      </View>
+
+      {/* ── MODAL: BUSCADOR DE INFLUENCERS ── */}
+      <Modal visible={isModalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Base de Datos de Influencers</Text>
+            <AppText variant="subtitle" color="textLight" style={styles.modalTitle}>
+              Base de Datos de Influencers
+            </AppText>
 
             <FlatList
               data={influencers}
@@ -152,11 +208,14 @@ export default function ConfiguracionScreen({ navigation }) {
                 <TouchableOpacity
                   style={styles.modalItem}
                   onPress={() => handleSelectInfluencer(item)}
+                  activeOpacity={0.75}
                 >
-                  <Text style={styles.modalItemName}>@{item.username}</Text>
-                  <Text style={styles.modalItemSub}>
+                  <AppText variant="body" color="primary" style={styles.modalItemName}>
+                    @{item.username}
+                  </AppText>
+                  <AppText variant="caption" color="textMuted" style={styles.modalItemSub}>
                     {item.seguidores} seguidores • {item.arquetipo}
-                  </Text>
+                  </AppText>
                 </TouchableOpacity>
               )}
             />
@@ -169,92 +228,88 @@ export default function ConfiguracionScreen({ navigation }) {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </AuthTemplate>
   );
 }
 
+// ── ESTILOS ──────────────────────────────────────────────────────────────────
+
 const createStyles = (compact, row) =>
   StyleSheet.create({
-    container: { flex: 1, backgroundColor: COLORS.background },
-
-    scrollContent: {
-      flexGrow: 1,
-      justifyContent: 'center',
-      paddingHorizontal: 20,
-      paddingVertical: compact ? 14 : 30,
-      width: '100%',
-      maxWidth: row ? 900 : 600,
-      alignSelf: 'center',
-    },
-
+    // Encabezado
     title: {
-      fontSize: compact ? 22 : 28,
-      fontWeight: '900',
-      color: COLORS.textLight,
+      fontSize: 28,
       marginBottom: 5,
       textAlign: 'center',
     },
+    titleCompact: {
+      fontSize: 22,
+    },
     subtitle: {
-      fontSize: compact ? 12 : 14,
-      color: COLORS.textMuted,
       marginBottom: compact ? 10 : 20,
       textAlign: 'center',
     },
 
-    // En horizontal ancho: sliders y buscador lado a lado
-    cardsRow: row ? { flexDirection: 'row', alignItems: 'flex-start', gap: 16 } : {},
-
+    // Layout de cards
+    cardsRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      gap: 16,
+    },
     sectionCard: {
-      flex: row ? 1 : undefined,
       backgroundColor: 'rgba(30, 41, 59, 0.5)',
       borderRadius: 16,
       padding: compact ? 14 : 20,
-      marginBottom: row ? 0 : compact ? 10 : 15,
+      marginBottom: compact ? 10 : 15,
       borderWidth: 1,
       borderColor: 'rgba(255,255,255,0.05)',
     },
+    sectionCardRow: {
+      flex: 1,
+      marginBottom: 0,
+    },
 
+    // Títulos de sección
     sectionTitle: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: COLORS.textLight,
       marginBottom: compact ? 10 : 15,
     },
     sectionSubtitle: {
-      fontSize: 12,
-      color: COLORS.textMuted,
       marginBottom: 10,
     },
 
-    errorText: {
-      color: COLORS.action,
-      fontSize: 14,
+    // Error
+    errorRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
       marginBottom: 10,
+    },
+    errorText: {
       fontWeight: 'bold',
     },
 
-    sliderGroup: { marginBottom: compact ? 6 : 15 },
-    sliderHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginBottom: 5,
-    },
-    sliderLabel: { color: COLORS.textLight, fontSize: 14, fontWeight: '600' },
-    sliderValue: { color: COLORS.primary, fontSize: 14, fontWeight: 'bold' },
-    slider: { width: '100%', height: 30 },
-
+    // Dropdown
     dropdownButton: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
       backgroundColor: COLORS.card,
       padding: 15,
       borderRadius: 10,
       borderWidth: 1,
       borderColor: 'rgba(255,255,255,0.1)',
     },
-    dropdownText: { color: COLORS.textLight, fontSize: 14 },
-    dropdownIcon: { color: COLORS.textMuted },
+    dropdownLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      flex: 1,
+    },
+    dropdownText: {
+      flex: 1,
+    },
 
+    // Info box influencer
     infoBox: {
       marginTop: 10,
       padding: 10,
@@ -262,17 +317,32 @@ const createStyles = (compact, row) =>
       borderRadius: 8,
       borderWidth: 1,
       borderColor: COLORS.primary,
+      gap: 4,
     },
-    infoText: { color: COLORS.primary, fontSize: 12, marginBottom: 2 },
+    infoRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    infoText: {
+      flex: 1,
+    },
 
-    finalButton: { marginTop: compact ? 4 : 10 },
+    // Botón final
+    finalButton: {
+      marginTop: compact ? 4 : 10,
+    },
     loadingContainer: {
       alignItems: 'center',
       justifyContent: 'center',
       padding: compact ? 8 : 20,
     },
-    loadingText: { color: COLORS.primary, marginTop: 10, fontWeight: 'bold' },
+    loadingText: {
+      marginTop: 10,
+      fontWeight: 'bold',
+    },
 
+    // Modal
     modalOverlay: {
       flex: 1,
       backgroundColor: 'rgba(0,0,0,0.7)',
@@ -289,9 +359,6 @@ const createStyles = (compact, row) =>
       alignSelf: 'center',
     },
     modalTitle: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      color: COLORS.textLight,
       marginBottom: 15,
       textAlign: 'center',
     },
@@ -300,6 +367,11 @@ const createStyles = (compact, row) =>
       borderBottomWidth: 1,
       borderBottomColor: 'rgba(255,255,255,0.1)',
     },
-    modalItemName: { color: COLORS.primary, fontSize: 16, fontWeight: 'bold' },
-    modalItemSub: { color: COLORS.textMuted, fontSize: 12, marginTop: 2 },
+    modalItemName: {
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+    modalItemSub: {
+      marginTop: 2,
+    },
   });
