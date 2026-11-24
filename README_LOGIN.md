@@ -180,15 +180,14 @@ dominio, la misma regla que el login.
 | `Text` de React Native con `fontWeight` manual | Átomo `AppText` (fuente Inter) con variantes `title`, `subtitle`, `body` y `caption` |
 | Colores escritos a mano en los textos | Prop `color` de `AppText` con tokens de `colors.js` (`textMuted`, `accent`, `error`) |
 | Sin íconos | Íconos de `phosphor-react-native` |
-| `TextInput` con la fuente del sistema | `TextInput` con `TYPOGRAPHY.family.regular` (Inter 400) |
+| `TextInput` y botón armados a mano | Molécula `FormField` y átomo `CustomButton` (Atomic Design, aporte de BM-3) |
 
 **Íconos Phosphor utilizados**
 
 | Ícono | Ubicación |
 |---|---|
 | `LockKey` | Encabezado, dentro de un círculo |
-| `EnvelopeSimple` | Dentro del campo Email |
-| `PaperPlaneTilt` | Botón "Send reset link" |
+| `EnvelopeSimple` | Dentro del campo Email (prop `rightElement` de `FormField`) |
 | `ArrowLeft` | Enlace "Back to Login" |
 
 La lógica (estado, validación por `ValidationError`, llamada al caso de uso y
