@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { AppText } from '../components/atoms/AppText';
 import {
   View,
-  Text,
   TextInput,
   Pressable,
   ScrollView,
@@ -9,6 +9,7 @@ import {
   Platform,
   ActivityIndicator,
   StyleSheet,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
@@ -17,35 +18,34 @@ import { registerUser } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
 
 export default function RegistroScreen({ navigation }) {
-  // --- ESTADOS: lo que escribe el usuario ---
+  const { height } = useWindowDimensions();
+  const compact = height < 520; // 16:9 horizontal o 1:1 compacto
+  const styles = useMemo(() => createStyles(compact), [compact]);
+
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
 
-  // --- ESTADOS: interfaz ---
-  const [isPasswordHidden, setIsPasswordHidden] = useState(true); // Ojo del campo Password
-  const [isRepeatHidden, setIsRepeatHidden] = useState(true);     // Ojo del campo Repeat Password
-  const [errors, setErrors] = useState({});                       // Errores por campo: { email: '...', ... }
-  const [isLoading, setIsLoading] = useState(false);              // Circulito de carga
-  const [isSuccess, setIsSuccess] = useState(false);              // Botón "✓ Account Created!"
+  const [isPasswordHidden, setIsPasswordHidden] = useState(true);
+  const [isRepeatHidden, setIsRepeatHidden] = useState(true);
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  // La pantalla solo recoge datos y muestra resultados: la validación y el
-  // registro los hace el caso de uso (application/auth/registerUser.js).
   const handleRegister = async () => {
-    if (isLoading || isSuccess) return; // Evita el doble toque
+    if (isLoading || isSuccess) return;
 
     setErrors({});
     setIsLoading(true);
     try {
       await registerUser({ fullName, email, password, repeatPassword });
 
-      // Cuenta creada: se muestra el mensaje de éxito y luego se pasa a Configuración.
       setIsSuccess(true);
       setTimeout(() => navigation.navigate('Configuracion'), 1200);
     } catch (error) {
       if (error instanceof ValidationError) {
-        setErrors(error.fieldErrors); // Muestra el error debajo de cada campo
+        setErrors(error.fieldErrors);
       } else {
         setErrors({ form: error?.message || 'Unable to create the account. Please try again.' });
       }
@@ -54,7 +54,6 @@ export default function RegistroScreen({ navigation }) {
     }
   };
 
-  // Al escribir en un campo se borra su error (y el error general del formulario).
   const clearError = (field) => {
     if (errors[field] || errors.form) {
       setErrors((prev) => ({ ...prev, [field]: undefined, form: undefined }));
@@ -63,7 +62,6 @@ export default function RegistroScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      {/* En iOS se empuja el contenido hacia arriba; en Android se reduce la altura */}
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -74,12 +72,18 @@ export default function RegistroScreen({ navigation }) {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.content}>
-            {/* Encabezado */}
-            <Text style={styles.title}>Registration</Text>
-            <Text style={styles.subtitle}>Create your BrandMatch account</Text>
-
+            <AppText variant="title" color="#FFFFFF" style={styles.title}>
+              Registration
+            </AppText>
+            <AppText variant="body" color="textMuted" style={styles.subtitle}>
+              Create your BrandMatch account
+            </AppText>
             {/* Full Name */}
-            <Text style={styles.label}>Full Name</Text>
+            <AppText variant="caption" color="#FFFFFF" style={styles.label}>
+              Full Name
+            </AppText>
+
+
             <TextInput
               style={[styles.input, errors.fullName && styles.inputError]}
               value={fullName}
@@ -92,10 +96,16 @@ export default function RegistroScreen({ navigation }) {
               returnKeyType="next"
               editable={!isLoading && !isSuccess}
             />
-            {errors.fullName ? <Text style={styles.errorText}>{errors.fullName}</Text> : null}
+            {errors.fullName ?(
+                <AppText variant="caption" color="error" style={styles.errorText}>
+                  {errors.fullName}
+                </AppText>
+              ) : null}
 
             {/* Email */}
-            <Text style={[styles.label, styles.labelSpacing]}>Email</Text>
+            <AppText variant="caption" color="#FFFFFF" style={[styles.label, styles.labelSpacing]}>
+              Email
+            </AppText>
             <TextInput
               style={[styles.input, errors.email && styles.inputError]}
               value={email}
@@ -110,10 +120,16 @@ export default function RegistroScreen({ navigation }) {
               returnKeyType="next"
               editable={!isLoading && !isSuccess}
             />
-            {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+            {errors.email ? (
+                <AppText variant="caption" color="error" style={styles.errorText}>
+                  {errors.email}
+                </AppText>
+              ) : null}
 
             {/* Password */}
-            <Text style={[styles.label, styles.labelSpacing]}>Password</Text>
+            <AppText variant="caption" color="#FFFFFF" style={[styles.label, styles.labelSpacing]}>
+              Password
+            </AppText>
             <View style={[styles.input, styles.passwordWrapper, errors.password && styles.inputError]}>
               <TextInput
                 style={styles.passwordInput}
@@ -139,10 +155,15 @@ export default function RegistroScreen({ navigation }) {
                 {isPasswordHidden ? <EyeIcon /> : <EyeOffIcon />}
               </Pressable>
             </View>
-            {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
-
+            {errors.password ?(
+                <AppText variant="caption" color="error" style={styles.errorText}>
+                  {errors.password}
+                </AppText>
+              ) : null}
             {/* Repeat Password */}
-            <Text style={[styles.label, styles.labelSpacing]}>Repeat Password</Text>
+            <AppText variant="caption" color="#FFFFFF" style={[styles.label, styles.labelSpacing]}>
+              Repeat Password
+            </AppText>
             <View style={[styles.input, styles.passwordWrapper, errors.repeatPassword && styles.inputError]}>
               <TextInput
                 style={styles.passwordInput}
@@ -169,11 +190,18 @@ export default function RegistroScreen({ navigation }) {
                 {isRepeatHidden ? <EyeIcon /> : <EyeOffIcon />}
               </Pressable>
             </View>
-            {errors.repeatPassword ? <Text style={styles.errorText}>{errors.repeatPassword}</Text> : null}
+            {errors.repeatPassword ? (
+                    <AppText variant="caption" color="error" style={styles.errorText}>
+                      {errors.repeatPassword}
+                    </AppText>
+            ) : null}
 
-            {errors.form ? <Text style={[styles.errorText, styles.formError]}>{errors.form}</Text> : null}
-
-            {/* Botón Register: circulito mientras carga, check al terminar */}
+            {errors.form ? (
+                <AppText variant="caption" color="error" style={[styles.errorText, styles.formError]}>
+                  {errors.form}
+                </AppText>
+            ) : null}
+            {/* Botón Register */}
             <Pressable
               onPress={handleRegister}
               disabled={isLoading || isSuccess}
@@ -187,23 +215,34 @@ export default function RegistroScreen({ navigation }) {
             >
               {isLoading ? (
                 <ActivityIndicator color="#FFFFFF" />
+              ) : isSuccess ? (
+                  <View style={styles.successRow}>
+                    <CheckCircle size={20} color={COLORS.background} weight="bold" />
+                    <AppText variant="subtitle" color="background" style={styles.primaryButtonText}>
+                      Account Created!
+                    </AppText>
+                  </View>
               ) : (
-                <Text style={[styles.primaryButtonText, isSuccess && styles.successButtonText]}>
-                  {isSuccess ? '✓ Account Created!' : 'Register'}
-                </Text>
+                  <AppText variant="subtitle" color="#FFFFFF" style={styles.primaryButtonText}>
+                    Register
+                  </AppText>
               )}
             </Pressable>
 
             {/* I have account? Log in */}
             <View style={styles.loginRow}>
-              <Text style={styles.loginText}>I have account? </Text>
+              <AppText variant="body" color="textMuted" style={styles.loginText}>
+                I have account?{' '}
+              </AppText>
               <Pressable
                 onPress={() => navigation.navigate('Login')}
                 hitSlop={8}
                 style={({ pressed }) => pressed && styles.pressedLight}
                 accessibilityRole="link"
               >
-                <Text style={[styles.link, styles.loginLink]}>Log in</Text>
+                <AppText variant="subtitle" color="accent" style={styles.link}>
+                  Log in
+                </AppText>
               </Pressable>
             </View>
           </View>
@@ -213,110 +252,94 @@ export default function RegistroScreen({ navigation }) {
   );
 }
 
-// Mismas medidas que el Login para que las pantallas de autenticación se vean iguales.
 const RADIUS = 14;
-const CONTROL_HEIGHT = 50;
 
-const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: COLORS.background },
-  flex: { flex: 1 },
-  scrollContent: {
-    flexGrow: 1,
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 24,
-  },
-  // Formulario anclado arriba, como en el diseño.
-  content: { width: '100%', maxWidth: 480, alignSelf: 'center' },
+const createStyles = (compact) => {
+  const CONTROL_HEIGHT = compact ? 42 : 50;
 
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: COLORS.textMuted,
-    textAlign: 'center',
-    marginTop: 10,
-    marginBottom: 30,
-  },
+  return StyleSheet.create({
+    safeArea: { flex: 1, backgroundColor: COLORS.background },
+    flex: { flex: 1 },
+    scrollContent: {
+      flexGrow: 1,
+      justifyContent: 'center',
+      paddingHorizontal: 20,
+      paddingVertical: compact ? 12 : 24,
+    },
+    content: { width: '100%', maxWidth: 480, alignSelf: 'center' },
 
-  label: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#FFFFFF',
-    marginBottom: 8,
-  },
-  labelSpacing: { marginTop: 22 },
+    title: {
+      fontSize: compact ? 22 : 28,
+      fontWeight: '800',
+      color: '#FFFFFF',
+      textAlign: 'center',
+      letterSpacing: -0.5,
+    },
+    subtitle: {
+      fontSize: compact ? 13 : 14,
+      color: COLORS.textMuted,
+      textAlign: 'center',
+      marginTop: compact ? 4 : 10,
+      marginBottom: compact ? 14 : 30,
+    },
 
-  input: {
-    height: CONTROL_HEIGHT,
-    backgroundColor: COLORS.inputBackground,
-    borderRadius: RADIUS,
-    borderWidth: 1,
-    borderColor: COLORS.inputBorder,
-    paddingHorizontal: 14,
-    color: '#FFFFFF',
-    fontSize: 14,
-  },
-  inputError: { borderColor: COLORS.error },
-  passwordWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingRight: 10,
-  },
-  passwordInput: {
-    flex: 1,
-    height: '100%',
-    color: '#FFFFFF',
-    fontSize: 14,
-    paddingVertical: 0,
-  },
-  eyeButton: { padding: 4, marginLeft: 8 },
+    label: {
+      fontSize: 13,
+      fontWeight: '600',
+      color: '#FFFFFF',
+      marginBottom: compact ? 4 : 8,
+    },
+    labelSpacing: { marginTop: compact ? 10 : 22 },
 
-  errorText: {
-    color: COLORS.error,
-    fontSize: 12,
-    marginTop: 6,
-  },
-  formError: { textAlign: 'center', marginTop: 12 },
+    input: {
+      height: CONTROL_HEIGHT,
+      backgroundColor: COLORS.inputBackground,
+      borderRadius: RADIUS,
+      borderWidth: 1,
+      borderColor: COLORS.inputBorder,
+      paddingHorizontal: 14,
+      color: '#FFFFFF',
+      fontSize: 14,
+    },
+    inputError: { borderColor: COLORS.error },
+    passwordWrapper: { flexDirection: 'row', alignItems: 'center', paddingRight: 10 },
+    passwordInput: {
+      flex: 1,
+      height: '100%',
+      color: '#FFFFFF',
+      fontSize: 14,
+      paddingVertical: 0,
+    },
+    eyeButton: { padding: 4, marginLeft: 8 },
 
-  link: {
-    fontSize: 14,
-    color: COLORS.accent,
-    textDecorationLine: 'underline',
-  },
+    errorText: { color: COLORS.error, fontSize: 12, marginTop: compact ? 3 : 6 },
+    formError: { textAlign: 'center', marginTop: compact ? 8 : 12 },
 
-  primaryButton: {
-    height: CONTROL_HEIGHT,
-    borderRadius: RADIUS,
-    backgroundColor: COLORS.authButton,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 28,
-  },
-  primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '700',
-  },
-  successButton: { backgroundColor: COLORS.primary },
-  successButtonText: { color: COLORS.background },
+    link: { fontSize: 14, color: COLORS.accent, textDecorationLine: 'underline' },
 
-  loginRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    marginTop: 22,
-  },
-  loginText: { color: COLORS.textMuted, fontSize: 14 },
-  loginLink: { fontWeight: '700' },
+    primaryButton: {
+      height: CONTROL_HEIGHT,
+      borderRadius: RADIUS,
+      backgroundColor: COLORS.authButton,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: compact ? 14 : 28,
+    },
+    primaryButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
+    successButton: { backgroundColor: COLORS.primary },
+    successButtonText: { color: COLORS.background },
 
-  // Retroalimentación visual al presionar
-  pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
-  pressedLight: { opacity: 0.6 },
-});
+    loginRow: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      marginTop: compact ? 12 : 22,
+    },
+    loginText: { color: COLORS.textMuted, fontSize: 14 },
+    loginLink: { fontWeight: '700' },
+
+    pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
+    pressedLight: { opacity: 0.6 },
+  });
+};

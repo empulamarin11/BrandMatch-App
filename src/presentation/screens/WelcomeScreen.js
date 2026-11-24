@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import { AppText } from '../components/atoms/AppText';
+import { Heart } from 'phosphor-react-native';
 import {
   View,
-  Text,
   StyleSheet,
   Animated,
   StatusBar,
@@ -72,18 +73,19 @@ export default function WelcomeScreen({ navigation }) {
             ]}
           >
             <View style={styles.logoRow}>
-              <Text style={styles.brandText}>Brand</Text>
-              <Text style={styles.matchText}>Match</Text>
+              <AppText variant="title" color="#91B5C8" style={styles.brandText}>
+                Brand
+              </AppText>
+              <AppText variant="title" color="#D77D9D" style={styles.matchText}>
+                Match
+              </AppText>
             </View>
 
-            <Animated.Text
-              style={[
-                styles.emoji,
-                { transform: [{ scale: heartbeatAnim }] },
-              ]}
-            >
-              💌
-            </Animated.Text>
+            <Animated.View style={[styles.emojiContainer, { transform: [{ scale: heartbeatAnim }] }]}>
+              <Heart size={42} color="#FE2C55" weight="fill" />
+            </Animated.View>
+
+
           </Animated.View>
 
           {/* DESCRIPCIÓN */}
@@ -96,20 +98,26 @@ export default function WelcomeScreen({ navigation }) {
               },
             ]}
           >
-            <Text style={styles.subtitle}>El "Tinder" de Marcas</Text>
-            <Text style={styles.subtitle}>e Influencers.</Text>
+            <AppText variant="subtitle" color="#E5E7EB" style={styles.subtitle}>
+              El "Tinder" de Marcas
+            </AppText>
+            <AppText variant="subtitle" color="#E5E7EB" style={styles.subtitle}>
+              e Influencers.
+            </AppText>
           </Animated.View>
 
           {/* BOTÓN START */}
           <Animated.View style={[styles.buttonContainer, { opacity: fadeAnim }]}>
             <Animated.View style={styles.buttonWrapper}>
-              <Text
-                style={styles.buttonText}
-                onPress={() => navigation.replace('Login')}
-                accessibilityRole="button"
+              <AppText
+                  variant="subtitle"
+                  color="#FFFFFF"
+                  style={styles.buttonText}
+                  onPress={() => navigation.replace('Login')}
+                  accessibilityRole="button"
               >
                 Start
-              </Text>
+              </AppText>
             </Animated.View>
           </Animated.View>
         </View>
