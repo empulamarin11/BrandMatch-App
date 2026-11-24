@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { TouchableOpacity, Text, StyleSheet, Animated } from 'react-native';
-import { COLORS } from '../theme/colors';
+import { COLORS } from '../../theme/colors';
 
 export default function CustomButton({ title, onPress, variant = 'primary' }) {
   const backgroundColor = variant === 'action' ? COLORS.action : COLORS.primary;

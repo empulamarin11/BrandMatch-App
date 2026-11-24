@@ -244,13 +244,13 @@ Welcome ──► Login ──► Configuración ADN ──► Análisis de Matc
 ## 📂 6. Estructura Real del Repositorio (`src/`)
 
 ```text
-PruebaBrandMatch/
+BrandMatch-App/
 ├── assets/
-│   └── screenshots/                # Capturas UI/UX de la app y del prototipo Figma
+│   └── screenshots/                    # Capturas UI/UX de la app y del prototipo Figma
 ├── docs/
-│   └── Reporte_Final_BrandMatch.pdf # Informe técnico institucional
+│   └── Reporte_Final_BrandMatch.pdf    # Informe técnico institucional
 ├── src/
-│   ├── domain/                     # 1. DOMINIO (Reglas puras e invariantes, sin React)
+│   ├── domain/                         # 1. DOMINIO (Reglas puras e invariantes, sin React)
 │   │   ├── auth/
 │   │   │   ├── AuthErrors.js
 │   │   │   ├── AuthRepository.js
@@ -262,7 +262,7 @@ PruebaBrandMatch/
 │   │       ├── Influencer.js
 │   │       └── MatchCalculator.js
 │   │
-│   ├── application/                # 2. APLICACIÓN (Casos de uso)
+│   ├── application/                    # 2. APLICACIÓN (Casos de uso)
 │   │   ├── auth/
 │   │   │   ├── loginUser.js
 │   │   │   ├── registerUser.js
@@ -270,20 +270,28 @@ PruebaBrandMatch/
 │   │   └── match/
 │   │       └── calculateMatch.js
 │   │
-│   ├── infrastructure/             # 3. INFRAESTRUCTURA (Adaptadores externos)
+│   ├── infrastructure/                 # 3. INFRAESTRUCTURA (Adaptadores externos)
 │   │   ├── auth/
 │   │   │   └── AuthApi.js
 │   │   └── match/
 │   │       └── InfluencerRepository.js
 │   │
-│   ├── presentation/               # 4. PRESENTACIÓN (UI React Native + Atomic Design)
+│   ├── presentation/                   # 4. PRESENTACIÓN (UI React Native + Atomic Design)
 │   │   ├── components/
-│   │   │   ├── AuthIcons.js
-│   │   │   ├── CustomButton.js
-│   │   │   └── RadarChart.js
-│   │   ├── Navigation/
-│   │   │   └── AppNavigator.js
-│   │   ├── Screens/
+│   │   │   ├── atoms/                  # Átomos indivisibles (Design System)
+│   │   │   │   ├── AppText.js          # Tipografía global controlada (Inter)
+│   │   │   │   ├── AuthIcons.js        # Iconos SVG (Ojo, Apple, Google)
+│   │   │   │   └── CustomButton.js     # Botón atómico con animación nativa
+│   │   │   ├── molecules/              # Agrupación funcional de átomos
+│   │   │   │   └── FormField.js        # Molécula de campo de formulario + validación
+│   │   │   ├── organisms/              # Organismos complejos
+│   │   │   │   └── DnaSliderGroup.js   # Grupo de sliders de calibración ADN
+│   │   │   ├── templates/              # Plantillas de estructura visual
+│   │   │   │   └── AuthTemplate.js     # Plantilla base responsiva
+│   │   │   └── RadarChart.js           # Gráfico pentagonal Big Five responsivo en SVG
+│   │   ├── Navigation/ 
+│   │   │   └── AppNavigator.js         # Pila de navegación Native Stack (7 pantallas)
+│   │   ├── screens/                    # Pantallas principales del flujo (7 vistas)
 │   │   │   ├── ConfiguracionScreen.js
 │   │   │   ├── ForgotPasswordScreen.js
 │   │   │   ├── loginScreen.js
@@ -291,18 +299,19 @@ PruebaBrandMatch/
 │   │   │   ├── PitchScreen.js
 │   │   │   ├── RegistroScreen.js
 │   │   │   └── WelcomeScreen.js
-│   │   └── Theme/
-│   │       └── colors.js
+│   │   └── theme/
+│   │       ├── colors.js               # Tokens cromáticos Dark Mode (#0B0F19, #25F4EE, #FE2C55)
+│   │       └── typography.js           # Tokens tipográficos Inter
 │   │
-│   └── container.js                # Composition Root (Inyección de dependencias)
+│   └── container.js                    # Composition Root (Inyección de dependencias)
 │
-├── App.js                          # Punto de entrada y carga de tipografía Inter
-├── package.json                    # Dependencias y scripts de Expo
-├── README.md                       # Documentación principal del sistema
-├── README_CONFIGURACION.md         # Manual técnico del módulo Configuración ADN
-├── README_LOGIN.md                 # Manual técnico del módulo Login
-├── README_MATCH.md                 # Manual técnico del módulo Match y Radar
-└── README_REGISTRO.md              # Manual técnico del módulo Registro
+├── App.js                              # Punto de entrada y carga de tipografía Inter
+├── package.json                        # Dependencias y scripts de Expo
+├── README.md                           # Documentación principal del sistema
+├── README_CONFIGURACION.md             # Manual técnico del módulo Configuración ADN
+├── README_LOGIN.md                     # Manual técnico del módulo Login
+├── README_MATCH.md                     # Manual técnico del módulo Match y Radar
+└── README_REGISTRO.md                  # Manual técnico del módulo Registro
 ```
 
 ---

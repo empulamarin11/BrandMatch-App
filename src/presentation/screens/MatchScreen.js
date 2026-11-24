@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
-import CustomButton from '../components/CustomButton';
+import CustomButton from '../components/atoms/CustomButton';
 import RadarChart from '../components/RadarChart';
 import { ejecutarCalculoMatch } from '../../application/match/calculateMatch';
 

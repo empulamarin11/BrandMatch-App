@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperPlaneTilt } from 'phosphor-react-native';
 import { AppText } from '../components/atoms/AppText';
 import { COLORS } from '../theme/colors';
-import CustomButton from '../components/CustomButton';
+import CustomButton from '../components/atoms/CustomButton';
 import { ejecutarGeneracionPitch } from '../../application/match/generatePitch';
 
 export default function PitchScreen({ navigation, route }) {

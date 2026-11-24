@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import { AppText } from '../components/atoms/AppText';
+import FormField from '../components/molecules/FormField';
 import {
   View,
-  TextInput,
   Pressable,
   ScrollView,
   KeyboardAvoidingView,
@@ -13,13 +13,13 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
-import { EyeIcon, EyeOffIcon } from '../components/AuthIcons';
+import { EyeIcon, EyeOffIcon } from '../components/atoms/AuthIcons';
 import { registerUser } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
 
 export default function RegistroScreen({ navigation }) {
   const { height } = useWindowDimensions();
-  const compact = height < 520; // 16:9 horizontal o 1:1 compacto
+  const compact = height < 520;
   const styles = useMemo(() => createStyles(compact), [compact]);
 
   const [fullName, setFullName] = useState('');
@@ -61,194 +61,172 @@ export default function RegistroScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+        <KeyboardAvoidingView
+            style={styles.flex}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
-          <View style={styles.content}>
-            <AppText variant="title" color="#FFFFFF" style={styles.title}>
-              Registration
-            </AppText>
-            <AppText variant="body" color="textMuted" style={styles.subtitle}>
-              Create your BrandMatch account
-            </AppText>
-            {/* Full Name */}
-            <AppText variant="caption" color="#FFFFFF" style={styles.label}>
-              Full Name
-            </AppText>
-
-
-            <TextInput
-              style={[styles.input, errors.fullName && styles.inputError]}
-              value={fullName}
-              onChangeText={(value) => { setFullName(value); clearError('fullName'); }}
-              placeholder="Full Name"
-              placeholderTextColor={COLORS.textMuted}
-              autoCapitalize="words"
-              autoComplete="name"
-              textContentType="name"
-              returnKeyType="next"
-              editable={!isLoading && !isSuccess}
-            />
-            {errors.fullName ?(
-                <AppText variant="caption" color="error" style={styles.errorText}>
-                  {errors.fullName}
-                </AppText>
-              ) : null}
-
-            {/* Email */}
-            <AppText variant="caption" color="#FFFFFF" style={[styles.label, styles.labelSpacing]}>
-              Email
-            </AppText>
-            <TextInput
-              style={[styles.input, errors.email && styles.inputError]}
-              value={email}
-              onChangeText={(value) => { setEmail(value); clearError('email'); }}
-              placeholder="Email"
-              placeholderTextColor={COLORS.textMuted}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="email"
-              textContentType="emailAddress"
-              returnKeyType="next"
-              editable={!isLoading && !isSuccess}
-            />
-            {errors.email ? (
-                <AppText variant="caption" color="error" style={styles.errorText}>
-                  {errors.email}
-                </AppText>
-              ) : null}
-
-            {/* Password */}
-            <AppText variant="caption" color="#FFFFFF" style={[styles.label, styles.labelSpacing]}>
-              Password
-            </AppText>
-            <View style={[styles.input, styles.passwordWrapper, errors.password && styles.inputError]}>
-              <TextInput
-                style={styles.passwordInput}
-                value={password}
-                onChangeText={(value) => { setPassword(value); clearError('password'); }}
-                placeholder="Password"
-                placeholderTextColor={COLORS.textMuted}
-                secureTextEntry={isPasswordHidden}
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoComplete="password-new"
-                textContentType="newPassword"
-                returnKeyType="next"
-                editable={!isLoading && !isSuccess}
-              />
-              <Pressable
-                onPress={() => setIsPasswordHidden((hidden) => !hidden)}
-                hitSlop={10}
-                style={({ pressed }) => [styles.eyeButton, pressed && styles.pressedLight]}
-                accessibilityRole="button"
-                accessibilityLabel={isPasswordHidden ? 'Show password' : 'Hide password'}
-              >
-                {isPasswordHidden ? <EyeIcon /> : <EyeOffIcon />}
-              </Pressable>
-            </View>
-            {errors.password ?(
-                <AppText variant="caption" color="error" style={styles.errorText}>
-                  {errors.password}
-                </AppText>
-              ) : null}
-            {/* Repeat Password */}
-            <AppText variant="caption" color="#FFFFFF" style={[styles.label, styles.labelSpacing]}>
-              Repeat Password
-            </AppText>
-            <View style={[styles.input, styles.passwordWrapper, errors.repeatPassword && styles.inputError]}>
-              <TextInput
-                style={styles.passwordInput}
-                value={repeatPassword}
-                onChangeText={(value) => { setRepeatPassword(value); clearError('repeatPassword'); }}
-                placeholder="Repeat Password"
-                placeholderTextColor={COLORS.textMuted}
-                secureTextEntry={isRepeatHidden}
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoComplete="password-new"
-                textContentType="newPassword"
-                returnKeyType="done"
-                onSubmitEditing={handleRegister}
-                editable={!isLoading && !isSuccess}
-              />
-              <Pressable
-                onPress={() => setIsRepeatHidden((hidden) => !hidden)}
-                hitSlop={10}
-                style={({ pressed }) => [styles.eyeButton, pressed && styles.pressedLight]}
-                accessibilityRole="button"
-                accessibilityLabel={isRepeatHidden ? 'Show password' : 'Hide password'}
-              >
-                {isRepeatHidden ? <EyeIcon /> : <EyeOffIcon />}
-              </Pressable>
-            </View>
-            {errors.repeatPassword ? (
-                    <AppText variant="caption" color="error" style={styles.errorText}>
-                      {errors.repeatPassword}
-                    </AppText>
-            ) : null}
-
-            {errors.form ? (
-                <AppText variant="caption" color="error" style={[styles.errorText, styles.formError]}>
-                  {errors.form}
-                </AppText>
-            ) : null}
-            {/* Botón Register */}
-            <Pressable
-              onPress={handleRegister}
-              disabled={isLoading || isSuccess}
-              style={({ pressed }) => [
-                styles.primaryButton,
-                isSuccess && styles.successButton,
-                pressed && styles.pressed,
-              ]}
-              accessibilityRole="button"
-              accessibilityState={{ busy: isLoading, disabled: isLoading || isSuccess }}
-            >
-              {isLoading ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : isSuccess ? (
-                  <View style={styles.successRow}>
-                    <CheckCircle size={20} color={COLORS.background} weight="bold" />
-                    <AppText variant="subtitle" color="background" style={styles.primaryButtonText}>
-                      Account Created!
-                    </AppText>
-                  </View>
-              ) : (
-                  <AppText variant="subtitle" color="#FFFFFF" style={styles.primaryButtonText}>
-                    Register
-                  </AppText>
-              )}
-            </Pressable>
-
-            {/* I have account? Log in */}
-            <View style={styles.loginRow}>
-              <AppText variant="body" color="textMuted" style={styles.loginText}>
-                I have account?{' '}
+          <ScrollView
+              contentContainerStyle={styles.scrollContent}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.content}>
+              <AppText variant="title" color="#FFFFFF" style={styles.title}>
+                Registration
               </AppText>
+              <AppText variant="body" color="textMuted" style={styles.subtitle}>
+                Create your BrandMatch account
+              </AppText>
+
+              {/* Full Name */}
+              <FormField
+                  label="Full Name"
+                  value={fullName}
+                  onChangeText={(value) => { setFullName(value); clearError('fullName'); }}
+                  placeholder="Full Name"
+                  error={errors.fullName}
+                  compact={compact}
+                  autoCapitalize="words"
+                  autoComplete="name"
+                  textContentType="name"
+                  returnKeyType="next"
+                  editable={!isLoading && !isSuccess}
+              />
+
+              {/* Email */}
+              <View style={styles.labelSpacing}>
+                <FormField
+                    label="Email"
+                    value={email}
+                    onChangeText={(value) => { setEmail(value); clearError('email'); }}
+                    placeholder="Email"
+                    error={errors.email}
+                    compact={compact}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoComplete="email"
+                    textContentType="emailAddress"
+                    returnKeyType="next"
+                    editable={!isLoading && !isSuccess}
+                />
+              </View>
+
+              {/* Password */}
+              <View style={styles.labelSpacing}>
+                <FormField
+                    label="Password"
+                    value={password}
+                    onChangeText={(value) => { setPassword(value); clearError('password'); }}
+                    placeholder="Password"
+                    error={errors.password}
+                    compact={compact}
+                    secureTextEntry={isPasswordHidden}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoComplete="password-new"
+                    textContentType="newPassword"
+                    returnKeyType="next"
+                    editable={!isLoading && !isSuccess}
+                    rightElement={
+                      <Pressable
+                          onPress={() => setIsPasswordHidden((hidden) => !hidden)}
+                          hitSlop={10}
+                          style={({ pressed }) => [styles.eyeButton, pressed && styles.pressedLight]}
+                          accessibilityRole="button"
+                          accessibilityLabel={isPasswordHidden ? 'Show password' : 'Hide password'}
+                      >
+                        {isPasswordHidden ? <EyeIcon /> : <EyeOffIcon />}
+                      </Pressable>
+                    }
+                />
+              </View>
+
+              {/* Repeat Password */}
+              <View style={styles.labelSpacing}>
+                <FormField
+                    label="Repeat Password"
+                    value={repeatPassword}
+                    onChangeText={(value) => { setRepeatPassword(value); clearError('repeatPassword'); }}
+                    placeholder="Repeat Password"
+                    error={errors.repeatPassword}
+                    compact={compact}
+                    secureTextEntry={isRepeatHidden}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    autoComplete="password-new"
+                    textContentType="newPassword"
+                    returnKeyType="done"
+                    onSubmitEditing={handleRegister}
+                    editable={!isLoading && !isSuccess}
+                    rightElement={
+                      <Pressable
+                          onPress={() => setIsRepeatHidden((hidden) => !hidden)}
+                          hitSlop={10}
+                          style={({ pressed }) => [styles.eyeButton, pressed && styles.pressedLight]}
+                          accessibilityRole="button"
+                          accessibilityLabel={isRepeatHidden ? 'Show password' : 'Hide password'}
+                      >
+                        {isRepeatHidden ? <EyeIcon /> : <EyeOffIcon />}
+                      </Pressable>
+                    }
+                />
+              </View>
+
+              {errors.form ? (
+                  <AppText variant="caption" color="error" style={[styles.errorText, styles.formError]}>
+                    {errors.form}
+                  </AppText>
+              ) : null}
+
+              {/* Botón Register */}
               <Pressable
-                onPress={() => navigation.navigate('Login')}
-                hitSlop={8}
-                style={({ pressed }) => pressed && styles.pressedLight}
-                accessibilityRole="link"
+                  onPress={handleRegister}
+                  disabled={isLoading || isSuccess}
+                  style={({ pressed }) => [
+                    styles.primaryButton,
+                    isSuccess && styles.successButton,
+                    pressed && styles.pressed,
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityState={{ busy: isLoading, disabled: isLoading || isSuccess }}
               >
-                <AppText variant="subtitle" color="accent" style={styles.link}>
-                  Log in
-                </AppText>
+                {isLoading ? (
+                    <ActivityIndicator color="#FFFFFF" />
+                ) : isSuccess ? (
+                    <View style={styles.successRow}>
+                      <AppText variant="subtitle" color="background" style={styles.primaryButtonText}>
+                        Account Created!
+                      </AppText>
+                    </View>
+                ) : (
+                    <AppText variant="subtitle" color="#FFFFFF" style={styles.primaryButtonText}>
+                      Register
+                    </AppText>
+                )}
               </Pressable>
+
+              {/* I have account? Log in */}
+              <View style={styles.loginRow}>
+                <AppText variant="body" color="textMuted" style={styles.loginText}>
+                  I have account?{' '}
+                </AppText>
+                <Pressable
+                    onPress={() => navigation.navigate('Login')}
+                    hitSlop={8}
+                    style={({ pressed }) => pressed && styles.pressedLight}
+                    accessibilityRole="link"
+                >
+                  <AppText variant="subtitle" color="accent" style={styles.link}>
+                    Log in
+                  </AppText>
+                </Pressable>
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 }
 
@@ -282,34 +260,7 @@ const createStyles = (compact) => {
       marginTop: compact ? 4 : 10,
       marginBottom: compact ? 14 : 30,
     },
-
-    label: {
-      fontSize: 13,
-      fontWeight: '600',
-      color: '#FFFFFF',
-      marginBottom: compact ? 4 : 8,
-    },
     labelSpacing: { marginTop: compact ? 10 : 22 },
-
-    input: {
-      height: CONTROL_HEIGHT,
-      backgroundColor: COLORS.inputBackground,
-      borderRadius: RADIUS,
-      borderWidth: 1,
-      borderColor: COLORS.inputBorder,
-      paddingHorizontal: 14,
-      color: '#FFFFFF',
-      fontSize: 14,
-    },
-    inputError: { borderColor: COLORS.error },
-    passwordWrapper: { flexDirection: 'row', alignItems: 'center', paddingRight: 10 },
-    passwordInput: {
-      flex: 1,
-      height: '100%',
-      color: '#FFFFFF',
-      fontSize: 14,
-      paddingVertical: 0,
-    },
     eyeButton: { padding: 4, marginLeft: 8 },
 
     errorText: { color: COLORS.error, fontSize: 12, marginTop: compact ? 3 : 6 },
@@ -327,7 +278,6 @@ const createStyles = (compact) => {
     },
     primaryButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
     successButton: { backgroundColor: COLORS.primary },
-    successButtonText: { color: COLORS.background },
 
     loginRow: {
       flexDirection: 'row',
@@ -337,7 +287,6 @@ const createStyles = (compact) => {
       marginTop: compact ? 12 : 22,
     },
     loginText: { color: COLORS.textMuted, fontSize: 14 },
-    loginLink: { fontWeight: '700' },
 
     pressed: { opacity: 0.85, transform: [{ scale: 0.98 }] },
     pressedLight: { opacity: 0.6 },
