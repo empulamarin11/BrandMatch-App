@@ -289,7 +289,7 @@ BrandMatch-App/
 │   │   │   ├── templates/              # Plantillas de estructura visual
 │   │   │   │   └── AuthTemplate.js     # Plantilla base responsiva
 │   │   │   └── RadarChart.js           # Gráfico pentagonal Big Five responsivo en SVG
-│   │   ├── Navigation/
+│   │   ├── Navigation/ 
 │   │   │   └── AppNavigator.js         # Pila de navegación Native Stack (7 pantallas)
 │   │   ├── screens/                    # Pantallas principales del flujo (7 vistas)
 │   │   │   ├── ConfiguracionScreen.js
