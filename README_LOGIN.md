@@ -19,6 +19,8 @@ pero aún no conectada a un servidor.
 | React Native + Expo | Framework de la aplicación móvil |
 | JavaScript | Lenguaje del proyecto |
 | `StyleSheet`, `TextInput`, `SafeAreaView`, `KeyboardAvoidingView`, `ScrollView` | Componentes nativos de la interfaz |
+| `@expo-google-fonts/inter` + átomo `AppText` | Tipografía Inter en todos los textos |
+| `phosphor-react-native` | Íconos de la pantalla ForgotPassword |
 | Visual Studio Code | Editor de código |
 | Claude Code (extensión de VS Code) | Asistente de IA que aplicó los cambios a partir de los prompts |
 | Android Studio — emulador Pixel 9 (API 37) | Pruebas de la interfaz |
@@ -110,6 +112,8 @@ botón Login, separador "Or login with", botones Apple y Google, enlace Register
 - Validación de correo (obligatorio y con formato válido) y contraseña (obligatoria).
 - Mensajes de error por campo.
 - Navegación a recuperación de contraseña y a registro.
+- Pantalla de recuperación de contraseña migrada a `AppText` (Inter) y Phosphor
+  Icons (ver sección 8).
 
 **Pendiente (requiere backend)**
 
@@ -155,3 +159,48 @@ npx expo start
 ```
 
 Con el emulador de Android encendido, presionar `a` en la terminal.
+
+## 8. Pantalla de recuperación de contraseña (ForgotPassword)
+
+**Archivo:** `src/presentation/screens/ForgotPasswordScreen.js`
+**Rama:** `feature/forgot-password` · **Tarjeta Jira:** BM-6 (épica BM-1)
+
+### 8.1 Descripción
+
+Permite que el usuario solicite un enlace para restablecer su contraseña. Se abre
+desde el enlace "Forgot Password" del login y recibe el correo ya escrito por
+parámetro de navegación (`route.params.email`). La pantalla no valida nada: llama
+al caso de uso `requestPasswordReset`, y este usa el objeto de valor `Email` del
+dominio, la misma regla que el login.
+
+### 8.2 Migración al sistema de diseño (Inter + Phosphor Icons)
+
+| Antes | Después |
+|---|---|
+| `Text` de React Native con `fontWeight` manual | Átomo `AppText` (fuente Inter) con variantes `title`, `subtitle`, `body` y `caption` |
+| Colores escritos a mano en los textos | Prop `color` de `AppText` con tokens de `colors.js` (`textMuted`, `accent`, `error`) |
+| Sin íconos | Íconos de `phosphor-react-native` |
+| `TextInput` con la fuente del sistema | `TextInput` con `TYPOGRAPHY.family.regular` (Inter 400) |
+
+**Íconos Phosphor utilizados**
+
+| Ícono | Ubicación |
+|---|---|
+| `LockKey` | Encabezado, dentro de un círculo |
+| `EnvelopeSimple` | Dentro del campo Email |
+| `PaperPlaneTilt` | Botón "Send reset link" |
+| `ArrowLeft` | Enlace "Back to Login" |
+
+La lógica (estado, validación por `ValidationError`, llamada al caso de uso y
+navegación) y el diseño responsivo no cambiaron.
+
+### 8.3 Cómo probarla
+
+1. `npm install` y `npx expo start`.
+2. Abrir la app en el celular con Expo Go (escanear el QR) o presionar `a` para
+   abrir el emulador de Android.
+3. En el login, tocar **Forgot Password**.
+4. Enviar el formulario vacío o con un correo inválido: aparece el mensaje de error
+   debajo del campo.
+5. Enviar un correo válido: aparece una alerta que indica que la recuperación aún
+   no está configurada, porque el backend está pendiente (`AuthApi.js`).
