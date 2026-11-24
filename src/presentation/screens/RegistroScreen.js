@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
-import { EyeIcon, EyeOffIcon } from '../components/AuthIcons';
+import { EyeIcon, EyeOffIcon } from '../components/atoms/AuthIcons';
 import { registerUser } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
 

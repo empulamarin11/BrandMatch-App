@@ -32,7 +32,7 @@ import { COLORS } from '../theme/colors';
 import { AppText } from '../components/atoms/AppText';
 import { DnaSliderGroup } from '../components/organisms/DnaSliderGroup';
 import { AuthTemplate } from '../components/templates/AuthTemplate';
-import CustomButton from '../components/CustomButton';
+import CustomButton from '../components/atoms/CustomButton';
 import { getInfluencers } from '../../infrastructure/match/InfluencerRepository';
 
 export default function ConfiguracionScreen({ navigation }) {

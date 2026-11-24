@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PaperPlaneTilt } from 'phosphor-react-native';
 import { AppText } from '../components/atoms/AppText';
 import { COLORS } from '../theme/colors';
-import CustomButton from '../components/CustomButton';
+import CustomButton from '../components/atoms/CustomButton';
 
 export default function PitchScreen({ navigation, route }) {
     const { influencer } = route.params;

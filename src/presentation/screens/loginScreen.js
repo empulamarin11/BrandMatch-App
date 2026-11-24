@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
-import { AppleIcon, GoogleIcon, EyeIcon, EyeOffIcon } from '../components/AuthIcons';
+import { AppleIcon, GoogleIcon, EyeIcon, EyeOffIcon } from '../components/atoms/AuthIcons';
 import { loginUser } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
 
