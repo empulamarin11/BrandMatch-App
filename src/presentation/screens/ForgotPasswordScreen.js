@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LockKey, EnvelopeSimple, ArrowLeft } from 'phosphor-react-native';
 import { COLORS } from '../theme/colors';
 import { requestPasswordReset } from '../../container';
 import { ValidationError } from '../../domain/auth/AuthErrors';
@@ -40,67 +41,72 @@ export default function ForgotPasswordScreen({ navigation, route }) {
   };
 
   return (
-      <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
-        <KeyboardAvoidingView
-            style={styles.flex}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom']}>
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <ScrollView
-              contentContainerStyle={styles.scrollContent}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.content}>
-              <AppText style={styles.title}>Forgot Password</AppText>
-              <AppText style={styles.subtitle}>
-                Enter your email to receive a password reset link
-              </AppText>
-
-              <FormField
-                  label="Email"
-                  value={email}
-                  onChangeText={(value) => {
-                    setEmail(value);
-                    if (error) setError('');
-                  }}
-                  placeholder="Email"
-                  error={error}
-                  compact={compact}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  autoComplete="email"
-                  textContentType="emailAddress"
-                  returnKeyType="send"
-                  onSubmitEditing={handleSubmit}
-              />
-
-              <CustomButton
-                  title="Send reset link"
-                  onPress={handleSubmit}
-                  style={styles.primaryButton}
-                  textStyle={styles.primaryButtonText}
-              />
-
-              <Pressable
-                  onPress={() => navigation.goBack()}
-                  hitSlop={8}
-                  style={({ pressed }) => [styles.backWrapper, pressed && styles.pressedLight]}
-                  accessibilityRole="link"
-              >
-                <AppText style={styles.link}>Back to Login</AppText>
-              </Pressable>
+          <View style={styles.content}>
+            {/* Ícono Phosphor del encabezado */}
+            <View style={styles.iconCircle}>
+              <LockKey size={compact ? 28 : 36} color={COLORS.accent} weight="bold" />
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+
+            <AppText variant="title" color="#FFFFFF" style={styles.title}>
+              Forgot Password
+            </AppText>
+            <AppText variant="body" color="textMuted" style={styles.subtitle}>
+              Enter your email to receive a password reset link
+            </AppText>
+
+            {/* Molécula FormField (Atomic Design) con ícono Phosphor */}
+            <FormField
+              label="Email"
+              value={email}
+              onChangeText={(value) => {
+                setEmail(value);
+                if (error) setError('');
+              }}
+              placeholder="Email"
+              error={error}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoComplete="email"
+              textContentType="emailAddress"
+              returnKeyType="send"
+              onSubmitEditing={handleSubmit}
+              rightElement={<EnvelopeSimple size={20} color={COLORS.textMuted} />}
+            />
+
+            {/* Átomo CustomButton (Atomic Design) */}
+            <CustomButton title="Send reset link" onPress={handleSubmit} variant="action" />
+
+            <Pressable
+              onPress={() => navigation.goBack()}
+              hitSlop={8}
+              style={({ pressed }) => [styles.backWrapper, pressed && styles.pressedLight]}
+              accessibilityRole="link"
+            >
+              <ArrowLeft size={16} color={COLORS.accent} weight="bold" />
+              <AppText variant="body" color="accent" style={styles.link}>
+                Back to Login
+              </AppText>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
-const createStyles = (compact) => {
-  const CONTROL_HEIGHT = compact ? 42 : 50;
-
-  return StyleSheet.create({
+const createStyles = (compact) =>
+  StyleSheet.create({
     safeArea: { flex: 1, backgroundColor: COLORS.background },
     flex: { flex: 1 },
     scrollContent: {
@@ -110,31 +116,36 @@ const createStyles = (compact) => {
       paddingVertical: compact ? 12 : 24,
     },
     content: { width: '100%', maxWidth: 480, alignSelf: 'center' },
+    iconCircle: {
+      width: compact ? 56 : 72,
+      height: compact ? 56 : 72,
+      borderRadius: compact ? 28 : 36,
+      backgroundColor: COLORS.inputBackground,
+      borderWidth: 1,
+      borderColor: COLORS.inputBorder,
+      alignItems: 'center',
+      justifyContent: 'center',
+      alignSelf: 'center',
+      marginBottom: compact ? 10 : 18,
+    },
     title: {
       fontSize: compact ? 22 : 28,
-      fontWeight: '800',
-      color: '#FFFFFF',
+      lineHeight: compact ? 28 : 34,
       textAlign: 'center',
       letterSpacing: -0.5,
     },
     subtitle: {
-      fontSize: compact ? 13 : 14,
-      color: COLORS.textMuted,
       textAlign: 'center',
       marginTop: compact ? 4 : 10,
       marginBottom: compact ? 14 : 30,
     },
-    primaryButton: {
-      height: CONTROL_HEIGHT,
-      borderRadius: 14,
-      backgroundColor: COLORS.authButton,
+    backWrapper: {
+      flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: compact ? 14 : 22,
+      gap: 6,
+      alignSelf: 'center',
+      marginTop: compact ? 12 : 22,
     },
-    primaryButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
-    backWrapper: { alignSelf: 'center', marginTop: compact ? 12 : 22 },
-    link: { fontSize: 14, color: COLORS.accent, textDecorationLine: 'underline' },
+    link: { textDecorationLine: 'underline' },
     pressedLight: { opacity: 0.6 },
   });
-};
