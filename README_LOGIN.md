@@ -1,7 +1,7 @@
 # BrandMatch — Módulo de Login
 
 **Repositorio:** empulamarin11/BrandMatch-App
-**Rama:** `login-rediseno`
+**Rama:** `main`
 
 ## 1. Descripción
 
@@ -153,7 +153,7 @@ e implementación actual)
 ```bash
 git clone https://github.com/empulamarin11/BrandMatch-App.git
 cd BrandMatch-App
-git checkout login-rediseno
+git checkout main
 npm install
 npx expo start
 ```
