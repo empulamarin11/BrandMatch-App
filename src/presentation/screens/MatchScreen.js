@@ -1,7 +1,7 @@
+
 import React, { useEffect, useRef, useMemo } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   ScrollView,
   Animated,
@@ -9,100 +9,322 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import {
+  Heartbeat,
+  ArrowLeft,
+  Target,
+  User,
+  At,
+  UsersThree,
+  MaskHappy,
+  ChartPolar,
+} from 'phosphor-react-native';
+
 import { COLORS } from '../theme/colors';
+import { AppText } from '../components/atoms/AppText';
 import CustomButton from '../components/atoms/CustomButton';
 import RadarChart from '../components/RadarChart';
 import { ejecutarCalculoMatch } from '../../application/match/calculateMatch';
 
 export default function MatchScreen({ navigation, route }) {
   const { marca, influencer } = route.params;
-  const { porcentaje: matchPct, estado: status } = ejecutarCalculoMatch(marca, influencer);
+
+  const { porcentaje: matchPct, estado: status } =
+    ejecutarCalculoMatch(marca, influencer);
 
   const { width, height } = useWindowDimensions();
-  const compact = height < 520;                    // 16:9 horizontal o 1:1 compacto
-  const row = width > height && width >= 600;      // horizontal con espacio para 2 columnas
-  const styles = useMemo(() => createStyles(compact, row), [compact, row]);
 
-  // Tamaño máximo del radar según el layout
-  const radarMax = row ? Math.min(width / 2 - 70, 300) : compact ? 240 : 340;
+  const compact = height < 520;
+  const row = width > height && width >= 600;
+
+  const styles = useMemo(
+    () => createStyles(compact, row),
+    [compact, row]
+  );
+
+  const radarMax = row
+    ? Math.min(width / 2 - 70, 300)
+    : compact
+      ? 240
+      : 340;
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
-      Animated.spring(scaleAnim, { toValue: 1, friction: 6, useNativeDriver: true }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 6,
+        useNativeDriver: true,
+      }),
     ]).start();
-  }, []);
+  }, [fadeAnim, scaleAnim]);
+
+  // Los umbrales coinciden con MatchCalculator.js
+  const statusColor =
+    matchPct > 75
+      ? '#10B981'
+      : matchPct > 50
+        ? '#F59E0B'
+        : COLORS.error;
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={styles.headerTitle}>BrandMatch</Text>
-        <Text style={styles.headerSubtitle}>Análisis de compatibilidad y ADN Digital</Text>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ENCABEZADO */}
+        <View style={styles.header}>
+          <Heartbeat
+            size={compact ? 25 : 30}
+            color={COLORS.primary}
+            weight="fill"
+          />
 
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>Volver al buscador</Text>
+          <AppText
+            variant="title"
+            color="textLight"
+            style={styles.headerTitle}
+          >
+            BrandMatch
+          </AppText>
+        </View>
+
+        <AppText
+          variant="body"
+          color="textMuted"
+          style={styles.headerSubtitle}
+        >
+          Análisis de compatibilidad y ADN Digital
+        </AppText>
+
+        {/* VOLVER */}
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.8}
+        >
+          <ArrowLeft size={18} color="#FFFFFF" weight="bold" />
+
+          <AppText
+            variant="body"
+            color="#FFFFFF"
+            style={styles.backButtonText}
+          >
+            Volver al buscador
+          </AppText>
         </TouchableOpacity>
 
-        <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
+        <Animated.View
+          style={{
+            opacity: fadeAnim,
+            transform: [{ scale: scaleAnim }],
+          }}
+        >
           <View style={styles.cardsRow}>
-            {/* TARJETA 1: NIVEL DE COMPATIBILIDAD */}
+
+            {/* TARJETA DE COMPATIBILIDAD */}
             <View style={styles.card}>
-              <Text style={styles.cardLabel}>NIVEL DE COMPATIBILIDAD</Text>
+              <View style={styles.sectionHeader}>
+                <Target
+                  size={20}
+                  color={COLORS.primary}
+                  weight="bold"
+                />
+
+                <AppText
+                  variant="caption"
+                  color="textMuted"
+                  style={styles.cardLabel}
+                >
+                  NIVEL DE COMPATIBILIDAD
+                </AppText>
+              </View>
 
               <View style={styles.matchRow}>
-                <Text style={styles.percentage}>{matchPct}%</Text>
-                <Text style={[styles.matchStatus, { color: matchPct > 70 ? '#10B981' : '#F59E0B' }]}>
+                <AppText
+                  variant="title"
+                  color="primary"
+                  style={styles.percentage}
+                >
+                  {matchPct}%
+                </AppText>
+
+                <AppText
+                  variant="subtitle"
+                  color={statusColor}
+                  style={styles.matchStatus}
+                >
                   {status}
-                </Text>
+                </AppText>
               </View>
 
               <View style={styles.divider} />
 
+              {/* NOMBRE */}
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>{influencer.name}</Text>
+                <View style={styles.infoLabelContainer}>
+                  <User
+                    size={17}
+                    color={COLORS.primary}
+                    weight="bold"
+                  />
+
+                  <AppText variant="body" color="textMuted">
+                    Nombre
+                  </AppText>
+                </View>
+
+                <AppText
+                  variant="body"
+                  color="textLight"
+                  style={styles.infoValue}
+                >
+                  {influencer.name}
+                </AppText>
               </View>
+
+              {/* USUARIO */}
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Usuario</Text>
-                <Text style={styles.infoValue}>@{influencer.username}</Text>
+                <View style={styles.infoLabelContainer}>
+                  <At
+                    size={17}
+                    color={COLORS.primary}
+                    weight="bold"
+                  />
+
+                  <AppText variant="body" color="textMuted">
+                    Usuario
+                  </AppText>
+                </View>
+
+                <AppText
+                  variant="body"
+                  color="textLight"
+                  style={styles.infoValue}
+                >
+                  @{influencer.username}
+                </AppText>
               </View>
+
+              {/* SEGUIDORES */}
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Seguidores</Text>
-                <Text style={styles.infoValue}>{influencer.seguidores}</Text>
+                <View style={styles.infoLabelContainer}>
+                  <UsersThree
+                    size={17}
+                    color={COLORS.primary}
+                    weight="bold"
+                  />
+
+                  <AppText variant="body" color="textMuted">
+                    Seguidores
+                  </AppText>
+                </View>
+
+                <AppText
+                  variant="body"
+                  color="textLight"
+                  style={styles.infoValue}
+                >
+                  {influencer.seguidores}
+                </AppText>
               </View>
+
+              {/* ARQUETIPO */}
               <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Arquetipo</Text>
-                <Text style={styles.infoValue}>{influencer.arquetipo}</Text>
+                <View style={styles.infoLabelContainer}>
+                  <MaskHappy
+                    size={17}
+                    color={COLORS.primary}
+                    weight="bold"
+                  />
+
+                  <AppText variant="body" color="textMuted">
+                    Arquetipo
+                  </AppText>
+                </View>
+
+                <AppText
+                  variant="body"
+                  color="textLight"
+                  style={styles.infoValue}
+                >
+                  {influencer.arquetipo}
+                </AppText>
               </View>
             </View>
 
-            {/* TARJETA 2: GRÁFICO RADAR */}
+            {/* TARJETA DEL RADAR */}
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>Comparativa Big Five</Text>
+              <View style={styles.sectionHeader}>
+                <ChartPolar
+                  size={21}
+                  color={COLORS.primary}
+                  weight="bold"
+                />
 
+                <AppText
+                  variant="subtitle"
+                  color="textLight"
+                  style={styles.cardTitle}
+                >
+                  Comparativa Big Five
+                </AppText>
+              </View>
+
+              {/* LEYENDA */}
               <View style={styles.legendRow}>
                 <View style={styles.legendItem}>
-                  <View style={[styles.dot, { backgroundColor: COLORS.primary }]} />
-                  <Text style={styles.legendText}>Influencer</Text>
+                  <View
+                    style={[
+                      styles.dot,
+                      { backgroundColor: COLORS.primary },
+                    ]}
+                  />
+
+                  <AppText variant="caption" color="textMuted">
+                    Influencer
+                  </AppText>
                 </View>
+
                 <View style={styles.legendItem}>
-                  <View style={[styles.dot, { backgroundColor: '#334155' }]} />
-                  <Text style={styles.legendText}>Tu Marca</Text>
+                  <View
+                    style={[
+                      styles.dot,
+                      { backgroundColor: '#334155' },
+                    ]}
+                  />
+
+                  <AppText variant="caption" color="textMuted">
+                    Tu Marca
+                  </AppText>
                 </View>
               </View>
 
-              <RadarChart data={influencer.bigfive} maxSize={radarMax} />
+              <RadarChart
+                data={influencer.bigfive}
+                marca={marca}
+                maxSize={radarMax}
+              />
             </View>
           </View>
 
-          {/* BOTÓN GENERAR CORREO */}
+          {/* BOTÓN DE PITCH */}
           <View style={styles.buttonWrapper}>
             <CustomButton
               title="Generar correo de colaboración"
               variant="action"
-              onPress={() => navigation.navigate('Pitch', { influencer })}
+              onPress={() =>
+                navigation.navigate('Pitch', { influencer })
+              }
             />
           </View>
         </Animated.View>
@@ -113,7 +335,10 @@ export default function MatchScreen({ navigation, route }) {
 
 const createStyles = (compact, row) =>
   StyleSheet.create({
-    container: { flex: 1, backgroundColor: COLORS.background },
+    container: {
+      flex: 1,
+      backgroundColor: COLORS.background,
+    },
 
     content: {
       flexGrow: 1,
@@ -125,21 +350,32 @@ const createStyles = (compact, row) =>
       alignSelf: 'center',
     },
 
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 9,
+    },
+
     headerTitle: {
       fontSize: compact ? 22 : 28,
-      fontWeight: '900',
-      color: COLORS.textLight,
+      lineHeight: compact ? 28 : 36,
+      fontFamily: 'Inter_700Bold',
       textAlign: 'center',
       marginBottom: 4,
     },
+
     headerSubtitle: {
       fontSize: compact ? 12 : 14,
-      color: COLORS.textMuted,
+      lineHeight: compact ? 16 : 20,
       textAlign: 'center',
       marginBottom: compact ? 10 : 20,
     },
 
     backButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
       backgroundColor: COLORS.action,
       paddingVertical: compact ? 6 : 10,
       paddingHorizontal: 16,
@@ -147,10 +383,20 @@ const createStyles = (compact, row) =>
       alignSelf: 'flex-start',
       marginBottom: compact ? 10 : 20,
     },
-    backButtonText: { color: '#FFF', fontWeight: 'bold', fontSize: 14 },
 
-    // En horizontal ancho: las dos tarjetas lado a lado
-    cardsRow: row ? { flexDirection: 'row', alignItems: 'stretch', gap: 16 } : {},
+    backButtonText: {
+      fontFamily: 'Inter_600SemiBold',
+      fontSize: 14,
+      lineHeight: 20,
+    },
+
+    cardsRow: row
+      ? {
+          flexDirection: 'row',
+          alignItems: 'stretch',
+          gap: 16,
+        }
+      : {},
 
     card: {
       flex: row ? 1 : undefined,
@@ -160,20 +406,29 @@ const createStyles = (compact, row) =>
       marginBottom: row ? 0 : compact ? 10 : 16,
       borderWidth: 1,
       borderColor: 'rgba(255,255,255,0.05)',
+      minWidth: 0,
+    },
+
+    sectionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 9,
+      marginBottom: 8,
     },
 
     cardLabel: {
       fontSize: 12,
-      fontWeight: 'bold',
-      color: COLORS.textMuted,
-      marginBottom: 8,
+      lineHeight: 16,
+      fontFamily: 'Inter_700Bold',
       letterSpacing: 1,
+      marginBottom: 0,
     },
+
     cardTitle: {
       fontSize: 16,
-      fontWeight: 'bold',
-      color: COLORS.textLight,
-      marginBottom: compact ? 8 : 15,
+      lineHeight: 22,
+      fontFamily: 'Inter_700Bold',
+      marginBottom: 0,
     },
 
     matchRow: {
@@ -182,9 +437,20 @@ const createStyles = (compact, row) =>
       justifyContent: 'space-between',
       marginBottom: compact ? 8 : 15,
       flexWrap: 'wrap',
+      gap: 8,
     },
-    percentage: { fontSize: compact ? 36 : 48, fontWeight: '900', color: COLORS.primary },
-    matchStatus: { fontSize: 16, fontWeight: 'bold' },
+
+    percentage: {
+      fontSize: compact ? 36 : 48,
+      lineHeight: compact ? 42 : 56,
+      fontFamily: 'Inter_700Bold',
+    },
+
+    matchStatus: {
+      fontSize: 16,
+      lineHeight: 22,
+      fontFamily: 'Inter_700Bold',
+    },
 
     divider: {
       height: 1,
@@ -194,12 +460,24 @@ const createStyles = (compact, row) =>
 
     infoRow: {
       flexDirection: 'row',
+      alignItems: 'center',
       justifyContent: 'space-between',
-      marginBottom: compact ? 4 : 8,
+      marginBottom: compact ? 8 : 12,
       flexWrap: 'wrap',
+      gap: 8,
     },
-    infoLabel: { fontSize: 14, color: COLORS.textMuted },
-    infoValue: { fontSize: 14, color: COLORS.textLight, fontWeight: '600' },
+
+    infoLabelContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 7,
+    },
+
+    infoValue: {
+      fontFamily: 'Inter_600SemiBold',
+      textAlign: 'right',
+      flexShrink: 1,
+    },
 
     legendRow: {
       flexDirection: 'row',
@@ -208,9 +486,20 @@ const createStyles = (compact, row) =>
       gap: 20,
       marginBottom: 10,
     },
-    legendItem: { flexDirection: 'row', alignItems: 'center' },
-    dot: { width: 8, height: 8, borderRadius: 4, marginRight: 6 },
-    legendText: { fontSize: 12, color: COLORS.textMuted },
 
-    buttonWrapper: { marginTop: compact ? 8 : row ? 16 : 10 },
+    legendItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+
+    dot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+    },
+
+    buttonWrapper: {
+      marginTop: compact ? 8 : row ? 16 : 10,
+    },
   });
